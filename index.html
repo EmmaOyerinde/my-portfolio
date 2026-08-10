@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emmanuel Oyerinde | GIS & Spatial Portfolio</title>
+    <title>Emmanuel Oyerinde, PMP | Project Manager & Business Systems Leader</title>
     
     <!-- Modern Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 800;
             color: var(--text-main);
             letter-spacing: -0.5px;
@@ -83,7 +83,7 @@
 
         .nav-links {
             display: flex;
-            gap: 2.5rem;
+            gap: 2rem;
             list-style: none;
         }
 
@@ -108,7 +108,7 @@
         }
 
         /* ==========================================
-           3. HERO SECTION (TECHIE GRID BACKGROUND)
+           3. HERO SECTION (DARK TECH GRID)
            ========================================== */
         .hero {
             min-height: 100vh;
@@ -116,7 +116,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            padding: 0 10%;
+            padding: 120px 10% 80px;
             position: relative;
             background-color: #0b1120;
             overflow: hidden;
@@ -127,8 +127,8 @@
             position: absolute;
             top: 0; left: -50%; width: 200%; height: 200%;
             background-image: 
-                linear-gradient(rgba(37, 99, 235, 0.25) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37, 99, 235, 0.25) 1px, transparent 1px);
+                linear-gradient(rgba(37, 99, 235, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.2) 1px, transparent 1px);
             background-size: 50px 50px;
             transform: perspective(1000px) rotateX(60deg) translateY(-100px) translateZ(-200px);
             animation: gridMove 5s linear infinite;
@@ -139,7 +139,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, #0b1120 70%);
+            background: radial-gradient(circle at center, transparent 0%, #0b1120 75%);
             z-index: 2;
         }
 
@@ -151,22 +151,41 @@
         .hero-content {
             position: relative;
             z-index: 3;
+            max-width: 900px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-size: clamp(2.5rem, 4.5vw, 4rem);
             font-weight: 800;
-            line-height: 1.1;
+            line-height: 1.15;
             margin-bottom: 1.5rem;
-            max-width: 800px;
             color: #ffffff;
         }
 
         .hero p {
-            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            font-size: clamp(1.05rem, 1.8vw, 1.2rem);
             color: #94a3b8;
-            max-width: 700px;
+            line-height: 1.7;
             margin-bottom: 2.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -182,17 +201,88 @@
             display: inline-block;
         }
 
-        .hero .btn {
+        .hero .btn-primary {
             box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
         }
 
+        .btn-secondary {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #334155;
+        }
+
+        .btn-secondary:hover {
+            border-color: #60a5fa;
+            color: #60a5fa;
+        }
+
         .btn:hover {
-            background-color: var(--primary-hover);
             transform: translateY(-2px);
         }
 
         /* ==========================================
-           4. PORTFOLIO SECTION
+           4. ABOUT & CORE COMPETENCIES
+           ========================================== */
+        .about-section {
+            padding: 90px 5%;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .skill-card {
+            background: var(--bg-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .skill-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .skill-card p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ==========================================
+           5. PORTFOLIO SECTION
            ========================================== */
         .portfolio {
             padding: 100px 5%;
@@ -205,7 +295,7 @@
         }
 
         .section-header h2 {
-            font-size: 2.5rem;
+            font-size: 2.25rem;
             font-weight: 800;
             margin-bottom: 1rem;
         }
@@ -213,7 +303,7 @@
         .section-header p {
             color: var(--text-muted);
             font-size: 1.1rem;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
@@ -243,7 +333,7 @@
 
         .project-image {
             width: 100%;
-            height: 250px;
+            height: 240px;
             object-fit: cover;
             object-position: top;
             border-bottom: 1px solid var(--border);
@@ -266,7 +356,7 @@
         }
 
         .project-title {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
             margin-bottom: 1rem;
             color: var(--text-main);
@@ -276,6 +366,7 @@
             color: var(--text-muted);
             font-size: 0.95rem;
             margin-bottom: 1rem;
+            line-height: 1.6;
             flex-grow: 1;
         }
 
@@ -301,7 +392,7 @@
         }
 
         /* ==========================================
-           5. LIVE INTERACTIVE MAP SECTION
+           6. LIVE INTERACTIVE MAP SECTION
            ========================================== */
         .map-section {
             padding: 80px 5%;
@@ -322,7 +413,6 @@
             background: #ffffff;
         }
 
-        /* SIDEBAR TABLE STYLES */
         #map-sidebar {
             width: 360px;
             background: #ffffff;
@@ -350,7 +440,6 @@
             color: #64748b;
         }
 
-        /* LEGEND */
         .legend-box {
             display: flex;
             justify-content: space-between;
@@ -375,7 +464,6 @@
             border-radius: 3px;
         }
 
-        /* SEARCH INPUT */
         .search-container {
             padding: 10px 15px;
             border-bottom: 1px solid var(--border);
@@ -394,7 +482,6 @@
             border-color: var(--primary);
         }
 
-        /* TABLE CONTAINER */
         .table-container {
             flex-grow: 1;
             overflow-y: auto;
@@ -442,7 +529,6 @@
             margin-right: 6px;
         }
 
-        /* MAP ELEMENT */
         #leaflet-map {
             flex-grow: 1;
             height: 100%;
@@ -450,7 +536,7 @@
         }
 
         /* ==========================================
-           6. CONTACT SECTION
+           7. CONTACT SECTION
            ========================================== */
         .contact {
             padding: 100px 5%;
@@ -464,7 +550,7 @@
         }
 
         .contact-container h2 {
-            font-size: 2.5rem;
+            font-size: 2.25rem;
             margin-bottom: 1rem;
         }
 
@@ -509,7 +595,7 @@
         }
 
         /* ==========================================
-           7. FOOTER
+           8. FOOTER
            ========================================== */
         footer {
             background: var(--text-main);
@@ -520,7 +606,12 @@
         }
 
         /* RESPONSIVE DESIGN */
-        @media (max-width: 850px) {
+        @media (max-width: 900px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
             #map-app-wrapper {
                 flex-direction: column;
                 height: 800px;
@@ -570,30 +661,66 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="logo">Emmanuel<span>O.</span></div>
+        <div class="logo">Emmanuel<span> Oyerinde, PMP</span></div>
         <ul class="nav-links" id="nav-links">
             <li><a href="#home">Home</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#grid-map">Live Grid Map</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#initiatives">Key Initiatives</a></li>
+            <li><a href="#grid-map">Analytics Map</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn">☰</button>
     </nav>
 
-<!-- Hero Section -->
+    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1>Emmanuel Oyerinde, PMP</h1>
-            <p>Senior Project Manager & Business Systems Leader with 10+ years of experience driving enterprise GIS, digital transformation, and infrastructure initiatives across large-scale utility organizations. I specialize in bridging technical strategy and operational execution to deliver measurable business outcomes.</p>
-            <a href="#portfolio" class="btn">View Featured Initiatives</a>
+            <span class="badge">PMP® Certified Project Manager</span>
+            <h1>Bridging Strategy, Enterprise Technology & Operational Excellence</h1>
+            <p>10+ years leading cross-functional IT, infrastructure, enterprise system implementation, and digital transformation initiatives across large utility and engineering organizations. Specialized in translating complex business goals into structured, high-impact execution.</p>
+            <div class="btn-group">
+                <a href="#initiatives" class="btn btn-primary">Explore Initiatives</a>
+                <a href="#about" class="btn btn-secondary">Professional Profile</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About & Competencies Section -->
+    <section class="about-section" id="about">
+        <div class="about-container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>Enterprise Leadership & Delivery</h2>
+                    <p>In my current role at <strong>London Hydro</strong>, I lead and coordinate complex projects involving enterprise applications, GIS platforms, operational workflows, and data-driven decision-making across multiple business units. I align technical teams, stakeholders, vendors, and executive leadership to manage scope, budgets, risk, and delivery timelines.</p>
+                    <p>Throughout my career managing infrastructure and enterprise systems serving over one million utility customers, I’ve specialized in bringing structure to ambiguous environments—leveraging Agile/hybrid governance frameworks, process optimization, and AI tools for workflow automation and technical analysis.</p>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>Project Leadership</h3>
+                        <p>PMP governance, scope/budget management, Agile & hybrid delivery, vendor leadership.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Enterprise Systems</h3>
+                        <p>Enterprise applications, GIS platform integration, data analytics, operational workflows.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Process & Transformation</h3>
+                        <p>Operational optimization, digital transformation, workflow automation, risk mitigation.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>AI & Innovation</h3>
+                        <p>Leveraging AI tools for project planning, documentation, workflow acceleration, and analytics.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Portfolio Section -->
-    <section class="portfolio" id="portfolio">
-<div class="section-header">
-            <h2>Featured Initiatives & Case Studies</h2>
-            <p>A showcase of enterprise spatial systems, utility grid monitoring projects, and published industry solutions.</p>
+    <section class="portfolio" id="initiatives">
+        <div class="section-header">
+            <h2>Key Initiatives & Featured Projects</h2>
+            <p>Demonstrated impact across enterprise system deployment, real-time grid monitoring, and published international case studies.</p>
         </div>
 
         <div class="portfolio-grid">
@@ -602,11 +729,11 @@
             <article class="project-card">
                 <img src="UT (1).PNG" alt="Geographic Network Monitoring System Dashboard" class="project-image">
                 <div class="project-content">
-                    <span class="project-category">Web GIS Dashboard</span>
+                    <span class="project-category">Enterprise Systems Deployment</span>
                     <h3 class="project-title">Geographic Network Monitoring System</h3>
-                    <p class="project-description">A real-time GNMS developed for the Ikeja Electric sub-grid. By utilizing a Data Aggregation System (DAS) to fetch data from meter headend systems to ArcGIS via GeoEvent Server, this system replaced cumbersome manual status checks. It provides granular views of feeders, interconnected DTs, and real-time remote terminal device parameters, helping maintenance engineers shorten fault response times by at least 3 hours.</p>
-                    <p class="project-tools"><strong>Tools:</strong> ArcGIS Dashboards, Hub, Experience Builder, Online, Pro, GeoEvent Server</p>
-                    <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View on Spatial Node &rarr;</a>
+                    <p class="project-description">Led the deployment of a real-time GNMS for the Ikeja Electric sub-grid. Integrated a Data Aggregation System (DAS) with meter headend systems to feed ArcGIS via GeoEvent Server. Replaced manual status checks, providing real-time visibility into feeders and distribution transformers, which shortened fault response times by at least 3 hours.</p>
+                    <p class="project-tools"><strong>Domain:</strong> Real-Time Dashboards, GeoEvent Server, Enterprise Integration</p>
+                    <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View Project Details &rarr;</a>
                 </div>
             </article>
 
@@ -614,11 +741,11 @@
             <article class="project-card">
                 <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80" alt="Ikeja Electric Power Availability Case Study" class="project-image">
                 <div class="project-content">
-                    <span class="project-category">Published Case Study</span>
-                    <h3 class="project-title">Ikeja Electric Power Availability Case Study</h3>
-                    <p class="project-description">Featured on Esri.com, this case study details our successful implementation of the Geographic Network Monitoring System at Ikeja Electric. It highlights how integrating real-time spatial data and ArcGIS technologies significantly improved power availability, optimized grid management, and transformed technical operations.</p>
-                    <p class="project-tools"><strong>Platform:</strong> Featured by Esri (Electric & Gas Industry)</p>
-                    <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" target="_blank" class="project-link">Read the Official Case Study &rarr;</a>
+                    <span class="project-category">Published Industry Case Study</span>
+                    <h3 class="project-title">Ikeja Electric Power Availability Transformation</h3>
+                    <p class="project-description">Featured on Esri.com, this case study details our successful implementation of the Geographic Network Monitoring System at Ikeja Electric. Highlights how integrating real-time spatial data and enterprise software significantly improved power availability, optimized grid management, and transformed technical operations.</p>
+                    <p class="project-tools"><strong>Publication:</strong> Featured by Esri (Electric & Gas Industry)</p>
+                    <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" target="_blank" class="project-link">Read Official Esri Story &rarr;</a>
                 </div>
             </article>
 
@@ -626,11 +753,11 @@
             <article class="project-card">
                 <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" class="project-image" style="border:none; overflow:hidden; width:100%;" scrolling="no" title="Effects of Mining on Flooding"></iframe>
                 <div class="project-content">
-                    <span class="project-category">Spatial Analysis</span>
+                    <span class="project-category">International Environmental Analysis</span>
                     <h3 class="project-title">UNDP Ukraine: Just Transition of the Coal Cities</h3>
-                    <p class="project-description">Generated GIS-based maps to analyze environmental conditions and parameters affecting coal-mining areas in the Donbas region. This spatial analysis helped identify areas of concern to support evidence-based decision-making for local transition planning as Ukraine phases out coal by 2035. The outputs contributed to broader UNDP efforts like decentralized energy development, green financing, and sustainable employment.</p>
-                    <p class="project-tools"><strong>Tools:</strong> ArcGIS Pro</p>
-                    <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View on Spatial Node &rarr;</a>
+                    <p class="project-description">Generated GIS-based environmental assessments in the Donbas region for UNDP Ukraine's initiative preparing coal-dependent communities for sustainable economic diversification by 2035. Supported evidence-based planning for decentralized energy installations (87 solar power plants), green financing, and workforce retraining.</p>
+                    <p class="project-tools"><strong>Domain:</strong> UNDP, Spatial Analytics, Policy & Environmental Assessment</p>
+                    <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View Full Assessment &rarr;</a>
                 </div>
             </article>
 
@@ -640,18 +767,16 @@
     <!-- LIVE MAP SECTION -->
     <section class="map-section" id="grid-map">
         <div class="section-header">
-            <h2>Canadian Utility Grid Monitor</h2>
-            <p>Interactive tool tracking SAIDI (outage hours) and SAIFI (outage frequency) across major utility service territories.</p>
+            <h2>Canadian Utility Grid Reliability Monitor</h2>
+            <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories.</p>
         </div>
 
         <div id="map-app-wrapper">
-            <!-- Sidebar Panel -->
             <div id="map-sidebar">
                 <div class="map-sidebar-header">
-                    <h3>Service Territory Reliability</h3>
-                    <p>Select a utility to focus on its territory bounds and reliability metrics.</p>
+                    <h3>Utility Reliability Benchmarking</h3>
+                    <p>Select a utility to focus on its territory bounds and performance metrics.</p>
                     
-                    <!-- Legend -->
                     <div class="legend-box">
                         <div class="legend-item">
                             <div class="legend-color" style="background: #10b981;"></div>
@@ -668,12 +793,10 @@
                     </div>
                 </div>
 
-                <!-- Search Input -->
                 <div class="search-container">
                     <input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region...">
                 </div>
 
-                <!-- Data Table -->
                 <div class="table-container">
                     <table class="map-table">
                         <thead>
@@ -683,14 +806,11 @@
                                 <th>SAIFI</th>
                             </tr>
                         </thead>
-                        <tbody id="utility-table-body">
-                            <!-- Populated dynamically via JS -->
-                        </tbody>
+                        <tbody id="utility-table-body"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Leaflet Map Element -->
             <div id="leaflet-map"></div>
         </div>
     </section>
@@ -699,7 +819,7 @@
     <section class="contact" id="contact">
         <div class="contact-container">
             <h2>Get In Touch</h2>
-            <p>Have a GIS project in mind or want to discuss geographic network solutions? I'd love to hear from you.</p>
+            <p>Interested in collaborating or discussing enterprise project management and business systems solutions? Send a direct message below.</p>
             
             <form id="contact-form" class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
                 <div class="form-group">
@@ -712,16 +832,16 @@
                 </div>
                 <div class="form-group">
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+                    <textarea id="message" name="message" rows="5" placeholder="Your message..." required></textarea>
                 </div>
-                <button type="submit" class="btn">Send Message</button>
+                <button type="submit" class="btn btn-primary">Send Message</button>
             </form>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Emmanuel Oyerinde. All rights reserved.</p>
+        <p>&copy; 2026 Emmanuel Oyerinde, PMP. All rights reserved.</p>
     </footer>
 
     <!-- Leaflet JS -->
@@ -729,9 +849,7 @@
 
     <!-- JavaScript -->
     <script>
-        // ==========================================
-        // 1. MOBILE MENU TOGGLE
-        // ==========================================
+        // MOBILE MENU
         const menuBtn = document.getElementById('menu-btn');
         const navLinks = document.getElementById('nav-links');
 
@@ -747,69 +865,25 @@
             });
         });
 
-        // ==========================================
-        // 2. INTERACTIVE MAP CODE
-        // ==========================================
+        // MAP DATA & LOGIC
         const utilitiesGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                {
-                    "type": "Feature",
-                    "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-79.63, 43.58], [-79.52, 43.75], [-79.12, 43.85], [-79.15, 43.65], [-79.63, 43.58]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-76.10, 45.15], [-75.90, 45.50], [-75.30, 45.55], [-75.40, 45.10], [-76.10, 45.15]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton, ON", "saidi": 0.95, "saifi": 1.10 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-80.00, 43.15], [-79.80, 43.70], [-79.55, 43.60], [-79.75, 43.10], [-80.00, 43.15]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.90], [-81.38, 43.08], [-81.12, 43.08], [-81.12, 42.90], [-81.38, 42.90]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-114.30, 50.85], [-114.30, 51.25], [-113.85, 51.25], [-113.85, 50.85], [-114.30, 50.85]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-113.75, 53.35], [-113.75, 53.70], [-113.25, 53.70], [-113.25, 53.35], [-113.75, 53.35]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "bc", "utility": "BC Hydro (Metro Region)", "region": "SW British Columbia", "saidi": 1.02, "saifi": 0.98 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-123.30, 49.00], [-123.30, 49.50], [-122.30, 49.50], [-122.30, 49.00], [-123.30, 49.00]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "hq", "utility": "Hydro-Québec (Greater Mtl)", "region": "Montreal Region, QC", "saidi": 1.45, "saifi": 1.50 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-74.00, 45.30], [-73.90, 45.70], [-73.30, 45.70], [-73.40, 45.30], [-74.00, 45.30]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia Region", "saidi": 2.30, "saifi": 2.10 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 44.20], [-64.20, 45.20], [-63.00, 45.20], [-63.20, 44.20], [-64.50, 44.20]]] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "id": "skp", "utility": "SaskPower (South)", "region": "Southern Saskatchewan", "saidi": 2.10, "saifi": 2.30 },
-                    "geometry": { "type": "Polygon", "coordinates": [[[-105.00, 50.00], [-105.00, 51.00], [-103.50, 51.00], [-103.50, 50.00], [-105.00, 50.00]]] }
-                }
+                { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.90], [-81.38, 43.08], [-81.12, 43.08], [-81.12, 42.90], [-81.38, 42.90]]] } },
+                { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.63, 43.58], [-79.52, 43.75], [-79.12, 43.85], [-79.15, 43.65], [-79.63, 43.58]]] } },
+                { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.10, 45.15], [-75.90, 45.50], [-75.30, 45.55], [-75.40, 45.10], [-76.10, 45.15]]] } },
+                { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton, ON", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.00, 43.15], [-79.80, 43.70], [-79.55, 43.60], [-79.75, 43.10], [-80.00, 43.15]]] } },
+                { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.30, 50.85], [-114.30, 51.25], [-113.85, 51.25], [-113.85, 50.85], [-114.30, 50.85]]] } },
+                { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 }, "geometry": { "type": "Polygon", "coordinates": [[[-113.75, 53.35], [-113.75, 53.70], [-113.25, 53.70], [-113.25, 53.35], [-113.75, 53.35]]] } },
+                { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro (Metro Region)", "region": "SW British Columbia", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-123.30, 49.00], [-123.30, 49.50], [-122.30, 49.50], [-122.30, 49.00], [-123.30, 49.00]]] } },
+                { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec (Greater Mtl)", "region": "Montreal Region, QC", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-74.00, 45.30], [-73.90, 45.70], [-73.30, 45.70], [-73.40, 45.30], [-74.00, 45.30]]] } },
+                { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia Region", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 44.20], [-64.20, 45.20], [-63.00, 45.20], [-63.20, 44.20], [-64.50, 44.20]]] } },
+                { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower (South)", "region": "Southern Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-105.00, 50.00], [-105.00, 51.00], [-103.50, 51.00], [-103.50, 50.00], [-105.00, 50.00]]] } }
             ]
         };
 
         function getColor(saidi) {
-            return saidi < 1.0 ? '#10b981' :
-                   saidi <= 1.8 ? '#f59e0b' :
-                                  '#ef4444';
+            return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444';
         }
 
         const map = L.map('leaflet-map').setView([50.0, -90.0], 4);
