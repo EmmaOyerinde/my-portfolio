@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emmanuel Oyerinde, PMP | Project Manager & Business Systems Leader</title>
+    <title>Emmanuel Oyerinde, PMP | Enterprise Project Manager</title>
     
-    <!-- Modern Font -->
+    <!-- Modern Font: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Leaflet CSS for Map -->
@@ -13,17 +13,31 @@
 
     <style>
         /* ==========================================
-           1. CSS VARIABLES & BASE STYLES
+           1. CSS VARIABLES (PREMIUM PALETTE)
            ========================================== */
         :root {
-            --primary: #2563eb;       /* Deep blue */
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            
+            --primary: #2563eb;       
             --primary-hover: #1d4ed8;
+            
             --bg-color: #f8fafc;
             --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --border: #e2e8f0;
-            --transition: all 0.3s ease;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -31,72 +45,64 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* Adjusts anchor links for fixed nav */
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
+            color: var(--slate-800);
+            line-height: 1.7;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-        }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
 
         /* ==========================================
-           2. NAVIGATION
+           2. NAVIGATION (FROSTED GLASS)
            ========================================== */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
-            padding: 1.25rem 5%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .logo {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--slate-900);
             letter-spacing: -0.5px;
         }
 
-        .logo span {
-            color: var(--primary);
-        }
+        .logo span { color: var(--primary); }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             list-style: none;
         }
 
         .nav-links a {
             font-weight: 600;
-            font-size: 0.95rem;
-            color: var(--text-muted);
+            font-size: 0.9rem;
+            color: var(--slate-700);
             transition: var(--transition);
         }
 
-        .nav-links a:hover {
-            color: var(--primary);
-        }
+        .nav-links a:hover { color: var(--primary); }
 
         .mobile-menu-btn {
             display: none;
@@ -104,7 +110,7 @@
             border: none;
             font-size: 1.75rem;
             cursor: pointer;
-            color: var(--text-main);
+            color: var(--slate-900);
         }
 
         /* ==========================================
@@ -118,7 +124,7 @@
             align-items: flex-start;
             padding: 120px 10% 80px;
             position: relative;
-            background-color: #0b1120;
+            background-color: var(--slate-900);
             overflow: hidden;
         }
 
@@ -127,11 +133,11 @@
             position: absolute;
             top: 0; left: -50%; width: 200%; height: 200%;
             background-image: 
-                linear-gradient(rgba(37, 99, 235, 0.2) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37, 99, 235, 0.2) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(rgba(37, 99, 235, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.15) 1px, transparent 1px);
+            background-size: 60px 60px;
             transform: perspective(1000px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            animation: gridMove 5s linear infinite;
+            animation: gridMove 8s linear infinite;
             z-index: 1;
         }
 
@@ -139,59 +145,63 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, #0b1120 75%);
+            background: radial-gradient(circle at center, transparent 0%, var(--slate-900) 80%);
             z-index: 2;
         }
 
         @keyframes gridMove {
             0% { transform: perspective(1000px) rotateX(60deg) translateY(0) translateZ(-200px); }
-            100% { transform: perspective(1000px) rotateX(60deg) translateY(50px) translateZ(-200px); }
+            100% { transform: perspective(1000px) rotateX(60deg) translateY(60px) translateZ(-200px); }
         }
 
         .hero-content {
             position: relative;
             z-index: 3;
             max-width: 900px;
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .badge {
-            display: inline-block;
-            background: rgba(37, 99, 235, 0.2);
-            color: #60a5fa;
-            border: 1px solid rgba(96, 165, 250, 0.3);
-            padding: 6px 14px;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(37, 99, 235, 0.15);
+            color: #93c5fd;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            padding: 0.4rem 1rem;
             border-radius: 20px;
             font-size: 0.85rem;
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 1.5rem;
             letter-spacing: 0.5px;
+            backdrop-filter: blur(4px);
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 4.5vw, 4rem);
+            font-size: clamp(2.5rem, 4.5vw, 4.5rem);
             font-weight: 800;
-            line-height: 1.15;
+            line-height: 1.1;
             margin-bottom: 1.5rem;
             color: #ffffff;
+            letter-spacing: -1px;
         }
 
         .hero p {
-            font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
             color: #94a3b8;
-            line-height: 1.7;
             margin-bottom: 2.5rem;
+            max-width: 800px;
         }
 
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
 
         .btn {
-            background-color: var(--primary);
-            color: white;
-            padding: 0.875rem 2rem;
+            padding: 0.875rem 2.25rem;
             border-radius: 8px;
             font-weight: 600;
             font-size: 1rem;
@@ -199,40 +209,43 @@
             cursor: pointer;
             transition: var(--transition);
             display: inline-block;
+            text-align: center;
         }
 
-        .hero .btn-primary {
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
         }
 
         .btn-secondary {
-            background-color: transparent;
+            background-color: rgba(255,255,255,0.05);
             color: #ffffff;
-            border: 1px solid #334155;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
         }
 
         .btn-secondary:hover {
-            border-color: #60a5fa;
-            color: #60a5fa;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
+            border-color: #ffffff;
+            background-color: rgba(255,255,255,0.1);
         }
 
         /* ==========================================
            4. ABOUT & CORE COMPETENCIES
            ========================================== */
         .about-section {
-            padding: 90px 5%;
+            padding: 100px 5%;
             background: var(--surface);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--slate-200);
         }
 
-        .about-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .about-container { max-width: 1200px; margin: 0 auto; }
 
         .about-grid {
             display: grid;
@@ -245,41 +258,81 @@
             font-size: 2.25rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
-            color: var(--text-main);
+            color: var(--slate-900);
+            letter-spacing: -0.5px;
         }
 
         .about-text p {
-            color: var(--text-muted);
-            margin-bottom: 1.25rem;
+            color: var(--slate-700);
+            margin-bottom: 1.5rem;
             font-size: 1.05rem;
-            line-height: 1.7;
         }
 
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
+            gap: 1.5rem;
         }
 
+        /* COLOR-CODED COMPETENCY CARDS (Premium Style) */
         .skill-card {
-            background: var(--bg-color);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+            background: var(--surface);
+            padding: 1.75rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
 
         .skill-card h3 {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            color: var(--text-main);
         }
 
         .skill-card p {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            line-height: 1.5;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--slate-700);
         }
+
+        /* 1. Project Leadership (Indigo) */
+        .skill-card.leadership {
+            background: #fcfdff;
+            border: 1px solid #e0e7ff;
+            border-top: 4px solid #4f46e5;
+        }
+        .skill-card.leadership h3 { color: #3730a3; }
+
+        /* 2. Enterprise Systems (Royal Blue) */
+        .skill-card.systems {
+            background: #f8fafc;
+            border: 1px solid #dbeafe;
+            border-top: 4px solid #2563eb;
+        }
+        .skill-card.systems h3 { color: #1e40af; }
+
+        /* 3. Process & Transformation (Emerald Green) */
+        .skill-card.process {
+            background: #f2fbf7;
+            border: 1px solid #d1fae5;
+            border-top: 4px solid #10b981;
+        }
+        .skill-card.process h3 { color: #065f46; }
+
+        /* 4. AI & Innovation (Violet) */
+        .skill-card.innovation {
+            background: #faf9ff;
+            border: 1px solid #ede9fe;
+            border-top: 4px solid #8b5cf6;
+        }
+        .skill-card.innovation h3 { color: #5b21b6; }
 
         /* ==========================================
            5. PORTFOLIO SECTION
@@ -297,11 +350,13 @@
         .section-header h2 {
             font-size: 2.25rem;
             font-weight: 800;
+            color: var(--slate-900);
             margin-bottom: 1rem;
+            letter-spacing: -0.5px;
         }
 
         .section-header p {
-            color: var(--text-muted);
+            color: var(--slate-700);
             font-size: 1.1rem;
             max-width: 700px;
             margin: 0 auto;
@@ -317,26 +372,37 @@
 
         .project-card {
             background: var(--surface);
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-md);
             transition: var(--transition);
-            border: 1px solid var(--border);
+            border: 1px solid var(--slate-200);
             display: flex;
             flex-direction: column;
         }
 
         .project-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-image-wrapper {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--slate-200);
         }
 
         .project-image {
             width: 100%;
-            height: 240px;
+            height: 100%;
             object-fit: cover;
             object-position: top;
-            border-bottom: 1px solid var(--border);
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05); /* Smooth image zoom on hover */
         }
 
         .project-content {
@@ -347,34 +413,37 @@
         }
 
         .project-category {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .project-title {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--text-main);
+            color: var(--slate-900);
+            line-height: 1.3;
         }
 
         .project-description {
-            color: var(--text-muted);
+            color: var(--slate-700);
             font-size: 0.95rem;
-            margin-bottom: 1rem;
-            line-height: 1.6;
+            margin-bottom: 1.5rem;
             flex-grow: 1;
         }
 
         .project-tools {
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: var(--slate-700);
             margin-bottom: 1.5rem;
-            font-weight: 600;
+            padding: 10px;
+            background: var(--slate-50);
+            border-radius: 6px;
+            border: 1px solid var(--slate-200);
         }
 
         .project-link {
@@ -384,21 +453,18 @@
             align-items: center;
             gap: 0.5rem;
             margin-top: auto;
+            transition: var(--transition);
         }
 
-        .project-link:hover {
-            color: var(--primary-hover);
-            text-decoration: underline;
-        }
+        .project-link:hover { color: var(--primary-hover); }
 
         /* ==========================================
            6. LIVE INTERACTIVE MAP SECTION
            ========================================== */
         .map-section {
-            padding: 80px 5%;
-            background: #ffffff;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
+            padding: 100px 5%;
+            background: var(--surface);
+            border-top: 1px solid var(--slate-200);
         }
 
         #map-app-wrapper {
@@ -406,80 +472,76 @@
             height: 650px;
             margin: 0 auto;
             display: flex;
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            box-shadow: var(--shadow-lg);
+            background: var(--surface);
         }
 
         #map-sidebar {
-            width: 360px;
-            background: #ffffff;
-            border-right: 1px solid var(--border);
+            width: 380px;
+            background: var(--surface);
+            border-right: 1px solid var(--slate-200);
             display: flex;
             flex-direction: column;
             z-index: 10;
         }
 
         .map-sidebar-header {
-            padding: 18px;
-            border-bottom: 1px solid var(--border);
-            background: #f8fafc;
+            padding: 20px;
+            border-bottom: 1px solid var(--slate-200);
+            background: var(--slate-50);
         }
 
         .map-sidebar-header h3 {
-            font-size: 1.1rem;
-            color: #0f172a;
+            font-size: 1.15rem;
+            color: var(--slate-900);
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .map-sidebar-header p {
-            font-size: 0.8rem;
-            color: #64748b;
+            font-size: 0.85rem;
+            color: var(--slate-700);
+            line-height: 1.4;
         }
 
         .legend-box {
             display: flex;
             justify-content: space-between;
-            margin-top: 12px;
-            padding: 8px 12px;
-            background: #ffffff;
+            margin-top: 15px;
+            padding: 10px 12px;
+            background: var(--surface);
             border-radius: 6px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--slate-200);
             font-size: 0.75rem;
             font-weight: 600;
         }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-color { width: 12px; height: 12px; border-radius: 3px; }
 
         .search-container {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--border);
+            padding: 15px;
+            border-bottom: 1px solid var(--slate-200);
         }
 
         .search-input {
             width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #cbd5e1;
+            padding: 10px 14px;
+            border: 1px solid var(--slate-200);
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             outline: none;
+            transition: var(--transition);
+            background: var(--slate-50);
         }
 
         .search-input:focus {
             border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .table-container {
@@ -487,28 +549,34 @@
             overflow-y: auto;
         }
 
+        /* Custom Scrollbar for Sidebar */
+        .table-container::-webkit-scrollbar { width: 6px; }
+        .table-container::-webkit-scrollbar-track { background: var(--slate-50); }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
         .map-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.825rem;
+            font-size: 0.85rem;
         }
 
         .map-table th {
             position: sticky;
             top: 0;
-            background: #f1f5f9;
-            padding: 10px 12px;
-            color: #475569;
+            background: var(--slate-100);
+            padding: 12px 15px;
+            color: var(--slate-700);
             font-weight: 600;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--slate-200);
             z-index: 2;
             text-align: left;
         }
 
         .map-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #f1f5f9;
-            color: #334155;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--slate-50);
+            color: var(--slate-800);
             text-align: left;
         }
 
@@ -526,7 +594,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            margin-right: 6px;
+            margin-right: 8px;
         }
 
         #leaflet-map {
@@ -535,12 +603,22 @@
             z-index: 1;
         }
 
+        /* Leaflet Popup Styling Override */
+        .leaflet-popup-content-wrapper { border-radius: 8px; box-shadow: var(--shadow-lg); }
+        .popup-title {
+            font-weight: 700; font-size: 1.05rem; color: var(--slate-900);
+            margin-bottom: 6px; border-bottom: 2px solid var(--primary); padding-bottom: 6px;
+        }
+        .popup-stat { font-size: 0.85rem; color: var(--slate-700); margin: 4px 0; }
+        .popup-stat strong { color: var(--slate-900); }
+
         /* ==========================================
            7. CONTACT SECTION
            ========================================== */
         .contact {
             padding: 100px 5%;
-            background: var(--surface);
+            background: var(--bg-color);
+            border-top: 1px solid var(--slate-200);
         }
 
         .contact-container {
@@ -552,10 +630,13 @@
         .contact-container h2 {
             font-size: 2.25rem;
             margin-bottom: 1rem;
+            color: var(--slate-900);
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .contact-container p {
-            color: var(--text-muted);
+            color: var(--slate-700);
             margin-bottom: 2.5rem;
         }
 
@@ -564,26 +645,28 @@
             flex-direction: column;
             gap: 1.25rem;
             text-align: left;
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--slate-200);
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
 
         .form-group label {
             font-weight: 600;
             font-size: 0.9rem;
+            color: var(--slate-800);
         }
 
         input, textarea {
             width: 100%;
             padding: 0.875rem 1rem;
             border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            background: var(--bg-color);
-            color: var(--text-main);
+            border: 1px solid var(--slate-200);
+            background: var(--slate-50);
+            color: var(--slate-900);
             font-size: 1rem;
             transition: var(--transition);
         }
@@ -591,6 +674,7 @@
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
+            background: var(--surface);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
@@ -598,7 +682,7 @@
            8. FOOTER
            ========================================== */
         footer {
-            background: var(--text-main);
+            background: var(--slate-900);
             color: #94a3b8;
             text-align: center;
             padding: 2rem 5%;
@@ -606,54 +690,21 @@
         }
 
         /* RESPONSIVE DESIGN */
-        @media (max-width: 900px) {
-            .about-grid {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-            }
-
-            #map-app-wrapper {
-                flex-direction: column;
-                height: 800px;
-            }
-
-            #map-sidebar {
-                width: 100%;
-                height: 350px;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
+        @media (max-width: 950px) {
+            .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            #map-app-wrapper { flex-direction: column; height: 850px; }
+            #map-sidebar { width: 100%; height: 400px; border-right: none; border-bottom: 1px solid var(--slate-200); }
+            
+            .mobile-menu-btn { display: block; }
             .nav-links {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--surface);
-                flex-direction: column;
-                gap: 0;
-                text-align: center;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.4s ease-out;
+                position: absolute; top: 100%; left: 0; width: 100%;
+                background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);
+                flex-direction: column; gap: 0; text-align: center;
+                box-shadow: var(--shadow-md); max-height: 0; overflow: hidden;
+                transition: max-height 0.4s ease-out; border-bottom: 1px solid var(--slate-200);
             }
-
-            .nav-links.active {
-                max-height: 300px;
-            }
-
-            .nav-links a {
-                display: block;
-                padding: 1.25rem;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-            }
+            .nav-links.active { max-height: 300px; }
+            .nav-links a { display: block; padding: 1.25rem; border-bottom: 1px solid var(--slate-200); }
         }
     </style>
 </head>
@@ -675,7 +726,10 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <span class="badge">PMP® Certified Project Manager</span>
+            <span class="badge">
+                <svg style="width:16px; height:16px; margin-right:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                PMP® Certified Project Manager
+            </span>
             <h1>Bridging Strategy, Enterprise Technology & Operational Excellence</h1>
             <p>10+ years leading cross-functional IT, infrastructure, enterprise system implementation, and digital transformation initiatives across large utility and engineering organizations. Specialized in translating complex business goals into structured, high-impact execution.</p>
             <div class="btn-group">
@@ -695,19 +749,19 @@
                     <p>Throughout my career managing infrastructure and enterprise systems serving over one million utility customers, I’ve specialized in bringing structure to ambiguous environments—leveraging Agile/hybrid governance frameworks, process optimization, and AI tools for workflow automation and technical analysis.</p>
                 </div>
                 <div class="skills-grid">
-                    <div class="skill-card">
+                    <div class="skill-card leadership">
                         <h3>Project Leadership</h3>
                         <p>PMP governance, scope/budget management, Agile & hybrid delivery, vendor leadership.</p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card systems">
                         <h3>Enterprise Systems</h3>
                         <p>Enterprise applications, GIS platform integration, data analytics, operational workflows.</p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card process">
                         <h3>Process & Transformation</h3>
                         <p>Operational optimization, digital transformation, workflow automation, risk mitigation.</p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card innovation">
                         <h3>AI & Innovation</h3>
                         <p>Leveraging AI tools for project planning, documentation, workflow acceleration, and analytics.</p>
                     </div>
@@ -727,36 +781,42 @@
             
             <!-- PROJECT 1: GNMS -->
             <article class="project-card">
-                <img src="UT (1).PNG" alt="Geographic Network Monitoring System Dashboard" class="project-image">
+                <div class="project-image-wrapper">
+                    <img src="UT (1).PNG" alt="Geographic Network Monitoring System Dashboard" class="project-image">
+                </div>
                 <div class="project-content">
                     <span class="project-category">Enterprise Systems Deployment</span>
                     <h3 class="project-title">Geographic Network Monitoring System</h3>
                     <p class="project-description">Led the deployment of a real-time GNMS for the Ikeja Electric sub-grid. Integrated a Data Aggregation System (DAS) with meter headend systems to feed ArcGIS via GeoEvent Server. Replaced manual status checks, providing real-time visibility into feeders and distribution transformers, which shortened fault response times by at least 3 hours.</p>
-                    <p class="project-tools"><strong>Domain:</strong> Real-Time Dashboards, GeoEvent Server, Enterprise Integration</p>
+                    <div class="project-tools"><strong>Domain:</strong> Real-Time Dashboards, GeoEvent Server, Enterprise Integration</div>
                     <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View Project Details &rarr;</a>
                 </div>
             </article>
 
             <!-- PROJECT 2: ESRI CASE STUDY -->
             <article class="project-card">
-                <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80" alt="Ikeja Electric Power Availability Case Study" class="project-image">
+                <div class="project-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80" alt="Ikeja Electric Power Availability Case Study" class="project-image">
+                </div>
                 <div class="project-content">
                     <span class="project-category">Published Industry Case Study</span>
                     <h3 class="project-title">Ikeja Electric Power Availability Transformation</h3>
                     <p class="project-description">Featured on Esri.com, this case study details our successful implementation of the Geographic Network Monitoring System at Ikeja Electric. Highlights how integrating real-time spatial data and enterprise software significantly improved power availability, optimized grid management, and transformed technical operations.</p>
-                    <p class="project-tools"><strong>Publication:</strong> Featured by Esri (Electric & Gas Industry)</p>
+                    <div class="project-tools"><strong>Publication:</strong> Featured by Esri (Electric & Gas Industry)</div>
                     <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" target="_blank" class="project-link">Read Official Esri Story &rarr;</a>
                 </div>
             </article>
 
             <!-- PROJECT 3: UNDP UKRAINE -->
             <article class="project-card">
-                <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" class="project-image" style="border:none; overflow:hidden; width:100%;" scrolling="no" title="Effects of Mining on Flooding"></iframe>
+                <div class="project-image-wrapper">
+                    <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" style="width:100%; height:100%; border:none; overflow:hidden;" scrolling="no" title="Effects of Mining on Flooding"></iframe>
+                </div>
                 <div class="project-content">
                     <span class="project-category">International Environmental Analysis</span>
                     <h3 class="project-title">UNDP Ukraine: Just Transition of the Coal Cities</h3>
                     <p class="project-description">Generated GIS-based environmental assessments in the Donbas region for UNDP Ukraine's initiative preparing coal-dependent communities for sustainable economic diversification by 2035. Supported evidence-based planning for decentralized energy installations (87 solar power plants), green financing, and workforce retraining.</p>
-                    <p class="project-tools"><strong>Domain:</strong> UNDP, Spatial Analytics, Policy & Environmental Assessment</p>
+                    <div class="project-tools"><strong>Domain:</strong> UNDP, Spatial Analytics, Policy & Environmental Assessment</div>
                     <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View Full Assessment &rarr;</a>
                 </div>
             </article>
@@ -834,7 +894,7 @@
                     <label for="message">Message</label>
                     <textarea id="message" name="message" rows="5" placeholder="Your message..." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Send Message</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Send Message</button>
             </form>
         </div>
     </section>
@@ -888,9 +948,9 @@
 
         const map = L.map('leaflet-map').setView([50.0, -90.0], 4);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             maxZoom: 18,
-            attribution: '&copy; OpenStreetMap contributors'
+            attribution: '&copy; OpenStreetMap contributors, &copy; CARTO'
         }).addTo(map);
 
         let geojsonLayer;
@@ -956,12 +1016,14 @@
 
                 row.innerHTML = `
                     <td>
-                        <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
-                        <strong>${p.utility}</strong>
-                        <div style="font-size: 0.725rem; color: #64748b; margin-left: 14px;">${p.region}</div>
+                        <div style="display:flex; align-items:center;">
+                            <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
+                            <strong style="color: #1e293b;">${p.utility}</strong>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #64748b; margin-left: 14px; margin-top: 2px;">${p.region}</div>
                     </td>
-                    <td><strong>${p.saidi}</strong> hr</td>
-                    <td><strong>${p.saifi}</strong></td>
+                    <td><strong style="color: #1e293b;">${p.saidi}</strong> hr</td>
+                    <td><strong style="color: #1e293b;">${p.saifi}</strong></td>
                 `;
 
                 row.addEventListener('click', () => selectUtility(p.id));
