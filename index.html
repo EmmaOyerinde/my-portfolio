@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#0f172a">
     <title>Emmanuel Oyerinde, PMP | Enterprise Project Manager</title>
     
     <!-- Modern Font: Inter -->
@@ -13,7 +14,7 @@
 
     <style>
         /* ==========================================
-           1. CSS VARIABLES (PREMIUM PALETTE)
+           1. CSS VARIABLES (PREMIUM ENTERPRISE PALETTE)
            ========================================== */
         :root {
             --slate-50: #f8fafc;
@@ -40,30 +41,43 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* ==========================================
+           2. BASE RESETS & iOS OPTIMIZATIONS
+           ========================================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 80px; /* Adjusts anchor links for fixed nav */
+            scroll-padding-top: 80px; 
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--slate-800);
             line-height: 1.7;
+            overflow-x: hidden;
         }
 
         a { text-decoration: none; color: inherit; }
-        img { max-width: 100%; display: block; }
+        img { max-width: 100%; height: auto; display: block; }
+        
+        /* Stop 300ms tap delay on mobile */
+        button, a, input, textarea { touch-action: manipulation; }
+
+        /* Prevent iOS input auto-zoom by forcing 16px font size on mobile */
+        input, textarea, select {
+            font-size: 16px !important; 
+        }
 
         /* ==========================================
-           2. NAVIGATION (FROSTED GLASS)
+           3. NAVIGATION (FROSTED GLASS)
            ========================================== */
         nav {
             position: fixed;
@@ -97,7 +111,7 @@
 
         .nav-links a {
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--slate-700);
             transition: var(--transition);
         }
@@ -111,13 +125,16 @@
             font-size: 1.75rem;
             cursor: pointer;
             color: var(--slate-900);
+            z-index: 1001; /* Keep above mobile menu */
         }
 
         /* ==========================================
-           3. HERO SECTION (DARK TECH GRID)
+           4. HERO SECTION (DYNAMIC HEIGHT)
            ========================================== */
         .hero {
+            /* Fallback for older browsers, 100dvh fixes iOS Safari bar jump */
             min-height: 100vh;
+            min-height: 100dvh; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -180,19 +197,20 @@
             margin-bottom: 1.5rem;
             letter-spacing: 0.5px;
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+            font-size: clamp(2.25rem, 5vw, 4.5rem);
             font-weight: 800;
-            line-height: 1.1;
+            line-height: 1.15;
             margin-bottom: 1.5rem;
             color: #ffffff;
             letter-spacing: -1px;
         }
 
         .hero p {
-            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+            font-size: clamp(1rem, 2vw, 1.25rem);
             color: #94a3b8;
             margin-bottom: 2.5rem;
             max-width: 800px;
@@ -229,6 +247,7 @@
             color: #ffffff;
             border: 1px solid rgba(255,255,255,0.2);
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .btn-secondary:hover {
@@ -237,7 +256,7 @@
         }
 
         /* ==========================================
-           4. ABOUT & CORE COMPETENCIES
+           5. ABOUT & COMPETENCIES
            ========================================== */
         .about-section {
             padding: 100px 5%;
@@ -255,7 +274,7 @@
         }
 
         .about-text h2 {
-            font-size: 2.25rem;
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
             font-weight: 800;
             margin-bottom: 1.5rem;
             color: var(--slate-900);
@@ -274,15 +293,12 @@
             gap: 1.5rem;
         }
 
-        /* COLOR-CODED COMPETENCY CARDS (Premium Style) */
         .skill-card {
             background: var(--surface);
             padding: 1.75rem;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
         }
 
         .skill-card:hover {
@@ -290,71 +306,37 @@
             box-shadow: var(--shadow-lg);
         }
 
-        .skill-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+        .skill-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .skill-card p { font-size: 0.9rem; line-height: 1.6; color: var(--slate-700); }
 
-        .skill-card p {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: var(--slate-700);
-        }
-
-        /* 1. Project Leadership (Indigo) */
-        .skill-card.leadership {
-            background: #fcfdff;
-            border: 1px solid #e0e7ff;
-            border-top: 4px solid #4f46e5;
-        }
+        .skill-card.leadership { background: #fcfdff; border: 1px solid #e0e7ff; border-top: 4px solid #4f46e5; }
         .skill-card.leadership h3 { color: #3730a3; }
-
-        /* 2. Enterprise Systems (Royal Blue) */
-        .skill-card.systems {
-            background: #f8fafc;
-            border: 1px solid #dbeafe;
-            border-top: 4px solid #2563eb;
-        }
+        
+        .skill-card.systems { background: #f8fafc; border: 1px solid #dbeafe; border-top: 4px solid #2563eb; }
         .skill-card.systems h3 { color: #1e40af; }
-
-        /* 3. Process & Transformation (Emerald Green) */
-        .skill-card.process {
-            background: #f2fbf7;
-            border: 1px solid #d1fae5;
-            border-top: 4px solid #10b981;
-        }
+        
+        .skill-card.process { background: #f2fbf7; border: 1px solid #d1fae5; border-top: 4px solid #10b981; }
         .skill-card.process h3 { color: #065f46; }
-
-        /* 4. AI & Innovation (Violet) */
-        .skill-card.innovation {
-            background: #faf9ff;
-            border: 1px solid #ede9fe;
-            border-top: 4px solid #8b5cf6;
-        }
+        
+        .skill-card.innovation { background: #faf9ff; border: 1px solid #ede9fe; border-top: 4px solid #8b5cf6; }
         .skill-card.innovation h3 { color: #5b21b6; }
 
         /* ==========================================
-           5. PORTFOLIO SECTION
+           6. PORTFOLIO SECTION
            ========================================== */
         .portfolio {
             padding: 100px 5%;
             background: var(--bg-color);
         }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
+        .section-header { text-align: center; margin-bottom: 4rem; }
         .section-header h2 {
-            font-size: 2.25rem;
+            font-size: clamp(2rem, 4vw, 2.5rem);
             font-weight: 800;
             color: var(--slate-900);
             margin-bottom: 1rem;
             letter-spacing: -0.5px;
         }
-
         .section-header p {
             color: var(--slate-700);
             font-size: 1.1rem;
@@ -364,7 +346,7 @@
 
         .portfolio-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2.5rem;
             max-width: 1200px;
             margin: 0 auto;
@@ -391,6 +373,9 @@
             height: 240px;
             overflow: hidden;
             border-bottom: 1px solid var(--slate-200);
+            position: relative;
+            /* iOS Fix for iframes/PDFs to scroll properly */
+            -webkit-overflow-scrolling: touch; 
         }
 
         .project-image {
@@ -401,9 +386,7 @@
             transition: transform 0.5s ease;
         }
 
-        .project-card:hover .project-image {
-            transform: scale(1.05); /* Smooth image zoom on hover */
-        }
+        .project-card:hover .project-image { transform: scale(1.05); }
 
         .project-content {
             padding: 2rem;
@@ -459,7 +442,7 @@
         .project-link:hover { color: var(--primary-hover); }
 
         /* ==========================================
-           6. LIVE INTERACTIVE MAP SECTION
+           7. LIVE MAP SECTION (RESPONSIVE FLEX)
            ========================================== */
         .map-section {
             padding: 100px 5%;
@@ -469,9 +452,10 @@
 
         #map-app-wrapper {
             max-width: 1200px;
-            height: 650px;
+            height: 700px;
             margin: 0 auto;
             display: flex;
+            flex-direction: row;
             border-radius: var(--radius-lg);
             overflow: hidden;
             border: 1px solid var(--slate-200);
@@ -494,18 +478,8 @@
             background: var(--slate-50);
         }
 
-        .map-sidebar-header h3 {
-            font-size: 1.15rem;
-            color: var(--slate-900);
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .map-sidebar-header p {
-            font-size: 0.85rem;
-            color: var(--slate-700);
-            line-height: 1.4;
-        }
+        .map-sidebar-header h3 { font-size: 1.15rem; color: var(--slate-900); font-weight: 700; margin-bottom: 6px; }
+        .map-sidebar-header p { font-size: 0.85rem; color: var(--slate-700); line-height: 1.4; }
 
         .legend-box {
             display: flex;
@@ -522,17 +496,12 @@
         .legend-item { display: flex; align-items: center; gap: 6px; }
         .legend-color { width: 12px; height: 12px; border-radius: 3px; }
 
-        .search-container {
-            padding: 15px;
-            border-bottom: 1px solid var(--slate-200);
-        }
-
+        .search-container { padding: 15px; border-bottom: 1px solid var(--slate-200); }
         .search-input {
             width: 100%;
             padding: 10px 14px;
             border: 1px solid var(--slate-200);
             border-radius: 6px;
-            font-size: 0.9rem;
             outline: none;
             transition: var(--transition);
             background: var(--slate-50);
@@ -544,76 +513,33 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .table-container {
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        /* Custom Scrollbar for Sidebar */
+        .table-container { flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .table-container::-webkit-scrollbar { width: 6px; }
         .table-container::-webkit-scrollbar-track { background: var(--slate-50); }
         .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .map-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
+        .map-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .map-table th {
-            position: sticky;
-            top: 0;
-            background: var(--slate-100);
-            padding: 12px 15px;
-            color: var(--slate-700);
-            font-weight: 600;
-            border-bottom: 1px solid var(--slate-200);
-            z-index: 2;
-            text-align: left;
+            position: sticky; top: 0; background: var(--slate-100);
+            padding: 12px 15px; color: var(--slate-700); font-weight: 600;
+            border-bottom: 1px solid var(--slate-200); z-index: 2; text-align: left;
         }
+        .map-table td { padding: 12px 15px; border-bottom: 1px solid var(--slate-50); color: var(--slate-800); text-align: left; }
+        
+        tr.utility-row { cursor: pointer; transition: background 0.2s; }
+        tr.utility-row:hover, tr.utility-row.active { background: #eff6ff; }
+        .status-badge { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
 
-        .map-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--slate-50);
-            color: var(--slate-800);
-            text-align: left;
-        }
+        #leaflet-map { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; }
 
-        tr.utility-row {
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        tr.utility-row:hover, tr.utility-row.active {
-            background: #eff6ff;
-        }
-
-        .status-badge {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        #leaflet-map {
-            flex-grow: 1;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* Leaflet Popup Styling Override */
         .leaflet-popup-content-wrapper { border-radius: 8px; box-shadow: var(--shadow-lg); }
-        .popup-title {
-            font-weight: 700; font-size: 1.05rem; color: var(--slate-900);
-            margin-bottom: 6px; border-bottom: 2px solid var(--primary); padding-bottom: 6px;
-        }
+        .popup-title { font-weight: 700; font-size: 1.05rem; color: var(--slate-900); margin-bottom: 6px; border-bottom: 2px solid var(--primary); padding-bottom: 6px; }
         .popup-stat { font-size: 0.85rem; color: var(--slate-700); margin: 4px 0; }
         .popup-stat strong { color: var(--slate-900); }
 
         /* ==========================================
-           7. CONTACT SECTION
+           8. CONTACT SECTION
            ========================================== */
         .contact {
             padding: 100px 5%;
@@ -621,90 +547,58 @@
             border-top: 1px solid var(--slate-200);
         }
 
-        .contact-container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .contact-container h2 {
-            font-size: 2.25rem;
-            margin-bottom: 1rem;
-            color: var(--slate-900);
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .contact-container p {
-            color: var(--slate-700);
-            margin-bottom: 2.5rem;
-        }
+        .contact-container { max-width: 600px; margin: 0 auto; text-align: center; }
+        .contact-container h2 { font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 1rem; color: var(--slate-900); font-weight: 800; letter-spacing: -0.5px; }
+        .contact-container p { color: var(--slate-700); margin-bottom: 2.5rem; }
 
         .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-            text-align: left;
-            background: var(--surface);
-            padding: 2.5rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--slate-200);
+            display: flex; flex-direction: column; gap: 1.25rem; text-align: left;
+            background: var(--surface); padding: 2.5rem; border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md); border: 1px solid var(--slate-200);
         }
 
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-
-        .form-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--slate-800);
-        }
+        .form-group label { font-weight: 600; font-size: 0.9rem; color: var(--slate-800); }
 
         input, textarea {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--slate-200);
-            background: var(--slate-50);
-            color: var(--slate-900);
-            font-size: 1rem;
-            transition: var(--transition);
+            width: 100%; padding: 0.875rem 1rem; border-radius: 8px;
+            border: 1px solid var(--slate-200); background: var(--slate-50);
+            color: var(--slate-900); transition: var(--transition);
         }
-
         input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: var(--surface);
+            outline: none; border-color: var(--primary); background: var(--surface);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* ==========================================
-           8. FOOTER
-           ========================================== */
-        footer {
-            background: var(--slate-900);
-            color: #94a3b8;
-            text-align: center;
-            padding: 2rem 5%;
-            font-size: 0.9rem;
-        }
+        footer { background: var(--slate-900); color: #94a3b8; text-align: center; padding: 2rem 5%; font-size: 0.9rem; }
 
-        /* RESPONSIVE DESIGN */
-        @media (max-width: 950px) {
+        /* ==========================================
+           9. MOBILE & iOS RESPONSIVE MEDIA QUERIES
+           ========================================== */
+        @media (max-width: 992px) {
             .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-            #map-app-wrapper { flex-direction: column; height: 850px; }
+            .skills-grid { grid-template-columns: 1fr; }
+            
+            /* Responsive Map Restructure for Mobile */
+            #map-app-wrapper { flex-direction: column; height: auto; }
             #map-sidebar { width: 100%; height: 400px; border-right: none; border-bottom: 1px solid var(--slate-200); }
+            #leaflet-map { height: 500px; }
             
             .mobile-menu-btn { display: block; }
+            
+            /* Smooth iOS Friendly Mobile Menu Transition */
             .nav-links {
                 position: absolute; top: 100%; left: 0; width: 100%;
-                background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);
+                background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
                 flex-direction: column; gap: 0; text-align: center;
-                box-shadow: var(--shadow-md); max-height: 0; overflow: hidden;
-                transition: max-height 0.4s ease-out; border-bottom: 1px solid var(--slate-200);
+                box-shadow: var(--shadow-md); border-bottom: 1px solid var(--slate-200);
+                opacity: 0; visibility: hidden; transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
             }
-            .nav-links.active { max-height: 300px; }
-            .nav-links a { display: block; padding: 1.25rem; border-bottom: 1px solid var(--slate-200); }
+            .nav-links.active { opacity: 1; visibility: visible; transform: translateY(0); }
+            .nav-links a { display: block; padding: 1.5rem; border-bottom: 1px solid var(--slate-200); }
+            
+            .contact-form { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -720,7 +614,7 @@
             <li><a href="#grid-map">Analytics Map</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
-        <button class="mobile-menu-btn" id="menu-btn">☰</button>
+        <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
     </nav>
 
     <!-- Hero Section -->
@@ -739,7 +633,7 @@
         </div>
     </section>
 
-    <!-- About & Competencies Section -->
+    <!-- About Section -->
     <section class="about-section" id="about">
         <div class="about-container">
             <div class="about-grid">
@@ -778,49 +672,47 @@
         </div>
 
         <div class="portfolio-grid">
-            
-            <!-- PROJECT 1: GNMS -->
+            <!-- PROJECT 1 -->
             <article class="project-card">
                 <div class="project-image-wrapper">
-                    <img src="UT (1).PNG" alt="Geographic Network Monitoring System Dashboard" class="project-image">
+                    <img src="UT (1).PNG" alt="Geographic Network Monitoring System Dashboard" class="project-image" loading="lazy">
                 </div>
                 <div class="project-content">
                     <span class="project-category">Enterprise Systems Deployment</span>
                     <h3 class="project-title">Geographic Network Monitoring System</h3>
                     <p class="project-description">Led the deployment of a real-time GNMS for the Ikeja Electric sub-grid. Integrated a Data Aggregation System (DAS) with meter headend systems to feed ArcGIS via GeoEvent Server. Replaced manual status checks, providing real-time visibility into feeders and distribution transformers, which shortened fault response times by at least 3 hours.</p>
                     <div class="project-tools"><strong>Domain:</strong> Real-Time Dashboards, GeoEvent Server, Enterprise Integration</div>
-                    <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View Project Details &rarr;</a>
+                    <a href="https://www.spatialnode.net/emmanu" target="_blank" rel="noopener noreferrer" class="project-link">View Project Details &rarr;</a>
                 </div>
             </article>
 
-            <!-- PROJECT 2: ESRI CASE STUDY -->
+            <!-- PROJECT 2 -->
             <article class="project-card">
                 <div class="project-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80" alt="Ikeja Electric Power Availability Case Study" class="project-image">
+                    <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80" alt="Electric Power Case Study" class="project-image" loading="lazy">
                 </div>
                 <div class="project-content">
                     <span class="project-category">Published Industry Case Study</span>
                     <h3 class="project-title">Ikeja Electric Power Availability Transformation</h3>
                     <p class="project-description">Featured on Esri.com, this case study details our successful implementation of the Geographic Network Monitoring System at Ikeja Electric. Highlights how integrating real-time spatial data and enterprise software significantly improved power availability, optimized grid management, and transformed technical operations.</p>
                     <div class="project-tools"><strong>Publication:</strong> Featured by Esri (Electric & Gas Industry)</div>
-                    <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" target="_blank" class="project-link">Read Official Esri Story &rarr;</a>
+                    <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" target="_blank" rel="noopener noreferrer" class="project-link">Read Official Esri Story &rarr;</a>
                 </div>
             </article>
 
-            <!-- PROJECT 3: UNDP UKRAINE -->
+            <!-- PROJECT 3 -->
             <article class="project-card">
                 <div class="project-image-wrapper">
-                    <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" style="width:100%; height:100%; border:none; overflow:hidden;" scrolling="no" title="Effects of Mining on Flooding"></iframe>
+                    <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" style="width:100%; height:100%; border:none;" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy"></iframe>
                 </div>
                 <div class="project-content">
                     <span class="project-category">International Environmental Analysis</span>
                     <h3 class="project-title">UNDP Ukraine: Just Transition of the Coal Cities</h3>
                     <p class="project-description">Generated GIS-based environmental assessments in the Donbas region for UNDP Ukraine's initiative preparing coal-dependent communities for sustainable economic diversification by 2035. Supported evidence-based planning for decentralized energy installations (87 solar power plants), green financing, and workforce retraining.</p>
                     <div class="project-tools"><strong>Domain:</strong> UNDP, Spatial Analytics, Policy & Environmental Assessment</div>
-                    <a href="https://www.spatialnode.net/emmanu" target="_blank" class="project-link">View Full Assessment &rarr;</a>
+                    <a href="https://www.spatialnode.net/emmanu" target="_blank" rel="noopener noreferrer" class="project-link">View Full Assessment &rarr;</a>
                 </div>
             </article>
-
         </div>
     </section>
 
@@ -838,23 +730,14 @@
                     <p>Select a utility to focus on its territory bounds and performance metrics.</p>
                     
                     <div class="legend-box">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #10b981;"></div>
-                            <span>&lt; 1.0 hr</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #f59e0b;"></div>
-                            <span>1.0 - 1.8 hrs</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #ef4444;"></div>
-                            <span>&gt; 1.8 hrs</span>
-                        </div>
+                        <div class="legend-item"><div class="legend-color" style="background: #10b981;"></div><span>&lt; 1.0 hr</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #f59e0b;"></div><span>1.0 - 1.8 hrs</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #ef4444;"></div><span>&gt; 1.8 hrs</span></div>
                     </div>
                 </div>
 
                 <div class="search-container">
-                    <input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region...">
+                    <input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region..." aria-label="Search Utility">
                 </div>
 
                 <div class="table-container">
@@ -871,6 +754,7 @@
                 </div>
             </div>
 
+            <!-- Leaflet Target -->
             <div id="leaflet-map"></div>
         </div>
     </section>
@@ -907,170 +791,173 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- JavaScript -->
+    <!-- Main Logic -->
     <script>
-        // MOBILE MENU
-        const menuBtn = document.getElementById('menu-btn');
-        const navLinks = document.getElementById('nav-links');
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- MOBILE MENU LOGIC ---
+            const menuBtn = document.getElementById('menu-btn');
+            const navLinks = document.getElementById('nav-links');
 
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
-        });
-
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuBtn.innerHTML = '☰';
+            menuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
             });
-        });
 
-        // MAP DATA & LOGIC
-        const utilitiesGeoJSON = {
-            "type": "FeatureCollection",
-            "features": [
-                { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.90], [-81.38, 43.08], [-81.12, 43.08], [-81.12, 42.90], [-81.38, 42.90]]] } },
-                { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.63, 43.58], [-79.52, 43.75], [-79.12, 43.85], [-79.15, 43.65], [-79.63, 43.58]]] } },
-                { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.10, 45.15], [-75.90, 45.50], [-75.30, 45.55], [-75.40, 45.10], [-76.10, 45.15]]] } },
-                { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton, ON", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.00, 43.15], [-79.80, 43.70], [-79.55, 43.60], [-79.75, 43.10], [-80.00, 43.15]]] } },
-                { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.30, 50.85], [-114.30, 51.25], [-113.85, 51.25], [-113.85, 50.85], [-114.30, 50.85]]] } },
-                { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 }, "geometry": { "type": "Polygon", "coordinates": [[[-113.75, 53.35], [-113.75, 53.70], [-113.25, 53.70], [-113.25, 53.35], [-113.75, 53.35]]] } },
-                { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro (Metro Region)", "region": "SW British Columbia", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-123.30, 49.00], [-123.30, 49.50], [-122.30, 49.50], [-122.30, 49.00], [-123.30, 49.00]]] } },
-                { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec (Greater Mtl)", "region": "Montreal Region, QC", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-74.00, 45.30], [-73.90, 45.70], [-73.30, 45.70], [-73.40, 45.30], [-74.00, 45.30]]] } },
-                { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia Region", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 44.20], [-64.20, 45.20], [-63.00, 45.20], [-63.20, 44.20], [-64.50, 44.20]]] } },
-                { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower (South)", "region": "Southern Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-105.00, 50.00], [-105.00, 51.00], [-103.50, 51.00], [-103.50, 50.00], [-105.00, 50.00]]] } }
-            ]
-        };
-
-        function getColor(saidi) {
-            return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444';
-        }
-
-        const map = L.map('leaflet-map').setView([50.0, -90.0], 4);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 18,
-            attribution: '&copy; OpenStreetMap contributors, &copy; CARTO'
-        }).addTo(map);
-
-        let geojsonLayer;
-        const layerMap = {};
-
-        function style(feature) {
-            return {
-                fillColor: getColor(feature.properties.saidi),
-                weight: 2,
-                opacity: 0.9,
-                color: getColor(feature.properties.saidi),
-                fillOpacity: 0.45
-            };
-        }
-
-        function highlightFeature(e) {
-            const layer = e.target;
-            layer.setStyle({ weight: 4, color: '#1e293b', fillOpacity: 0.75 });
-            layer.bringToFront();
-            const row = document.getElementById(`row-${layer.feature.properties.id}`);
-            if (row) row.classList.add('active');
-        }
-
-        function resetHighlight(e) {
-            const layer = e.target;
-            geojsonLayer.resetStyle(layer);
-            const row = document.getElementById(`row-${layer.feature.properties.id}`);
-            if (row) row.classList.remove('active');
-        }
-
-        function onEachFeature(feature, layer) {
-            layerMap[feature.properties.id] = layer;
-            const p = feature.properties;
-            const popupContent = `
-                <div class="popup-title">${p.utility}</div>
-                <div class="popup-stat"><strong>Region:</strong> ${p.region}</div>
-                <div class="popup-stat"><strong>SAIDI:</strong> ${p.saidi} hrs/yr</div>
-                <div class="popup-stat"><strong>SAIFI:</strong> ${p.saifi} outages/yr</div>
-            `;
-            layer.bindPopup(popupContent);
-
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: () => selectUtility(p.id)
-            });
-        }
-
-        geojsonLayer = L.geoJSON(utilitiesGeoJSON, {
-            style: style,
-            onEachFeature: onEachFeature
-        }).addTo(map);
-
-        const tableBody = document.getElementById('utility-table-body');
-
-        function buildTable(features) {
-            tableBody.innerHTML = '';
-            features.forEach(f => {
-                const p = f.properties;
-                const row = document.createElement('tr');
-                row.className = 'utility-row';
-                row.id = `row-${p.id}`;
-
-                row.innerHTML = `
-                    <td>
-                        <div style="display:flex; align-items:center;">
-                            <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
-                            <strong style="color: #1e293b;">${p.utility}</strong>
-                        </div>
-                        <div style="font-size: 0.75rem; color: #64748b; margin-left: 14px; margin-top: 2px;">${p.region}</div>
-                    </td>
-                    <td><strong style="color: #1e293b;">${p.saidi}</strong> hr</td>
-                    <td><strong style="color: #1e293b;">${p.saifi}</strong></td>
-                `;
-
-                row.addEventListener('click', () => selectUtility(p.id));
-
-                row.addEventListener('mouseenter', () => {
-                    const layer = layerMap[p.id];
-                    if (layer) highlightFeature({ target: layer });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    menuBtn.innerHTML = '☰';
                 });
-
-                row.addEventListener('mouseleave', () => {
-                    const layer = layerMap[p.id];
-                    if (layer) resetHighlight({ target: layer });
-                });
-
-                tableBody.appendChild(row);
             });
-        }
 
-        buildTable(utilitiesGeoJSON.features);
-
-        function selectUtility(id) {
-            const layer = layerMap[id];
-            if (!layer) return;
-
-            map.fitBounds(layer.getBounds(), { padding: [50, 50], maxZoom: 9 });
-            layer.openPopup();
-
-            document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
-            const activeRow = document.getElementById(`row-${id}`);
-            if (activeRow) {
-                activeRow.classList.add('active');
-                activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filteredFeatures = utilitiesGeoJSON.features.filter(f => 
-                f.properties.utility.toLowerCase().includes(query) ||
-                f.properties.region.toLowerCase().includes(query)
-            );
-
-            buildTable(filteredFeatures);
-            geojsonLayer.clearLayers();
-            geojsonLayer.addData({
+            // --- LEAFLET MAP LOGIC ---
+            const utilitiesGeoJSON = {
                 "type": "FeatureCollection",
-                "features": filteredFeatures
+                "features": [
+                    { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.90], [-81.38, 43.08], [-81.12, 43.08], [-81.12, 42.90], [-81.38, 42.90]]] } },
+                    { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.63, 43.58], [-79.52, 43.75], [-79.12, 43.85], [-79.15, 43.65], [-79.63, 43.58]]] } },
+                    { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.10, 45.15], [-75.90, 45.50], [-75.30, 45.55], [-75.40, 45.10], [-76.10, 45.15]]] } },
+                    { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton, ON", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.00, 43.15], [-79.80, 43.70], [-79.55, 43.60], [-79.75, 43.10], [-80.00, 43.15]]] } },
+                    { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.30, 50.85], [-114.30, 51.25], [-113.85, 51.25], [-113.85, 50.85], [-114.30, 50.85]]] } },
+                    { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 }, "geometry": { "type": "Polygon", "coordinates": [[[-113.75, 53.35], [-113.75, 53.70], [-113.25, 53.70], [-113.25, 53.35], [-113.75, 53.35]]] } },
+                    { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro (Metro Region)", "region": "SW British Columbia", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-123.30, 49.00], [-123.30, 49.50], [-122.30, 49.50], [-122.30, 49.00], [-123.30, 49.00]]] } },
+                    { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec (Greater Mtl)", "region": "Montreal Region, QC", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-74.00, 45.30], [-73.90, 45.70], [-73.30, 45.70], [-73.40, 45.30], [-74.00, 45.30]]] } },
+                    { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia Region", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 44.20], [-64.20, 45.20], [-63.00, 45.20], [-63.20, 44.20], [-64.50, 44.20]]] } },
+                    { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower (South)", "region": "Southern Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-105.00, 50.00], [-105.00, 51.00], [-103.50, 51.00], [-103.50, 50.00], [-105.00, 50.00]]] } }
+                ]
+            };
+
+            function getColor(saidi) {
+                return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444';
+            }
+
+            const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([50.0, -90.0], 4);
+            
+            // Allow map to fix its layout when flexbox resizes it on mobile
+            setTimeout(() => { map.invalidateSize(); }, 500);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 18,
+                attribution: '&copy; OpenStreetMap contributors, &copy; CARTO'
+            }).addTo(map);
+
+            let geojsonLayer;
+            const layerMap = {};
+
+            function style(feature) {
+                return {
+                    fillColor: getColor(feature.properties.saidi),
+                    weight: 2,
+                    opacity: 0.9,
+                    color: getColor(feature.properties.saidi),
+                    fillOpacity: 0.45
+                };
+            }
+
+            function highlightFeature(e) {
+                const layer = e.target;
+                layer.setStyle({ weight: 4, color: '#1e293b', fillOpacity: 0.75 });
+                layer.bringToFront();
+                const row = document.getElementById(`row-${layer.feature.properties.id}`);
+                if (row) row.classList.add('active');
+            }
+
+            function resetHighlight(e) {
+                const layer = e.target;
+                geojsonLayer.resetStyle(layer);
+                const row = document.getElementById(`row-${layer.feature.properties.id}`);
+                if (row) row.classList.remove('active');
+            }
+
+            function onEachFeature(feature, layer) {
+                layerMap[feature.properties.id] = layer;
+                const p = feature.properties;
+                const popupContent = `
+                    <div class="popup-title">${p.utility}</div>
+                    <div class="popup-stat"><strong>Region:</strong> ${p.region}</div>
+                    <div class="popup-stat"><strong>SAIDI:</strong> ${p.saidi} hrs/yr</div>
+                    <div class="popup-stat"><strong>SAIFI:</strong> ${p.saifi} outages/yr</div>
+                `;
+                layer.bindPopup(popupContent);
+
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    click: () => selectUtility(p.id)
+                });
+            }
+
+            geojsonLayer = L.geoJSON(utilitiesGeoJSON, {
+                style: style,
+                onEachFeature: onEachFeature
+            }).addTo(map);
+
+            const tableBody = document.getElementById('utility-table-body');
+
+            function buildTable(features) {
+                tableBody.innerHTML = '';
+                features.forEach(f => {
+                    const p = f.properties;
+                    const row = document.createElement('tr');
+                    row.className = 'utility-row';
+                    row.id = `row-${p.id}`;
+
+                    row.innerHTML = `
+                        <td>
+                            <div style="display:flex; align-items:center;">
+                                <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
+                                <strong style="color: #1e293b;">${p.utility}</strong>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #64748b; margin-left: 14px; margin-top: 2px;">${p.region}</div>
+                        </td>
+                        <td><strong style="color: #1e293b;">${p.saidi}</strong> hr</td>
+                        <td><strong style="color: #1e293b;">${p.saifi}</strong></td>
+                    `;
+
+                    row.addEventListener('click', () => selectUtility(p.id));
+                    row.addEventListener('mouseenter', () => { if(layerMap[p.id]) highlightFeature({ target: layerMap[p.id] }); });
+                    row.addEventListener('mouseleave', () => { if(layerMap[p.id]) resetHighlight({ target: layerMap[p.id] }); });
+
+                    tableBody.appendChild(row);
+                });
+            }
+
+            buildTable(utilitiesGeoJSON.features);
+
+            function selectUtility(id) {
+                const layer = layerMap[id];
+                if (!layer) return;
+
+                map.fitBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 9 });
+                layer.openPopup();
+
+                document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
+                const activeRow = document.getElementById(`row-${id}`);
+                if (activeRow) {
+                    activeRow.classList.add('active');
+                    // Mobile friendly scroll behavior
+                    activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const filteredFeatures = utilitiesGeoJSON.features.filter(f => 
+                    f.properties.utility.toLowerCase().includes(query) ||
+                    f.properties.region.toLowerCase().includes(query)
+                );
+
+                buildTable(filteredFeatures);
+                geojsonLayer.clearLayers();
+                geojsonLayer.addData({
+                    "type": "FeatureCollection",
+                    "features": filteredFeatures
+                });
+            });
+            
+            // Re-calculate map dimensions properly on device orientation change
+            window.addEventListener('resize', () => {
+                map.invalidateSize();
             });
         });
     </script>
