@@ -151,7 +151,6 @@
             overflow: hidden;
         }
 
-        /* Subtle animated topography/grid line */
         .hero::before {
             content: '';
             position: absolute;
@@ -260,7 +259,7 @@
         }
 
         /* ==========================================
-           5. ABOUT & COMPETENCIES (REWRITTEN)
+           5. ABOUT & COMPETENCIES
            ========================================== */
         .about-section {
             padding: 120px 5%;
@@ -299,38 +298,64 @@
             gap: 1.5rem;
         }
 
-        /* Unified Premium Skill Cards */
+        /* Premium Tinted Skill Cards */
         .skill-card {
-            background: var(--bg-surface);
             padding: 2rem;
             border-radius: var(--radius-md);
-            border: 1px solid var(--zinc-200);
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
             position: relative;
             overflow: hidden;
         }
 
-        .skill-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: var(--accent);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
         .skill-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
-            border-color: transparent;
         }
 
-        .skill-card:hover::before { transform: scaleX(1); }
+        .skill-card h3 { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            margin-bottom: 0.75rem; 
+        }
+        
+        .skill-card p { 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            color: var(--text-muted); 
+        }
 
-        .skill-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-main); }
-        .skill-card p { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); }
+        /* 1. Leadership (Cobalt Blue) */
+        .card-leadership {
+            background: rgba(37, 99, 235, 0.03);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            border-left: 4px solid #2563eb;
+        }
+        .card-leadership h3 { color: #1d4ed8; }
+
+        /* 2. Systems (Deep Indigo) */
+        .card-systems {
+            background: rgba(79, 70, 229, 0.03);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            border-left: 4px solid #4f46e5;
+        }
+        .card-systems h3 { color: #4338ca; }
+
+        /* 3. Process (Emerald) */
+        .card-process {
+            background: rgba(16, 185, 129, 0.03);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+        }
+        .card-process h3 { color: #047857; }
+
+        /* 4. Innovation (Rich Violet) */
+        .card-innovation {
+            background: rgba(139, 92, 246, 0.03);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-left: 4px solid #8b5cf6;
+        }
+        .card-innovation h3 { color: #6d28d9; }
 
         /* ==========================================
            6. PORTFOLIO SECTION
@@ -632,30 +657,30 @@
         </div>
     </section>
 
-    <!-- About Section (Authentic Executive Rewrite) -->
+    <!-- About Section -->
     <section class="about-section" id="about">
         <div class="about-container">
             <div class="about-grid">
                 <div class="about-text">
                     <h2>Enterprise Leadership & Delivery</h2>
-                    <p>At <strong>London Hydro</strong>, my work goes beyond standard project management—it’s about ensuring the critical systems that power our city run flawlessly. I bridge the gap between complex technical execution and high-level business strategy, guiding enterprise IT, GIS, and operational teams through high-stakes deployments.</p>
+                    <p>At <strong>London Hydro</strong>, my role extends beyond standard project management to ensure the critical systems powering our city run flawlessly. I bridge the gap between complex technical execution and high-level business strategy, guiding enterprise IT, GIS, and operational teams through high-stakes deployments.</p>
                     <p>Whether negotiating multimillion-dollar vendor contracts, aligning executive stakeholders, or untangling legacy system migrations, my focus is entirely on delivering secure, scalable outcomes.</p>
-                    <p>Having spent over a decade in the utility sector—supporting infrastructure that serves over a million customers—I know firsthand how quickly technical debt and operational silos can derail an initiative. I don’t just implement frameworks; I build pragmatic governance structures that actually work in the real world, blending traditional project management with Agile execution. Most recently, I’ve been pioneering the integration of AI to cut through administrative friction, automate workflows, and give engineering teams more time to do what they do best: innovate.</p>
+                    <p>I have spent over a decade in the utility sector managing infrastructure that serves more than a million customers. This background has shown me firsthand how quickly technical debt and operational silos can derail an initiative. Rather than simply rolling out rigid frameworks, I build pragmatic governance structures that actually work in the real world by blending traditional project management with Agile execution. Most recently, I have been integrating AI to cut through administrative friction and automate workflows. This gives our engineering teams the time and space to do what they do best: innovate.</p>
                 </div>
                 <div class="skills-grid">
-                    <div class="skill-card">
+                    <div class="skill-card card-leadership">
                         <h3>Project Leadership</h3>
                         <p>Executive governance, scope/budget management, Agile & hybrid delivery frameworks, and strategic vendor leadership.</p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card card-systems">
                         <h3>Enterprise Systems</h3>
                         <p>Full-lifecycle deployment of enterprise applications, GIS platform integrations, and real-time operational workflows.</p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card card-process">
                         <h3>Process & Transformation</h3>
                         <p>Operational optimization, rigorous risk mitigation, digital transformation, and legacy system modernization.</p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card card-innovation">
                         <h3>AI & Innovation</h3>
                         <p>Leveraging advanced AI tools for rapid project planning, documentation, workflow acceleration, and technical analytics.</p>
                     </div>
