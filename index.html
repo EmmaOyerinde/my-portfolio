@@ -6,8 +6,11 @@
     <title>Emmanuel Oyerinde | GIS & Spatial Portfolio</title>
     
     <!-- Modern Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <style>
         /* ==========================================
            1. CSS VARIABLES & BASE STYLES
@@ -57,7 +60,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
             padding: 1.25rem 5%;
             display: flex;
@@ -115,36 +118,27 @@
             align-items: flex-start;
             padding: 0 10%;
             position: relative;
-            background-color: #0b1120; /* Deep space/tech dark background */
+            background-color: #0b1120;
             overflow: hidden;
         }
 
-        /* The Animated 3D Spatial Grid */
         .hero::before {
             content: '';
             position: absolute;
-            top: 0; 
-            left: -50%; 
-            width: 200%; 
-            height: 200%;
+            top: 0; left: -50%; width: 200%; height: 200%;
             background-image: 
                 linear-gradient(rgba(37, 99, 235, 0.25) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(37, 99, 235, 0.25) 1px, transparent 1px);
             background-size: 50px 50px;
-            /* Tilts the grid in 3D space */
             transform: perspective(1000px) rotateX(60deg) translateY(-100px) translateZ(-200px);
             animation: gridMove 5s linear infinite;
             z-index: 1;
         }
 
-        /* Radial gradient overlay to fade the edges of the grid into darkness */
         .hero::after {
             content: '';
             position: absolute;
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, transparent 0%, #0b1120 70%);
             z-index: 2;
         }
@@ -154,7 +148,6 @@
             100% { transform: perspective(1000px) rotateX(60deg) translateY(50px) translateZ(-200px); }
         }
 
-        /* Wrap content to sit above the animated background */
         .hero-content {
             position: relative;
             z-index: 3;
@@ -166,13 +159,12 @@
             line-height: 1.1;
             margin-bottom: 1.5rem;
             max-width: 800px;
-            letter-spacing: -1px;
-            color: #ffffff; /* White text for contrast */
+            color: #ffffff;
         }
 
         .hero p {
             font-size: clamp(1.1rem, 2vw, 1.25rem);
-            color: #94a3b8; /* Slate gray */
+            color: #94a3b8;
             max-width: 700px;
             margin-bottom: 2.5rem;
         }
@@ -191,7 +183,7 @@
         }
 
         .hero .btn {
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); /* Adds a subtle tech glow to the button */
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
         }
 
         .btn:hover {
@@ -237,7 +229,7 @@
             background: var(--surface);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             transition: var(--transition);
             border: 1px solid var(--border);
             display: flex;
@@ -246,7 +238,7 @@
 
         .project-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .project-image {
@@ -309,12 +301,160 @@
         }
 
         /* ==========================================
-           5. CONTACT SECTION
+           5. LIVE INTERACTIVE MAP SECTION
+           ========================================== */
+        .map-section {
+            padding: 80px 5%;
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        #map-app-wrapper {
+            max-width: 1200px;
+            height: 650px;
+            margin: 0 auto;
+            display: flex;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+        }
+
+        /* SIDEBAR TABLE STYLES */
+        #map-sidebar {
+            width: 360px;
+            background: #ffffff;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .map-sidebar-header {
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+            background: #f8fafc;
+        }
+
+        .map-sidebar-header h3 {
+            font-size: 1.1rem;
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .map-sidebar-header p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* LEGEND */
+        .legend-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: #ffffff;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* SEARCH INPUT */
+        .search-container {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* TABLE CONTAINER */
+        .table-container {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .map-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.825rem;
+        }
+
+        .map-table th {
+            position: sticky;
+            top: 0;
+            background: #f1f5f9;
+            padding: 10px 12px;
+            color: #475569;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            z-index: 2;
+            text-align: left;
+        }
+
+        .map-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            text-align: left;
+        }
+
+        tr.utility-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        tr.utility-row:hover, tr.utility-row.active {
+            background: #eff6ff;
+        }
+
+        .status-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        /* MAP ELEMENT */
+        #leaflet-map {
+            flex-grow: 1;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* ==========================================
+           6. CONTACT SECTION
            ========================================== */
         .contact {
             padding: 100px 5%;
             background: var(--surface);
-            border-top: 1px solid var(--border);
         }
 
         .contact-container {
@@ -369,7 +509,7 @@
         }
 
         /* ==========================================
-           6. FOOTER
+           7. FOOTER
            ========================================== */
         footer {
             background: var(--text-main);
@@ -379,10 +519,18 @@
             font-size: 0.9rem;
         }
 
-        /* ==========================================
-           7. RESPONSIVE DESIGN (MOBILE)
-           ========================================== */
-        @media (max-width: 768px) {
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 850px) {
+            #map-app-wrapper {
+                flex-direction: column;
+                height: 800px;
+            }
+
+            #map-sidebar {
+                width: 100%;
+                height: 350px;
+            }
+
             .mobile-menu-btn {
                 display: block;
             }
@@ -406,13 +554,9 @@
                 max-height: 300px;
             }
 
-            .nav-links li {
-                width: 100%;
-            }
-
             .nav-links a {
                 display: block;
-                padding: 1.5rem;
+                padding: 1.25rem;
                 border-bottom: 1px solid var(--border);
             }
 
@@ -430,6 +574,7 @@
         <ul class="nav-links" id="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#grid-map">Live Grid Map</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn">☰</button>
@@ -448,12 +593,12 @@
     <section class="portfolio" id="portfolio">
         <div class="section-header">
             <h2>Featured Works</h2>
-            <p>A selection of my recent spatial node projects and dashboards.</p>
+            <p>A selection of my recent spatial node projects and published case studies.</p>
         </div>
 
         <div class="portfolio-grid">
             
-            <!-- EMMANUEL'S PROJECT 1: GNMS -->
+            <!-- PROJECT 1: GNMS -->
             <article class="project-card">
                 <img src="UT (1).PNG" alt="Geographic Network Monitoring System Dashboard" class="project-image">
                 <div class="project-content">
@@ -465,7 +610,7 @@
                 </div>
             </article>
 
-            <!-- EMMANUEL'S PROJECT 2: ESRI CASE STUDY -->
+            <!-- PROJECT 2: ESRI CASE STUDY -->
             <article class="project-card">
                 <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80" alt="Ikeja Electric Power Availability Case Study" class="project-image">
                 <div class="project-content">
@@ -477,7 +622,7 @@
                 </div>
             </article>
 
-            <!-- EMMANUEL'S PROJECT 3: UNDP UKRAINE -->
+            <!-- PROJECT 3: UNDP UKRAINE -->
             <article class="project-card">
                 <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" class="project-image" style="border:none; overflow:hidden; width:100%;" scrolling="no" title="Effects of Mining on Flooding"></iframe>
                 <div class="project-content">
@@ -492,21 +637,78 @@
         </div>
     </section>
 
-<!-- Contact Section -->
+    <!-- LIVE MAP SECTION -->
+    <section class="map-section" id="grid-map">
+        <div class="section-header">
+            <h2>Canadian Utility Grid Monitor</h2>
+            <p>Interactive tool tracking SAIDI (outage hours) and SAIFI (outage frequency) across major utility service territories.</p>
+        </div>
+
+        <div id="map-app-wrapper">
+            <!-- Sidebar Panel -->
+            <div id="map-sidebar">
+                <div class="map-sidebar-header">
+                    <h3>Service Territory Reliability</h3>
+                    <p>Select a utility to focus on its territory bounds and reliability metrics.</p>
+                    
+                    <!-- Legend -->
+                    <div class="legend-box">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #10b981;"></div>
+                            <span>&lt; 1.0 hr</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e0b;"></div>
+                            <span>1.0 - 1.8 hrs</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ef4444;"></div>
+                            <span>&gt; 1.8 hrs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Input -->
+                <div class="search-container">
+                    <input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region...">
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-container">
+                    <table class="map-table">
+                        <thead>
+                            <tr>
+                                <th>Utility</th>
+                                <th>SAIDI</th>
+                                <th>SAIFI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="utility-table-body">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Leaflet Map Element -->
+            <div id="leaflet-map"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="contact-container">
             <h2>Get In Touch</h2>
             <p>Have a GIS project in mind or want to discuss geographic network solutions? I'd love to hear from you.</p>
             
-            <!-- The updated form tag is right here -->
-            <form id="contact-form" class="contact-form" action="mailto:emmanueloyerinde@yahoo.com" method="POST" enctype="text/plain">
+            <form id="contact-form" class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" id="name" name="name" placeholder="John Mark" required>
+                    <input type="text" id="name" name="name" placeholder="John Doe" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="johnmark@aol.com" required>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required>
                 </div>
                 <div class="form-group">
                     <label for="message">Message</label>
@@ -522,22 +724,22 @@
         <p>&copy; 2026 Emmanuel Oyerinde. All rights reserved.</p>
     </footer>
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <!-- JavaScript -->
     <script>
-        // Mobile Menu Toggle Logic
+        // ==========================================
+        // 1. MOBILE MENU TOGGLE
+        // ==========================================
         const menuBtn = document.getElementById('menu-btn');
         const navLinks = document.getElementById('nav-links');
 
         menuBtn.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-            if(navLinks.classList.contains('active')) {
-                menuBtn.innerHTML = '✕';
-            } else {
-                menuBtn.innerHTML = '☰';
-            }
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
         });
 
-        // Close mobile menu on link click
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
@@ -545,20 +747,195 @@
             });
         });
 
-        // Form Submit Handler
-        document.getElementById('contact-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = 'Message Sent! ✓';
-            btn.style.backgroundColor = '#10b981'; // Success Green
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.backgroundColor = ''; // Reverts to CSS default
-                e.target.reset();
-            }, 3000);
+        // ==========================================
+        // 2. INTERACTIVE MAP CODE
+        // ==========================================
+        const utilitiesGeoJSON = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-79.63, 43.58], [-79.52, 43.75], [-79.12, 43.85], [-79.15, 43.65], [-79.63, 43.58]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-76.10, 45.15], [-75.90, 45.50], [-75.30, 45.55], [-75.40, 45.10], [-76.10, 45.15]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton, ON", "saidi": 0.95, "saifi": 1.10 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-80.00, 43.15], [-79.80, 43.70], [-79.55, 43.60], [-79.75, 43.10], [-80.00, 43.15]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.90], [-81.38, 43.08], [-81.12, 43.08], [-81.12, 42.90], [-81.38, 42.90]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-114.30, 50.85], [-114.30, 51.25], [-113.85, 51.25], [-113.85, 50.85], [-114.30, 50.85]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-113.75, 53.35], [-113.75, 53.70], [-113.25, 53.70], [-113.25, 53.35], [-113.75, 53.35]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "bc", "utility": "BC Hydro (Metro Region)", "region": "SW British Columbia", "saidi": 1.02, "saifi": 0.98 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-123.30, 49.00], [-123.30, 49.50], [-122.30, 49.50], [-122.30, 49.00], [-123.30, 49.00]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "hq", "utility": "Hydro-Québec (Greater Mtl)", "region": "Montreal Region, QC", "saidi": 1.45, "saifi": 1.50 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-74.00, 45.30], [-73.90, 45.70], [-73.30, 45.70], [-73.40, 45.30], [-74.00, 45.30]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia Region", "saidi": 2.30, "saifi": 2.10 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 44.20], [-64.20, 45.20], [-63.00, 45.20], [-63.20, 44.20], [-64.50, 44.20]]] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "id": "skp", "utility": "SaskPower (South)", "region": "Southern Saskatchewan", "saidi": 2.10, "saifi": 2.30 },
+                    "geometry": { "type": "Polygon", "coordinates": [[[-105.00, 50.00], [-105.00, 51.00], [-103.50, 51.00], [-103.50, 50.00], [-105.00, 50.00]]] }
+                }
+            ]
+        };
+
+        function getColor(saidi) {
+            return saidi < 1.0 ? '#10b981' :
+                   saidi <= 1.8 ? '#f59e0b' :
+                                  '#ef4444';
+        }
+
+        const map = L.map('leaflet-map').setView([50.0, -90.0], 4);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let geojsonLayer;
+        const layerMap = {};
+
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.saidi),
+                weight: 2,
+                opacity: 0.9,
+                color: getColor(feature.properties.saidi),
+                fillOpacity: 0.45
+            };
+        }
+
+        function highlightFeature(e) {
+            const layer = e.target;
+            layer.setStyle({ weight: 4, color: '#1e293b', fillOpacity: 0.75 });
+            layer.bringToFront();
+            const row = document.getElementById(`row-${layer.feature.properties.id}`);
+            if (row) row.classList.add('active');
+        }
+
+        function resetHighlight(e) {
+            const layer = e.target;
+            geojsonLayer.resetStyle(layer);
+            const row = document.getElementById(`row-${layer.feature.properties.id}`);
+            if (row) row.classList.remove('active');
+        }
+
+        function onEachFeature(feature, layer) {
+            layerMap[feature.properties.id] = layer;
+            const p = feature.properties;
+            const popupContent = `
+                <div class="popup-title">${p.utility}</div>
+                <div class="popup-stat"><strong>Region:</strong> ${p.region}</div>
+                <div class="popup-stat"><strong>SAIDI:</strong> ${p.saidi} hrs/yr</div>
+                <div class="popup-stat"><strong>SAIFI:</strong> ${p.saifi} outages/yr</div>
+            `;
+            layer.bindPopup(popupContent);
+
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: () => selectUtility(p.id)
+            });
+        }
+
+        geojsonLayer = L.geoJSON(utilitiesGeoJSON, {
+            style: style,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+
+        const tableBody = document.getElementById('utility-table-body');
+
+        function buildTable(features) {
+            tableBody.innerHTML = '';
+            features.forEach(f => {
+                const p = f.properties;
+                const row = document.createElement('tr');
+                row.className = 'utility-row';
+                row.id = `row-${p.id}`;
+
+                row.innerHTML = `
+                    <td>
+                        <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
+                        <strong>${p.utility}</strong>
+                        <div style="font-size: 0.725rem; color: #64748b; margin-left: 14px;">${p.region}</div>
+                    </td>
+                    <td><strong>${p.saidi}</strong> hr</td>
+                    <td><strong>${p.saifi}</strong></td>
+                `;
+
+                row.addEventListener('click', () => selectUtility(p.id));
+
+                row.addEventListener('mouseenter', () => {
+                    const layer = layerMap[p.id];
+                    if (layer) highlightFeature({ target: layer });
+                });
+
+                row.addEventListener('mouseleave', () => {
+                    const layer = layerMap[p.id];
+                    if (layer) resetHighlight({ target: layer });
+                });
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        buildTable(utilitiesGeoJSON.features);
+
+        function selectUtility(id) {
+            const layer = layerMap[id];
+            if (!layer) return;
+
+            map.fitBounds(layer.getBounds(), { padding: [50, 50], maxZoom: 9 });
+            layer.openPopup();
+
+            document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
+            const activeRow = document.getElementById(`row-${id}`);
+            if (activeRow) {
+                activeRow.classList.add('active');
+                activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filteredFeatures = utilitiesGeoJSON.features.filter(f => 
+                f.properties.utility.toLowerCase().includes(query) ||
+                f.properties.region.toLowerCase().includes(query)
+            );
+
+            buildTable(filteredFeatures);
+            geojsonLayer.clearLayers();
+            geojsonLayer.addData({
+                "type": "FeatureCollection",
+                "features": filteredFeatures
+            });
         });
     </script>
 </body>
