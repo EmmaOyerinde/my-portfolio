@@ -175,11 +175,9 @@
         .leaflet-map-container { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; background: var(--zinc-900); }
         
         /* Shared Leaflet Tooltip Styles */
-        .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--zinc-800); color: var(--zinc-300); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--zinc-700); }
+        .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--zinc-800); color: var(--zinc-300); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--zinc-700); padding: 0;}
+        .leaflet-popup-content { margin: 12px; }
         .leaflet-popup-tip { background: var(--zinc-800); }
-        .popup-title { font-weight: 700; font-size: 1.1rem; color: #ffffff; margin-bottom: 8px; border-bottom: 1px solid var(--zinc-700); padding-bottom: 8px; }
-        .popup-stat { font-size: 0.9rem; color: var(--zinc-400); margin: 6px 0; }
-        .popup-stat strong { color: var(--zinc-200); }
         .dark-tooltip { background: var(--zinc-800) !important; color: var(--zinc-200) !important; border: 1px solid var(--zinc-700) !important; border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-md) !important; font-family: 'Plus Jakarta Sans', sans-serif !important; }
         .dark-tooltip.leaflet-tooltip::before { border-top-color: var(--zinc-800); border-bottom-color: var(--zinc-800); border-left-color: var(--zinc-800); border-right-color: var(--zinc-800); }
 
@@ -194,8 +192,7 @@
         .map-table td { padding: 16px 24px; border-bottom: 1px solid var(--zinc-800); color: var(--zinc-300); text-align: left; }
         tr.utility-row { cursor: pointer; transition: var(--transition); }
         tr.utility-row:hover, tr.utility-row.active { background: rgba(37, 99, 235, 0.15); }
-        .status-badge { display: inline-block; width: 100px; height: 10px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
-        .status-badge { width: 10px; height: 10px; }
+        .status-badge { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
 
         /* ==========================================
            9. MAP 2 SPECIFIC (50-YEAR FORECAST)
@@ -300,7 +297,6 @@
     </nav>
 
     <main>
-        
         <!-- Hero Section -->
         <section class="hero" id="home">
             <div class="hero-glow"></div>
@@ -403,7 +399,7 @@
             <div class="map-glow"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
                 <h2>National Utility Reliability Benchmark</h2>
-                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories, from Coast to Coast to Coast.</p>
+                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories. Click any service territory to view deep structural metrics including customer density and generation mix.</p>
             </div>
 
             <div class="map-app-wrapper">
@@ -437,7 +433,7 @@
             </div>
         </section>
 
-        <!-- LIVE MAP 2: 50-YEAR FORECAST (UPDATED FOR ENTIRE COUNTRY) -->
+        <!-- LIVE MAP 2: 50-YEAR FORECAST -->
         <section class="map-section reveal" style="background-color: var(--bg-base);" id="load-growth">
             <div class="map-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 60%);"></div> 
             
@@ -510,7 +506,7 @@
             <div class="map-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 60%);"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
                 <h2>Remote & Off-Grid Infrastructure</h2>
-                <p>Visualizing the 100+ Canadian communities, First Nations, and coastal settlements (including Labrador) that operate completely independently of the North American power grid, relying almost entirely on localized diesel microgrids.</p>
+                <p>Visualizing the 100+ Canadian communities, First Nations, and coastal settlements that operate completely independently of the North American power grid, relying almost entirely on localized diesel microgrids.</p>
             </div>
 
             <div class="map-app-wrapper">
@@ -605,7 +601,7 @@
             }, 100);
 
             // ==========================================
-            // 3. MAP 1: UTILITY RELIABILITY (HIGH-FIDELITY, ALL PROVINCES)
+            // 3. MAP 1: UTILITY RELIABILITY (WITH ENTERPRISE DATA CARDS)
             // ==========================================
             function initReliabilityMap() {
                 const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([50.0, -96.0], 4);
@@ -616,19 +612,22 @@
                 const utilitiesGeoJSON = {
                     "type": "FeatureCollection",
                     "features": [
-                        { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.93], [-81.33, 43.07], [-81.15, 43.05], [-81.12, 42.90], [-81.25, 42.88], [-81.38, 42.93]]] } },
-                        { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.60, 43.75], [-79.15, 43.82], [-79.12, 43.77], [-79.25, 43.68], [-79.38, 43.63], [-79.54, 43.58]]] } },
-                        { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.15, 45.55], [-75.75, 45.45], [-75.50, 45.55], [-75.30, 45.55], [-75.30, 45.20], [-75.80, 45.10], [-76.35, 45.45]]] } },
-                        { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-79.95, 43.25], [-79.80, 43.40], [-79.75, 43.60], [-79.60, 43.75], [-79.40, 43.85], [-79.20, 43.90], [-79.10, 43.85], [-79.15, 43.82], [-79.60, 43.75], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
-                        { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]]] } },
-                        { "type": "Feature", "properties": { "id": "mh", "utility": "Manitoba Hydro", "region": "Manitoba", "saidi": 1.60, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.00, 49.00], [-102.00, 60.00], [-95.00, 60.00], [-89.00, 56.00], [-95.00, 51.50], [-95.00, 49.00], [-102.00, 49.00]]] } },
-                        { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower", "region": "Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } },
-                        { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-114.05, 49.00], [-123.10, 49.00], [-125.00, 50.50], [-128.00, 51.00], [-130.50, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
-                        { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-79.50, 51.50]]] } },
-                        { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
-                        { "type": "Feature", "properties": { "id": "nbp", "utility": "NB Power", "region": "New Brunswick", "saidi": 2.50, "saifi": 2.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-69.00, 47.30], [-68.00, 48.00], [-64.50, 48.00], [-64.00, 46.00], [-64.30, 45.90], [-66.15, 43.85], [-67.00, 45.00], [-67.80, 45.50], [-69.00, 47.30]]] } },
-                        { "type": "Feature", "properties": { "id": "nfp", "utility": "Newfoundland Power", "region": "Island of Newfoundland", "saidi": 1.80, "saifi": 1.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-59.50, 51.50], [-55.50, 51.50], [-52.50, 47.50], [-54.00, 46.60], [-59.50, 47.50], [-59.50, 51.50]]] } },
-                        { "type": "Feature", "properties": { "id": "me", "utility": "Maritime Electric", "region": "Prince Edward Island", "saidi": 3.00, "saifi": 2.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 46.50], [-63.80, 46.50], [-62.00, 46.30], [-62.00, 46.00], [-63.50, 46.00], [-64.50, 46.50]]] } }
+                        { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro One", "region": "Rural & Provincial Ontario", "customers": "1.5M", "line_km": "125,000", "density": "12", "mix": "Nuclear, Hydro, Gas, Wind", "saidi": 7.5, "saifi": 2.8 }, "geometry": { "type": "Polygon", "coordinates": [[[-95.0, 51.5], [-85.0, 50.0], [-79.0, 46.5], [-76.0, 45.5], [-74.0, 45.0], [-80.0, 42.5], [-83.0, 42.0], [-95.0, 49.0]]] } },
+                        { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "customers": "780k", "line_km": "15,000", "density": "52", "mix": "Urban Distribution", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.60, 43.75], [-79.15, 43.82], [-79.12, 43.77], [-79.25, 43.68], [-79.38, 43.63], [-79.54, 43.58]]] } },
+                        { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "customers": "165k", "line_km": "3,000", "density": "55", "mix": "Urban Distribution", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.93], [-81.33, 43.07], [-81.15, 43.05], [-81.12, 42.90], [-81.25, 42.88], [-81.38, 42.93]]] } },
+                        { "type": "Feature", "properties": { "id": "ho_ottawa", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "customers": "350k", "line_km": "6,000", "density": "58", "mix": "Urban Distribution", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.15, 45.55], [-75.75, 45.45], [-75.50, 45.55], [-75.30, 45.55], [-75.30, 45.20], [-75.80, 45.10], [-76.35, 45.45]]] } },
+                        { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton", "customers": "1.1M", "line_km": "10,000", "density": "110", "mix": "Urban/Suburban Dist.", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-79.95, 43.25], [-79.80, 43.40], [-79.75, 43.60], [-79.60, 43.75], [-79.40, 43.85], [-79.20, 43.90], [-79.10, 43.85], [-79.15, 43.82], [-79.60, 43.75], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
+                        { "type": "Feature", "properties": { "id": "fa", "utility": "FortisAlberta", "region": "Alberta (Rural/Suburban)", "customers": "580k", "line_km": "124,000", "density": "4.6", "mix": "Coal, Gas, Wind, Solar", "saidi": 1.85, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [[[-119.0, 55.0], [-110.0, 55.0], [-110.0, 49.0], [-114.0, 49.0], [-119.0, 55.0]]] } },
+                        { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "customers": "520k", "line_km": "8,500", "density": "61", "mix": "Urban Distribution", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]]] } },
+                        { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "customers": "415k", "line_km": "6,000", "density": "69", "mix": "Urban Distribution", "saidi": 1.51, "saifi": 0.72 }, "geometry": { "type": "Polygon", "coordinates": [[[-113.70, 53.40], [-113.70, 53.65], [-113.30, 53.65], [-113.30, 53.40], [-113.70, 53.40]]] } },
+                        { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "customers": "2.1M", "line_km": "79,000", "density": "26", "mix": "95% Hydroelectric", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-114.05, 49.00], [-123.10, 49.00], [-125.00, 50.50], [-128.00, 51.00], [-130.50, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
+                        { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower", "region": "Saskatchewan", "customers": "540k", "line_km": "157,000", "density": "3.4", "mix": "Gas, Coal, Wind, Hydro", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } },
+                        { "type": "Feature", "properties": { "id": "mh", "utility": "Manitoba Hydro", "region": "Manitoba", "customers": "608k", "line_km": "75,000", "density": "8.1", "mix": "97% Hydroelectric", "saidi": 1.60, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.00, 49.00], [-102.00, 60.00], [-95.00, 60.00], [-89.00, 56.00], [-95.00, 51.50], [-95.00, 49.00], [-102.00, 49.00]]] } },
+                        { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "customers": "4.4M", "line_km": "118,000", "density": "37", "mix": "99% Hydroelectric", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-79.50, 51.50]]] } },
+                        { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "customers": "520k", "line_km": "32,000", "density": "16", "mix": "Coal, Gas, Wind, Hydro", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
+                        { "type": "Feature", "properties": { "id": "nbp", "utility": "NB Power", "region": "New Brunswick", "customers": "400k", "line_km": "21,000", "density": "19", "mix": "Nuclear, Hydro, Fossil", "saidi": 2.50, "saifi": 2.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-69.00, 47.30], [-68.00, 48.00], [-64.50, 48.00], [-64.00, 46.00], [-64.30, 45.90], [-66.15, 43.85], [-67.00, 45.00], [-67.80, 45.50], [-69.00, 47.30]]] } },
+                        { "type": "Feature", "properties": { "id": "nfp", "utility": "Newfoundland Power", "region": "Island of Newfoundland", "customers": "270k", "line_km": "12,000", "density": "22", "mix": "Hydroelectric", "saidi": 1.80, "saifi": 1.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-59.50, 51.50], [-55.50, 51.50], [-52.50, 47.50], [-54.00, 46.60], [-59.50, 47.50], [-59.50, 51.50]]] } },
+                        { "type": "Feature", "properties": { "id": "me", "utility": "Maritime Electric", "region": "Prince Edward Island", "customers": "86k", "line_km": "6,000", "density": "14", "mix": "Wind, Imports via Cable", "saidi": 3.00, "saifi": 2.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 46.50], [-63.80, 46.50], [-62.00, 46.30], [-62.00, 46.00], [-63.50, 46.00], [-64.50, 46.50]]] } }
                     ]
                 };
 
@@ -639,12 +638,46 @@
                     style: function(f) { return { fillColor: getColor(f.properties.saidi), weight: 2, opacity: 0.9, color: getColor(f.properties.saidi), fillOpacity: 0.35 }; }, 
                     onEachFeature: function(f, layer) {
                         layerMap[f.properties.id] = layer;
-                        layer.bindPopup(`
-                            <div class="popup-title">${f.properties.utility}</div>
-                            <div class="popup-stat"><strong>Region:</strong> ${f.properties.region}</div>
-                            <div class="popup-stat"><strong>SAIDI:</strong> ${f.properties.saidi} hrs/yr</div>
-                            <div class="popup-stat"><strong>SAIFI:</strong> ${f.properties.saifi} outages/yr</div>
-                        `);
+                        
+                        const popupHTML = `
+                            <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 280px; padding: 5px;">
+                                <div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">${f.properties.region}</div>
+                                <strong style="font-size: 1.25rem; color: #fff; display: block; margin-bottom: 12px; border-bottom: 1px solid #3f3f46; padding-bottom: 8px;">${f.properties.utility}</strong>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                                    <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
+                                        <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Customers</span>
+                                        <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.customers}</strong>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
+                                        <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Circuit Line (km)</span>
+                                        <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.line_km}</strong>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem;">
+                                    <span style="color: #a1a1aa;">Grid Density:</span>
+                                    <strong style="color: #10b981;">${f.properties.density} /km</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.85rem; border-bottom: 1px solid #3f3f46; padding-bottom: 12px;">
+                                    <span style="color: #a1a1aa;">Generation:</span>
+                                    <strong style="color: #e4e4e7; text-align: right; max-width: 140px;">${f.properties.mix}</strong>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                    <div>
+                                        <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">SAIDI (Duration)</span>
+                                        <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saidi} hrs</strong>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">SAIFI (Freq.)</span>
+                                        <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saifi}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        layer.bindPopup(popupHTML);
+
                         layer.on({ 
                             mouseover: (e) => { e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: 0.6 }); e.target.bringToFront(); const r = document.getElementById(`row-${f.properties.id}`); if(r) r.classList.add('active'); }, 
                             mouseout: (e) => { geojsonLayer.resetStyle(e.target); const r = document.getElementById(`row-${f.properties.id}`); if(r) r.classList.remove('active'); }, 
@@ -707,14 +740,12 @@
             }
 
             // ==========================================
-            // 4. MAP 2: 50-YEAR BESPOKE FORECAST (ALL CANADA)
+            // 4. MAP 2: 50-YEAR BESPOKE FORECAST
             // ==========================================
             function initForecastMap() {
                 const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false }).setView([56.0, -96.0], 4);
                 L.control.zoom({ position: 'topright' }).addTo(forecastMap);
-                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(forecastMap);
-                
                 setTimeout(() => { forecastMap.invalidateSize(); }, 500);
 
                 const regions = [
@@ -804,13 +835,11 @@
             }
 
             // ==========================================
-            // 5. MAP 3: PROVINCIAL CAPACITY DEFICIT (INCL. SK & MB)
+            // 5. MAP 3: PROVINCIAL CAPACITY DEFICIT
             // ==========================================
             function initDeficitMap() {
                 const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false }).setView([56.0, -96.0], 4);
-                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(deficitMap);
-                
                 setTimeout(() => { deficitMap.invalidateSize(); }, 500);
 
                 const gridData = [
@@ -872,9 +901,7 @@
             // ==========================================
             function initOffGridMap() {
                 const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false }).setView([58.0, -90.0], 4);
-                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
-                
                 setTimeout(() => { offgridMap.invalidateSize(); }, 500);
 
                 const offgridZones = {
