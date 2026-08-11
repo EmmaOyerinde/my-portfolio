@@ -35,13 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
             initForecastMap();
             initDeficitMap();
             initOffGridMap(); 
+            initNewsFeed();
         }
     }, 100);
 
+    // Bounds restricting map bounds strictly to North America / Canada
     const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
 
     // ==========================================
-    // MAP 1: UTILITY RELIABILITY
+    // MAP 1: UTILITY RELIABILITY (HIEARACHIAL ARRAY)
     // ==========================================
     function initReliabilityMap() {
         const map = L.map('leaflet-map', { 
@@ -57,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const utilitiesGeoJSON = {
             "type": "FeatureCollection",
             "features": [
+                // --- PROVINCIAL LEVEL GRIDS (DRAWN FIRST / BACK) ---
                 { "type": "Feature", "properties": { "id": "hq", "type_org": "provincial", "utility": "Hydro-Québec", "region": "Quebec", "customers": "4.4M", "line_km": "118,000", "density": "37", "mix": "99% Hydroelectric", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-64.00, 52.00], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-76.00, 46.00], [-79.50, 51.50]]] } },
                 { "type": "Feature", "properties": { "id": "bc", "type_org": "provincial", "utility": "BC Hydro", "region": "British Columbia", "customers": "2.1M", "line_km": "79,000", "density": "26", "mix": "95% Hydroelectric", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-120.00, 49.00], [-123.00, 49.00], [-123.30, 48.30], [-124.00, 48.30], [-125.00, 48.80], [-128.00, 50.80], [-128.50, 51.00], [-130.00, 52.00], [-131.00, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
                 { "type": "Feature", "properties": { "id": "skp", "type_org": "provincial", "utility": "SaskPower", "region": "Saskatchewan", "customers": "540k", "line_km": "157,000", "density": "3.4", "mix": "Gas, Coal, Wind, Hydro", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } },
@@ -68,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "nfp", "type_org": "provincial", "utility": "Newfoundland Power", "region": "Island of Newfoundland", "customers": "270k", "line_km": "12,000", "density": "22", "mix": "Hydroelectric", "saidi": 1.80, "saifi": 1.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-59.50, 51.50], [-55.50, 51.50], [-52.50, 47.50], [-54.00, 46.60], [-59.50, 47.50], [-59.50, 51.50]]] } },
                 { "type": "Feature", "properties": { "id": "me", "type_org": "provincial", "utility": "Maritime Electric", "region": "Prince Edward Island", "customers": "86k", "line_km": "6,000", "density": "14", "mix": "Wind, Imports via Cable", "saidi": 3.00, "saifi": 2.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 46.50], [-63.80, 46.50], [-62.00, 46.30], [-62.00, 46.00], [-63.50, 46.00], [-64.50, 46.50]]] } },
                 
+                // --- MUNICIPAL LEVEL GRIDS LDCs (DRAWN LAST / TOP) ---
                 { "type": "Feature", "properties": { "id": "th", "type_org": "municipal", "utility": "Toronto Hydro", "region": "Toronto, ON", "customers": "780k", "line_km": "15,000", "density": "52", "mix": "Urban Distribution", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.62, 43.74], [-79.60, 43.76], [-79.17, 43.85], [-79.13, 43.80], [-79.15, 43.77], [-79.20, 43.72], [-79.25, 43.69], [-79.34, 43.66], [-79.38, 43.63], [-79.45, 43.62], [-79.54, 43.58]]] } },
                 { "type": "Feature", "properties": { "id": "al", "type_org": "municipal", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton / Vaughan", "customers": "1.1M", "line_km": "10,000", "density": "110", "mix": "Urban/Suburban Dist.", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-80.00, 43.25], [-79.85, 43.45], [-79.80, 43.75], [-79.70, 44.40], [-79.60, 44.40], [-79.30, 43.95], [-79.20, 43.90], [-79.15, 43.85], [-79.17, 43.85], [-79.60, 43.76], [-79.62, 43.74], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
                 { "type": "Feature", "properties": { "id": "enov", "type_org": "municipal", "utility": "Enova Power Corp", "region": "Waterloo / Kitchener / Wilmot", "customers": "165k", "line_km": "3,400", "density": "48", "mix": "Urban/Suburban Dist.", "saidi": 0.98, "saifi": 1.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.70, 43.35], [-80.75, 43.50], [-80.65, 43.60], [-80.50, 43.65], [-80.40, 43.55], [-80.30, 43.45], [-80.40, 43.35], [-80.70, 43.35]]] } },
@@ -483,9 +487,101 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', () => { offgridMap.invalidateSize(); });
     }
 
+    // ==========================================
+    // LIVE UTILITY NEWS FEED ENGINE
+    // ==========================================
+    function initNewsFeed() {
+        const container = document.getElementById('news-feed-container');
+        if (!container) return;
+
+        // Google News RSS targeting Canadian Electric, Gas, and Water Utility sectors
+        const rssUrl = 'https://news.google.com/rss/search?q=Canada+(utility+OR+"electric+utility"+OR+"natural+gas"+OR+"water+utility"+OR+hydro)&hl=en-CA&gl=CA&ceid=CA:en';
+        const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+        fetch(apiUrl)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                    container.innerHTML = '';
+                    // Render top 6 headlines
+                    data.items.slice(0, 6).forEach(item => {
+                        const date = new Date(item.pubDate).toLocaleDateString('en-CA', {
+                            month: 'short', day: 'numeric', year: 'numeric'
+                        });
+                        
+                        let title = item.title || '';
+                        let source = 'Canada Utility Wire';
+                        if (title.includes(' - ')) {
+                            const parts = title.split(' - ');
+                            source = parts.pop();
+                            title = parts.join(' - ');
+                        }
+
+                        let snippet = item.description || '';
+                        snippet = snippet.replace(/<[^>]*>?/gm, ''); // Strip raw HTML tags
+                        if (snippet.length > 130) {
+                            snippet = snippet.substring(0, 127) + '...';
+                        }
+
+                        const card = document.createElement('article');
+                        card.className = 'news-card';
+                        card.innerHTML = `
+                            <div>
+                                <div class="news-card-header">
+                                    <span class="news-source-badge">${source}</span>
+                                    <span class="news-date">${date}</span>
+                                </div>
+                                <h3 class="news-title">${title}</h3>
+                                <p class="news-snippet">${snippet || 'Latest sector updates and regulatory developments across Canadian distribution networks.'}</p>
+                            </div>
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-link">
+                                Read Coverage &rarr;
+                            </a>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    renderFallbackNews(container);
+                }
+            })
+            .catch(() => {
+                renderFallbackNews(container);
+            });
+    }
+
+    function renderFallbackNews(container) {
+        const fallbacks = [
+            { title: 'IESO Annual Planning Outlook Forecasts Surge in Industrial Demand', source: 'IESO Planning', date: 'Latest Update', link: 'https://www.ieso.ca', snippet: 'Ontario grid operators project unprecedented load expansion driven by EV supply chain gigafactories and hyper-scale data centers.' },
+            { title: 'Canadian Gas Utilities Advance Renewable Natural Gas & Hydrogen Frameworks', source: 'CGA Wire', date: 'Latest Update', link: 'https://www.cga.ca', snippet: 'Gas utilities across Canada scale up blend mandates for renewable natural gas (RNG) into existing distribution networks.' },
+            { title: 'Municipal Water Utilities Invest in Climate-Resilient Infrastructure Upgrades', source: 'CWWA Report', date: 'Latest Update', link: 'https://www.cwwa.ca', snippet: 'Water distribution authorities deploy advanced spatial GIS and smart metering to mitigate aging infrastructure challenges.' }
+        ];
+
+        container.innerHTML = '';
+        fallbacks.forEach(item => {
+            const card = document.createElement('article');
+            card.className = 'news-card';
+            card.innerHTML = `
+                <div>
+                    <div class="news-card-header">
+                        <span class="news-source-badge">${item.source}</span>
+                        <span class="news-date">${item.date}</span>
+                    </div>
+                    <h3 class="news-title">${item.title}</h3>
+                    <p class="news-snippet">${item.snippet}</p>
+                </div>
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-link">
+                    Read Coverage &rarr;
+                </a>
+            `;
+            container.appendChild(card);
+        });
+    }
+
 });
 
-// Anti-Snooping Script (Deterrent for casual inspection)
+// ==========================================
+// ANTI-SNOOPING SCRIPT (Deterrent)
+// ==========================================
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 document.onkeydown = function (e) {
