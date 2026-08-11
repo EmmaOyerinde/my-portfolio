@@ -31,18 +31,17 @@
         <ul class="nav-links" id="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">Profile</a></li>
-            <li><a href="#initiatives">Initiatives</a></li>
-            <li><a href="#grid-map">Reliability</a></li>
+            <li><a href="#grid-map">Analytics</a></li>
             <li><a href="#load-growth">Forecasts</a></li>
             <li><a href="#supply-deficit">Deficit</a></li>
             <li><a href="#off-grid">Off-Grid</a></li>
+            <li><a href="#utility-news">News Wire</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
     </nav>
 
     <main>
-        
         <!-- Hero Section -->
         <section class="hero" id="home">
             <div class="hero-glow"></div>
@@ -71,7 +70,7 @@
                         <h2>Enterprise Leadership & Delivery</h2>
                         <p>My work extends far beyond standard project delivery to ensure the critical infrastructure powering our communities operates flawlessly. I bridge the gap between complex technical execution and high-level business strategy, guiding enterprise IT, GIS, and operational teams through high-stakes deployments.</p>
                         <p>Whether orchestrating large-scale technology rollouts, aligning executive stakeholders, or untangling legacy system migrations, my focus is entirely on delivering secure, scalable outcomes.</p>
-                        <p>I have spent over a decade in the utility sector managing systems that serve more than a million customers. This background has shown me firsthand how quickly technical debt and operational silos can derail an initiative. Rather than simply rolling out rigid frameworks, I build pragmatic governance structures that actually work in the real world by blending traditional project management with Agile execution. Most recently, I have been integrating AI to cut through administrative friction and automate workflows. This gives our engineering teams the time and space to do what they do best: innovate.</p>
+                        <p>I have spent over a decade in the utility sector managing systems that serve more than a million customers. This background has shown me firsthand how quickly technical debt and operational silos can derail an initiative. Rather than simply rolling out rigid frameworks, I build pragmatic governance structures that actually work in the real world by blending traditional project management with Agile execution. Most recently, I have been integrating AI to cut through administrative friction and automate workflows.</p>
                     </div>
                     <div class="skills-grid">
                         <div class="skill-card card-leadership">
@@ -109,7 +108,7 @@
                     <div class="project-content">
                         <span class="project-category">Enterprise Systems</span>
                         <h3 class="project-title">Geographic Network Monitoring System</h3>
-                        <p class="project-description">Led the deployment of a real-time GNMS for the Ikeja Electric sub-grid. Integrated a Data Aggregation System (DAS) with meter headend systems to feed ArcGIS via GeoEvent Server. Replaced manual status checks, shortening fault response times by at least 3 hours.</p>
+                        <p class="project-description">Led the deployment of a real-time GNMS for the Ikeja Electric sub-grid. Integrated a Data Aggregation System (DAS) with meter headend systems to feed ArcGIS via GeoEvent Server.</p>
                         <a href="https://www.spatialnode.net/emmanu" target="_blank" rel="noopener noreferrer" class="project-link">View Project Details &rarr;</a>
                     </div>
                 </article>
@@ -120,8 +119,8 @@
                     </div>
                     <div class="project-content">
                         <span class="project-category">Published Case Study</span>
-                        <h3 class="project-title">Ikeja Electric Power Availability Transformation</h3>
-                        <p class="project-description">Featured on Esri.com, this case study details our successful implementation of the GNMS. Highlights how integrating real-time spatial data and enterprise software significantly improved power availability, optimized grid management, and transformed technical operations.</p>
+                        <h3 class="project-title">Ikeja Electric Power Availability</h3>
+                        <p class="project-description">Featured on Esri.com, this case study details our successful implementation of the GNMS. Highlights how integrating real-time spatial data and enterprise software optimized grid management.</p>
                         <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" target="_blank" rel="noopener noreferrer" class="project-link">Read Official Esri Story &rarr;</a>
                     </div>
                 </article>
@@ -132,8 +131,8 @@
                     </div>
                     <div class="project-content">
                         <span class="project-category">International Analysis</span>
-                        <h3 class="project-title">UNDP Ukraine: Just Transition of the Coal Cities</h3>
-                        <p class="project-description">Generated GIS-based environmental assessments for UNDP Ukraine's initiative preparing coal-dependent communities for economic diversification by 2035. Supported planning for decentralized energy installations, green financing, and workforce retraining.</p>
+                        <h3 class="project-title">UNDP Ukraine: Just Transition</h3>
+                        <p class="project-description">Generated GIS-based environmental assessments for UNDP Ukraine's initiative preparing coal-dependent communities for economic diversification by 2035.</p>
                         <a href="https://www.spatialnode.net/emmanu" target="_blank" rel="noopener noreferrer" class="project-link">View Full Assessment &rarr;</a>
                     </div>
                 </article>
@@ -269,6 +268,22 @@
                     </div>
                 </div>
                 <div id="offgrid-leaflet-map" class="leaflet-map-container"></div>
+            </div>
+        </section>
+
+        <!-- LIVE UTILITY NEWS FEED SECTION -->
+        <section class="map-section reveal" id="utility-news" style="background-color: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 60%);"></div>
+            
+            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 2.5rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                <h2 style="color: #ffffff;">Canada Utility Intelligence Wire</h2>
+                <p style="color: var(--zinc-400);">Real-time live news feed tracking strategic developments, regulatory shifts, and grid announcements across Canadian electric, gas, and water utilities.</p>
+            </div>
+
+            <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;">
+                <div id="news-feed-container" class="news-feed-grid">
+                    <div class="news-loading">Fetching live Canadian utility feed...</div>
+                </div>
             </div>
         </section>
 
