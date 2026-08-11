@@ -6,14 +6,8 @@
     <meta name="theme-color" content="#09090b">
     <meta name="description" content="Emmanuel Oyerinde - Enterprise Project Manager specializing in utility infrastructure, GIS, and digital transformation.">
     
-    <!-- Favicon (Commented out until ready) -->
-    <!-- <link rel="icon" type="image/png" href="favicon.png"> -->
-    <!-- <link rel="apple-touch-icon" href="favicon.png"> -->
-
-    <!-- Social Media / Open Graph Preview Cards (Commented out until ready) -->
     <meta property="og:title" content="Emmanuel Oyerinde | Enterprise Project Manager">
     <meta property="og:description" content="10+ years leading cross-functional IT, infrastructure, enterprise system implementation, and digital transformation initiatives.">
-    <!-- <meta property="og:image" content="social-preview.jpg"> -->
     <meta property="og:type" content="website">
 
     <title>Emmanuel Oyerinde | Enterprise Project Manager</title>
@@ -56,7 +50,6 @@
             --radius-md: 12px;
             --radius-lg: 20px;
             
-            /* High-End Soft Shadows */
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.02);
             --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
@@ -68,178 +61,53 @@
         /* ==========================================
            2. BASE RESETS & OPTIMIZATIONS
            ========================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 90px; 
-        }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+        html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+        body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.7; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
         img { max-width: 100%; height: auto; display: block; }
-        
         button, a, input, textarea { touch-action: manipulation; }
         input, textarea, select { font-size: 16px !important; }
 
-        /* Scroll Reveal Animation Classes */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: transform, opacity;
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform, opacity; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* ==========================================
            3. NAVIGATION
            ========================================== */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            padding: 1.25rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(228, 228, 231, 0.5);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-        }
-
+        nav { position: fixed; top: 0; width: 100%; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); padding: 1.25rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-bottom: 1px solid rgba(228, 228, 231, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); }
         .logo { font-size: 1.25rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
         .logo span { color: var(--accent); }
-
         .nav-links { display: flex; gap: 2.5rem; list-style: none; }
         .nav-links a { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); transition: var(--transition); letter-spacing: 0.2px; }
         .nav-links a:hover { color: var(--text-main); }
-
-        .mobile-menu-btn {
-            display: none; background: none; border: none; font-size: 1.75rem;
-            cursor: pointer; color: var(--text-main); z-index: 1001; 
-        }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: var(--text-main); z-index: 1001; }
 
         /* ==========================================
-           4. HERO SECTION (WITH AMBIENT GLOW)
+           4. HERO SECTION
            ========================================== */
-        .hero {
-            min-height: 100vh;
-            min-height: 100dvh; 
-            display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-            padding: 140px 10% 100px; position: relative; background-color: var(--zinc-950); overflow: hidden;
-        }
-
-        /* Subtle Animated Tech Grid */
-        .hero::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-            background-size: 80px 80px; opacity: 0.7; z-index: 1;
-        }
-
-        /* Ambient Blue Glow */
-        .hero-glow {
-            position: absolute;
-            top: 20%;
-            left: 30%;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 1;
-            pointer-events: none;
-            filter: blur(60px);
-            animation: float 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(5%, 5%); }
-            100% { transform: translate(0, 0); }
-        }
-
-        .hero::after {
-            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50vh;
-            background: linear-gradient(to top, var(--zinc-950), transparent); z-index: 2;
-        }
-
-        .hero-content {
-            position: relative; z-index: 3; max-width: 950px;
-            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px);
-        }
-
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 140px 10% 100px; position: relative; background-color: var(--zinc-950); overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px); background-size: 80px 80px; opacity: 0.7; z-index: 1; }
+        .hero-glow { position: absolute; top: 20%; left: 30%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%); border-radius: 50%; z-index: 1; pointer-events: none; filter: blur(60px); animation: float 10s ease-in-out infinite alternate; }
+        @keyframes float { 0% { transform: translate(0, 0); } 50% { transform: translate(5%, 5%); } 100% { transform: translate(0, 0); } }
+        .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50vh; background: linear-gradient(to top, var(--zinc-950), transparent); z-index: 2; }
+        .hero-content { position: relative; z-index: 3; max-width: 950px; animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        /* Profile Headshot Styling */
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            margin-bottom: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(37, 99, 235, 0.2);
-            background: var(--zinc-900);
-            position: relative;
-            z-index: 10;
-        }
-        .profile-avatar img {
-            width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;
-        }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.15); margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(37, 99, 235, 0.2); background: var(--zinc-900); position: relative; z-index: 10; }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
         .profile-avatar:hover img { transform: scale(1.05); }
 
-        .badge {
-            display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.03);
-            color: var(--zinc-200); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem 1.25rem;
-            border-radius: 30px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+        .badge { display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.03); color: var(--zinc-200); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem 1.25rem; border-radius: 30px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; backdrop-filter: blur(12px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
         .badge svg { color: var(--accent); }
-
         .hero h1 { font-size: clamp(2.5rem, 5.5vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.75rem; color: #ffffff; letter-spacing: -1.5px; }
         .hero p { font-size: clamp(1.1rem, 2vw, 1.35rem); color: var(--zinc-400); margin-bottom: 3rem; max-width: 800px; line-height: 1.7; }
-
         .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .btn {
-            padding: 1rem 2.5rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 1rem;
-            border: none; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center;
-        }
-        .btn-primary { 
-            background: linear-gradient(135deg, var(--accent), #3b82f6); 
-            color: white; 
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        }
-        .btn-primary:hover { 
-            background: linear-gradient(135deg, var(--accent-hover), var(--accent));
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 25px var(--accent-glow); 
-        }
-        .btn-secondary { 
-            background-color: rgba(255,255,255,0.03); color: #ffffff; 
-            border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); 
-        }
-        .btn-secondary:hover { 
-            border-color: rgba(255,255,255,0.4); background-color: rgba(255,255,255,0.08); transform: translateY(-2px); 
-        }
+        .btn { padding: 1rem 2.5rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 1rem; border: none; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), #3b82f6); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+        .btn-primary:hover { background: linear-gradient(135deg, var(--accent-hover), var(--accent)); transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-secondary { background-color: rgba(255,255,255,0.03); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); }
+        .btn-secondary:hover { border-color: rgba(255,255,255,0.4); background-color: rgba(255,255,255,0.08); transform: translateY(-2px); }
 
         /* ==========================================
            5. ABOUT & COMPETENCIES
@@ -247,19 +115,13 @@
         .about-section { padding: 120px 5%; background: var(--bg-surface); position: relative; }
         .about-container { max-width: 1200px; margin: 0 auto; }
         .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
-
         .about-text h2 { font-size: clamp(2rem, 3.5vw, 2.75rem); font-weight: 800; margin-bottom: 2rem; color: var(--text-main); letter-spacing: -1px; line-height: 1.1; }
         .about-text p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1.125rem; line-height: 1.8; }
-
         .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-        .skill-card {
-            padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
-            transition: var(--transition); position: relative; overflow: hidden; background: var(--bg-surface);
-        }
+        .skill-card { padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: var(--transition); position: relative; overflow: hidden; background: var(--bg-surface); }
         .skill-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
         .skill-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
         .skill-card p { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); }
-
         .card-leadership { background: rgba(37, 99, 235, 0.02); border: 1px solid rgba(37, 99, 235, 0.08); border-left: 4px solid #2563eb; }
         .card-leadership h3 { color: #1d4ed8; }
         .card-systems { background: rgba(79, 70, 229, 0.02); border: 1px solid rgba(79, 70, 229, 0.08); border-left: 4px solid #4f46e5; }
@@ -276,20 +138,12 @@
         .section-header { text-align: left; margin-bottom: 4rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
         .section-header h2 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; color: var(--text-main); margin-bottom: 1.25rem; letter-spacing: -1px; }
         .section-header p { color: var(--text-muted); font-size: 1.15rem; max-width: 700px; }
-
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2.5rem; max-width: 1200px; margin: 0 auto; }
-        
-        .project-card {
-            background: var(--bg-surface); border-radius: var(--radius-lg); overflow: hidden;
-            box-shadow: var(--shadow-md); transition: var(--transition); border: 1px solid rgba(0,0,0,0.06);
-            display: flex; flex-direction: column;
-        }
+        .project-card { background: var(--bg-surface); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); transition: var(--transition); border: 1px solid rgba(0,0,0,0.06); display: flex; flex-direction: column; }
         .project-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); border-color: rgba(37, 99, 235, 0.2); }
-
-        .project-image-wrapper { width: 100%; height: 260px; overflow: hidden; border-bottom: 1px solid var(--zinc-200); position: relative; -webkit-overflow-scrolling: touch; }
+        .project-image-wrapper { width: 100%; height: 260px; overflow: hidden; border-bottom: 1px solid var(--zinc-200); position: relative; }
         .project-image { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         .project-card:hover .project-image { transform: scale(1.05); }
-
         .project-content { padding: 2.5rem; flex-grow: 1; display: flex; flex-direction: column; }
         .project-category { font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1rem; }
         .project-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); line-height: 1.3; }
@@ -298,83 +152,75 @@
         .project-link:hover { color: var(--accent); gap: 0.75rem; }
 
         /* ==========================================
-           7. LIVE MAP SECTIONS (SHARED DASHBOARD STYLES)
+           7. LIVE MAP 1: RELIABILITY DASHBOARD
            ========================================== */
         .map-section { padding: 120px 5%; background: var(--bg-surface); border-top: 1px solid var(--zinc-200); position: relative; overflow: hidden; }
-        
-        /* Subtle glow behind map */
-        .map-glow {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 60%);
-            border-radius: 50%; z-index: 0; pointer-events: none; filter: blur(80px);
-        }
-
-        .map-app-wrapper {
-            position: relative; z-index: 2;
-            max-width: 1200px; height: 750px; margin: 0 auto; display: flex; flex-direction: row;
-            border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--zinc-800);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); background: var(--zinc-950);
-        }
-
+        .map-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 60%); border-radius: 50%; z-index: 0; pointer-events: none; filter: blur(80px); }
+        .map-app-wrapper { position: relative; z-index: 2; max-width: 1200px; height: 750px; margin: 0 auto; display: flex; flex-direction: row; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--zinc-800); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); background: var(--zinc-950); }
         .map-sidebar { width: 400px; background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(10px); border-right: 1px solid var(--zinc-800); display: flex; flex-direction: column; z-index: 10; color: var(--zinc-200); }
-        
         .map-sidebar-header { padding: 24px; border-bottom: 1px solid var(--zinc-800); }
         .map-sidebar-header h3 { font-size: 1.25rem; color: #ffffff; font-weight: 700; margin-bottom: 8px; }
         .map-sidebar-header p { font-size: 0.9rem; color: var(--zinc-400); line-height: 1.5; }
-
         .legend-box { display: flex; justify-content: space-between; margin-top: 20px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; font-weight: 600; }
         .legend-item { display: flex; align-items: center; gap: 8px; }
         .legend-color { width: 12px; height: 12px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
-
         .search-container { padding: 16px 24px; border-bottom: 1px solid var(--zinc-800); }
         .search-input { width: 100%; padding: 12px 16px; border: 1px solid var(--zinc-700); border-radius: var(--radius-sm); outline: none; transition: var(--transition); background: rgba(39, 39, 42, 0.5); color: #ffffff; }
-        .search-input::placeholder { color: var(--zinc-500); }
         .search-input:focus { border-color: var(--accent); background: var(--zinc-800); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
-
-        .table-container { flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .table-container { flex-grow: 1; overflow-y: auto; }
         .table-container::-webkit-scrollbar { width: 6px; }
-        .table-container::-webkit-scrollbar-track { background: transparent; }
         .table-container::-webkit-scrollbar-thumb { background: var(--zinc-700); border-radius: 3px; }
-        .table-container::-webkit-scrollbar-thumb:hover { background: var(--zinc-500); }
-
         .map-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .map-table th { position: sticky; top: 0; background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(10px); padding: 16px 24px; color: var(--zinc-400); font-weight: 600; border-bottom: 1px solid var(--zinc-800); z-index: 2; text-align: left; }
+        .map-table th { position: sticky; top: 0; background: rgba(24, 24, 27, 0.95); padding: 16px 24px; color: var(--zinc-400); font-weight: 600; border-bottom: 1px solid var(--zinc-800); z-index: 2; text-align: left; }
         .map-table td { padding: 16px 24px; border-bottom: 1px solid var(--zinc-800); color: var(--zinc-300); text-align: left; }
         tr.utility-row { cursor: pointer; transition: var(--transition); }
         tr.utility-row:hover, tr.utility-row.active { background: rgba(37, 99, 235, 0.15); }
         .status-badge { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
-
         .leaflet-map-container { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; background: var(--zinc-900); }
-
-        /* Leaflet Popups & Tooltips Dark Mode */
+        
         .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--zinc-800); color: var(--zinc-300); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--zinc-700); }
         .leaflet-popup-tip { background: var(--zinc-800); }
         .popup-title { font-weight: 700; font-size: 1.1rem; color: #ffffff; margin-bottom: 8px; border-bottom: 1px solid var(--zinc-700); padding-bottom: 8px; }
         .popup-stat { font-size: 0.9rem; color: var(--zinc-400); margin: 6px 0; }
         .popup-stat strong { color: var(--zinc-200); }
-        
         .dark-tooltip.leaflet-tooltip { background: var(--zinc-800); color: var(--zinc-200); border: 1px solid var(--zinc-700); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); font-family: 'Plus Jakarta Sans', sans-serif;}
-        .dark-tooltip.leaflet-tooltip::before { border-top-color: var(--zinc-800); border-bottom-color: var(--zinc-800); border-left-color: var(--zinc-800); border-right-color: var(--zinc-800); }
+        .dark-tooltip.leaflet-tooltip::before { border-top-color: var(--zinc-800); }
 
         /* ==========================================
-           8. LOAD FORECAST SPECIFIC STYLES
+           8. LIVE MAP 2: 50-YEAR BESPOKE FORECAST
            ========================================== */
-        #forecast-app-wrapper { height: 600px; }
-        #forecast-sidebar { width: 350px; padding: 0 24px 24px; overflow-y: auto; border-right: 1px solid var(--zinc-800); background: rgba(24, 24, 27, 0.95); }
+        .forecast-hero-wrapper { position: relative; width: 100%; height: 850px; max-width: 1200px; margin: 0 auto; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid rgba(255, 255, 255, 0.1); background: var(--zinc-950); }
+        #forecast-map-premium { width: 100%; height: 100%; z-index: 1; }
+        .glass-dashboard { position: absolute; top: 40px; left: 40px; width: 380px; background: rgba(24, 24, 27, 0.75); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-md); padding: 32px; z-index: 10; color: white; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
+        .glass-header h3 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px; background: linear-gradient(135deg, #ffffff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-header p { font-size: 0.85rem; color: var(--zinc-400); margin-bottom: 24px; line-height: 1.5; }
+
+        .premium-slider-container { margin-bottom: 30px; }
+        .slider-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+        .slider-header label { font-weight: 600; font-size: 0.9rem; color: var(--zinc-300); }
+        .year-highlight { font-size: 2.5rem; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow); line-height: 1; }
         
-        .control-group { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--zinc-800); }
-        .control-group > label { font-weight: 600; color: var(--zinc-300); display: block; margin-bottom: 8px; font-size: 0.9rem; }
-        .year-display { font-size: 1.75rem; font-weight: 800; color: var(--accent); display: inline-block; margin-left: 10px; vertical-align: middle; }
+        input[type=range].premium-slider { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range].premium-slider::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-top: -8px; box-shadow: 0 0 15px rgba(37, 99, 235, 0.8); }
+        input[type=range].premium-slider::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: var(--zinc-700); border-radius: 2px; }
+
+        .scenario-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .toggle-label { font-size: 0.9rem; color: var(--zinc-200); font-weight: 500; }
+        .toggle-label span { display: block; font-size: 0.75rem; color: var(--zinc-500); margin-top: 2px; }
         
-        input[type="range"] { width: 100%; margin: 15px 0; accent-color: var(--accent); cursor: pointer; }
-        
-        .checkbox-container { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; font-size: 0.85rem; color: var(--zinc-400); transition: var(--transition); }
-        .checkbox-container:hover { color: var(--zinc-200); }
-        .checkbox-container input { margin-right: 10px; width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
-        
-        .metrics-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); padding: 20px; margin-top: 24px; text-align: center;}
-        .metrics-value { font-size: 2.25rem; font-weight: 800; color: #ffffff; margin: 5px 0; line-height: 1; }
-        .metrics-label { font-size: 0.85rem; color: var(--zinc-500); }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider-toggle { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
+        .slider-toggle:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        input:checked + .slider-toggle { background-color: var(--accent); }
+        input:checked + .slider-toggle:before { transform: translateX(20px); }
+
+        .metric-readout { text-align: center; }
+        .metric-readout .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--zinc-500); margin-bottom: 5px; }
+        .metric-readout .value { font-size: 3.5rem; font-weight: 800; color: #ffffff; line-height: 1; margin-bottom: 10px; }
+        .metric-readout .value span { font-size: 1.5rem; color: var(--zinc-500); font-weight: 500; }
+        .growth-pill { display: inline-block; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(16,185,129,0.2); }
 
         /* ==========================================
            9. CONTACT & FOOTER
@@ -383,43 +229,29 @@
         .contact-container { max-width: 650px; margin: 0 auto; text-align: center; }
         .contact-container h2 { font-size: clamp(2rem, 4vw, 2.75rem); margin-bottom: 1rem; color: var(--text-main); font-weight: 800; letter-spacing: -1px; }
         .contact-container p { color: var(--text-muted); margin-bottom: 3rem; font-size: 1.1rem; }
-
-        .contact-form {
-            display: flex; flex-direction: column; gap: 1.5rem; text-align: left;
-            background: var(--bg-surface); padding: 3rem; border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md); border: 1px solid rgba(0,0,0,0.05);
-        }
+        .contact-form { display: flex; flex-direction: column; gap: 1.5rem; text-align: left; background: var(--bg-surface); padding: 3rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); border: 1px solid rgba(0,0,0,0.05); }
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .form-group label { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
-        input[type="text"], input[type="email"], textarea {
-            width: 100%; padding: 1rem 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--zinc-200);
-            background: var(--zinc-50); color: var(--text-main); transition: var(--transition);
-        }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 1rem 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--zinc-200); background: var(--zinc-50); color: var(--text-main); transition: var(--transition); }
         input[type="text"]:focus, input[type="email"]:focus, textarea:focus { outline: none; border-color: var(--accent); background: var(--bg-surface); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-
         footer { background: var(--zinc-950); color: var(--zinc-500); text-align: center; padding: 3rem 5%; font-size: 0.95rem; }
 
         /* ==========================================
-           10. RESPONSIVE MEDIA QUERIES
+           10. RESPONSIVE
            ========================================== */
         @media (max-width: 1024px) {
             .about-grid { grid-template-columns: 1fr; gap: 3rem; }
             .skills-grid { grid-template-columns: 1fr; }
-            
-            .map-app-wrapper, #forecast-app-wrapper { flex-direction: column; height: auto; }
-            .map-sidebar, #forecast-sidebar { width: 100%; height: auto; max-height: 450px; border-right: none; border-bottom: 1px solid var(--zinc-800); }
+            .map-app-wrapper { flex-direction: column; height: auto; }
+            .map-sidebar { width: 100%; height: auto; max-height: 450px; border-right: none; border-bottom: 1px solid var(--zinc-800); }
             .leaflet-map-container { height: 500px; }
-            
+            .glass-dashboard { position: relative; top: 0; left: 0; width: 100%; border-radius: 0; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .forecast-hero-wrapper { height: auto; display: flex; flex-direction: column; }
+            #forecast-map-premium { height: 500px; }
             .mobile-menu-btn { display: block; }
-            .nav-links {
-                position: absolute; top: 100%; left: 0; width: 100%;
-                background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-                flex-direction: column; gap: 0; text-align: center; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--zinc-200);
-                opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-            }
+            .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); flex-direction: column; gap: 0; text-align: center; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--zinc-200); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
             .nav-links.active { opacity: 1; visibility: visible; transform: translateY(0); }
             .nav-links a { display: block; padding: 1.5rem; border-bottom: 1px solid var(--zinc-100); font-size: 1.1rem; }
-            
             .contact-form { padding: 2rem; }
         }
     </style>
@@ -433,26 +265,22 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#about">Profile</a></li>
             <li><a href="#initiatives">Initiatives</a></li>
-            <li><a href="#grid-map">Analytics</a></li>
+            <li><a href="#grid-map">Reliability</a></li>
             <li><a href="#load-growth">Forecasts</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
     </nav>
 
-    <!-- Main Content Wrapper -->
     <main>
         
         <!-- Hero Section -->
         <section class="hero" id="home">
-            <div class="hero-glow"></div> <!-- Ambient animated glow -->
+            <div class="hero-glow"></div>
             <div class="hero-content">
-                
-                <!-- Profile Headshot -->
                 <div class="profile-avatar">
                     <img src="headshot.jpg" alt="Emmanuel Oyerinde">
                 </div>
-
                 <span class="badge">
                     <svg style="width:16px; height:16px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                     PMP® Certified Project Manager
@@ -504,7 +332,6 @@
                 <h2>Key Initiatives</h2>
                 <p>Demonstrated impact across enterprise system deployment, real-time grid monitoring, and international policy analysis.</p>
             </div>
-
             <div class="portfolio-grid">
                 <article class="project-card">
                     <div class="project-image-wrapper">
@@ -544,7 +371,7 @@
             </div>
         </section>
 
-        <!-- LIVE MAP SECTION 1: RELIABILITY -->
+        <!-- LIVE MAP 1: RELIABILITY -->
         <section class="map-section reveal" id="grid-map">
             <div class="map-glow"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
@@ -557,18 +384,15 @@
                     <div class="map-sidebar-header">
                         <h3>Service Territory Analytics</h3>
                         <p>Select a utility to focus on its territory bounds and performance metrics.</p>
-                        
                         <div class="legend-box">
                             <div class="legend-item"><div class="legend-color" style="background: #10b981;"></div><span>&lt; 1.0 hr</span></div>
                             <div class="legend-item"><div class="legend-color" style="background: #f59e0b;"></div><span>1.0 - 1.8 hrs</span></div>
                             <div class="legend-item"><div class="legend-color" style="background: #ef4444;"></div><span>&gt; 1.8 hrs</span></div>
                         </div>
                     </div>
-
                     <div class="search-container">
-                        <input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region..." aria-label="Search Utility">
+                        <input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region...">
                     </div>
-
                     <div class="table-container">
                         <table class="map-table">
                             <thead>
@@ -582,55 +406,61 @@
                         </table>
                     </div>
                 </div>
-
                 <div id="leaflet-map" class="leaflet-map-container"></div>
             </div>
         </section>
 
-        <!-- LIVE MAP SECTION 2: FORECASTING -->
+        <!-- LIVE MAP 2: 50-YEAR FORECAST -->
         <section class="map-section reveal" style="background-color: var(--bg-base);" id="load-growth">
-            <div class="map-glow" style="background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 60%);"></div> 
-            <div class="section-header" style="position: relative; z-index: 2;">
-                <h2>Ontario Grid Demand Forecast</h2>
-                <p>Interactive 20-year demand projection based on IESO regional models and macroeconomic growth drivers.</p>
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 60%);"></div> 
+            
+            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem;">
+                <h2>50-Year Enterprise Load Horizon</h2>
+                <p>Advanced strategic modeling projecting Ontario's grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points and long-term capital requirements.</p>
             </div>
 
-            <div id="forecast-app-wrapper" class="map-app-wrapper">
-                <div id="forecast-sidebar">
-                    <div class="map-sidebar-header" style="padding-left: 0; padding-right: 0;">
-                        <h3>Regional Macro Drivers</h3>
-                        <p>Toggle economic factors to simulate localized infrastructure stress points.</p>
+            <div class="forecast-hero-wrapper">
+                <div class="glass-dashboard">
+                    <div class="glass-header">
+                        <h3>Growth Parameters</h3>
+                        <p>Simulate localized capacity strain.</p>
                     </div>
 
-                    <div class="control-group" style="margin-top: 0;">
-                        <label>Forecast Year: <span class="year-display" id="yearLabel">2025</span></label>
-                        <input type="range" id="yearSlider" min="2025" max="2045" value="2025" step="1">
+                    <div class="premium-slider-container">
+                        <div class="slider-header">
+                            <label>Projection Year</label>
+                            <div class="year-highlight" id="yearLabelPrem">2025</div>
+                        </div>
+                        <input type="range" id="yearSliderPrem" class="premium-slider" min="2025" max="2075" value="2025" step="1">
                     </div>
 
-                    <div class="control-group">
-                        <label>Key Growth Scenarios</label>
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="evToggle" checked>
-                            EV Adoption (Widespread)
+                    <div class="scenario-group">
+                        <label class="toggle-row">
+                            <div class="toggle-label">EV Supply Chain & Industry<span>Heavy localized battery mfg load</span></div>
+                            <div class="switch"><input type="checkbox" id="t-ev" checked><span class="slider-toggle"></span></div>
                         </label>
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="aiToggle" checked>
-                            AI & Data Centers (Urban)
+                        <label class="toggle-row">
+                            <div class="toggle-label">Hyper-Scale Data & AI<span>Urban dense compute centers</span></div>
+                            <div class="switch"><input type="checkbox" id="t-ai" checked><span class="slider-toggle"></span></div>
                         </label>
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="indToggle" checked>
-                            Industrial / Mining (SW & North)
+                        <label class="toggle-row">
+                            <div class="toggle-label">Residential Electrification<span>Aggressive heat-pump adoption</span></div>
+                            <div class="switch"><input type="checkbox" id="t-heat"><span class="slider-toggle"></span></div>
+                        </label>
+                        <label class="toggle-row">
+                            <div class="toggle-label">Green Hydrogen Economy<span>Massive industrial electrolysis</span></div>
+                            <div class="switch"><input type="checkbox" id="t-hydro"><span class="slider-toggle"></span></div>
                         </label>
                     </div>
 
-                    <div class="metrics-card">
-                        <div class="metrics-label">Estimated Provincial Load</div>
-                        <div class="metrics-value"><span id="totalLoad">151.0</span> <span style="font-size:1.2rem; color: var(--zinc-400);">TWh</span></div>
-                        <div class="metrics-label" style="margin-top: 10px;">% Growth from 2025: <span id="growthPercent" style="font-weight: bold; color: var(--accent);">0%</span></div>
+                    <div class="metric-readout">
+                        <div class="label">Simulated Grid Load</div>
+                        <div class="value" id="totalLoadPrem">151 <span>TWh</span></div>
+                        <div class="growth-pill" id="growthPercentPrem">Baseline</div>
                     </div>
                 </div>
 
-                <div id="forecast-map" class="leaflet-map-container"></div>
+                <div id="forecast-map-premium"></div>
             </div>
         </section>
 
@@ -639,7 +469,6 @@
             <div class="contact-container">
                 <h2>Get In Touch</h2>
                 <p>Interested in collaborating or discussing enterprise project management and business systems solutions? Send a direct message below.</p>
-                
                 <form id="contact-form" class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
                     <div class="form-group">
                         <label for="name">Name</label>
@@ -672,7 +501,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // 1. SCROLL REVEAL ANIMATIONS (Intersection Observer)
+            // 1. SCROLL REVEAL
             const revealElements = document.querySelectorAll('.reveal');
             const revealObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -682,18 +511,15 @@
                     }
                 });
             }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
-            
             revealElements.forEach(el => revealObserver.observe(el));
 
-            // 2. MOBILE MENU TOGGLE
+            // 2. MOBILE MENU
             const menuBtn = document.getElementById('menu-btn');
             const navLinks = document.getElementById('nav-links');
-
             menuBtn.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
                 menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
             });
-
             document.querySelectorAll('.nav-links a').forEach(link => {
                 link.addEventListener('click', () => {
                     navLinks.classList.remove('active');
@@ -702,7 +528,7 @@
             });
 
             // ==========================================
-            // 3. MAP 1: UTILITY RELIABILITY (EXISTING)
+            // 3. MAP 1: UTILITY RELIABILITY
             // ==========================================
             const utilitiesGeoJSON = {
                 "type": "FeatureCollection",
@@ -720,9 +546,7 @@
                 ]
             };
 
-            function getColor(saidi) {
-                return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444';
-            }
+            function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
             let checkLeaflet = setInterval(() => {
                 if(window.L) {
@@ -734,27 +558,18 @@
 
             function initReliabilityMap() {
                 const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([50.0, -90.0], 4);
-                
                 setTimeout(() => { map.invalidateSize(); }, 500);
 
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    maxZoom: 18,
-                    attribution: '&copy; OpenStreetMap contributors, &copy; CARTO'
+                    maxZoom: 18, attribution: '&copy; OpenStreetMap contributors, &copy; CARTO'
                 }).addTo(map);
 
                 let geojsonLayer;
                 const layerMap = {};
 
                 function style(feature) {
-                    return {
-                        fillColor: getColor(feature.properties.saidi),
-                        weight: 2,
-                        opacity: 0.9,
-                        color: getColor(feature.properties.saidi),
-                        fillOpacity: 0.35
-                    };
+                    return { fillColor: getColor(feature.properties.saidi), weight: 2, opacity: 0.9, color: getColor(feature.properties.saidi), fillOpacity: 0.35 };
                 }
-
                 function highlightFeature(e) {
                     const layer = e.target;
                     layer.setStyle({ weight: 3, color: '#ffffff', fillOpacity: 0.6 });
@@ -762,39 +577,27 @@
                     const row = document.getElementById(`row-${layer.feature.properties.id}`);
                     if (row) row.classList.add('active');
                 }
-
                 function resetHighlight(e) {
                     const layer = e.target;
                     geojsonLayer.resetStyle(layer);
                     const row = document.getElementById(`row-${layer.feature.properties.id}`);
                     if (row) row.classList.remove('active');
                 }
-
                 function onEachFeature(feature, layer) {
                     layerMap[feature.properties.id] = layer;
                     const p = feature.properties;
-                    const popupContent = `
+                    layer.bindPopup(`
                         <div class="popup-title">${p.utility}</div>
                         <div class="popup-stat"><strong>Region:</strong> ${p.region}</div>
                         <div class="popup-stat"><strong>SAIDI:</strong> ${p.saidi} hrs/yr</div>
                         <div class="popup-stat"><strong>SAIFI:</strong> ${p.saifi} outages/yr</div>
-                    `;
-                    layer.bindPopup(popupContent);
-
-                    layer.on({
-                        mouseover: highlightFeature,
-                        mouseout: resetHighlight,
-                        click: () => selectUtility(p.id)
-                    });
+                    `);
+                    layer.on({ mouseover: highlightFeature, mouseout: resetHighlight, click: () => selectUtility(p.id) });
                 }
 
-                geojsonLayer = L.geoJSON(utilitiesGeoJSON, {
-                    style: style,
-                    onEachFeature: onEachFeature
-                }).addTo(map);
+                geojsonLayer = L.geoJSON(utilitiesGeoJSON, { style: style, onEachFeature: onEachFeature }).addTo(map);
 
                 const tableBody = document.getElementById('utility-table-body');
-
                 function buildTable(features) {
                     tableBody.innerHTML = '';
                     features.forEach(f => {
@@ -802,7 +605,6 @@
                         const row = document.createElement('tr');
                         row.className = 'utility-row';
                         row.id = `row-${p.id}`;
-
                         row.innerHTML = `
                             <td>
                                 <div style="display:flex; align-items:center;">
@@ -814,24 +616,19 @@
                             <td><strong style="color: #f4f4f5;">${p.saidi}</strong> hr</td>
                             <td><strong style="color: #f4f4f5;">${p.saifi}</strong></td>
                         `;
-
                         row.addEventListener('click', () => selectUtility(p.id));
                         row.addEventListener('mouseenter', () => { if(layerMap[p.id]) highlightFeature({ target: layerMap[p.id] }); });
                         row.addEventListener('mouseleave', () => { if(layerMap[p.id]) resetHighlight({ target: layerMap[p.id] }); });
-
                         tableBody.appendChild(row);
                     });
                 }
-
                 buildTable(utilitiesGeoJSON.features);
 
                 function selectUtility(id) {
                     const layer = layerMap[id];
                     if (!layer) return;
-
                     map.fitBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 9 });
                     layer.openPopup();
-
                     document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
                     const activeRow = document.getElementById(`row-${id}`);
                     if (activeRow) {
@@ -843,114 +640,118 @@
                 document.getElementById('search-input').addEventListener('input', (e) => {
                     const query = e.target.value.toLowerCase();
                     const filteredFeatures = utilitiesGeoJSON.features.filter(f => 
-                        f.properties.utility.toLowerCase().includes(query) ||
-                        f.properties.region.toLowerCase().includes(query)
+                        f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query)
                     );
-
                     buildTable(filteredFeatures);
                     geojsonLayer.clearLayers();
-                    geojsonLayer.addData({
-                        "type": "FeatureCollection",
-                        "features": filteredFeatures
-                    });
+                    geojsonLayer.addData({ "type": "FeatureCollection", "features": filteredFeatures });
                 });
-                
                 window.addEventListener('resize', () => { map.invalidateSize(); });
             }
 
             // ==========================================
-            // 4. MAP 2: ONTARIO LOAD FORECAST (NEW)
+            // 4. MAP 2: 50-YEAR BESPOKE FORECAST
             // ==========================================
             function initForecastMap() {
-                const forecastMap = L.map('forecast-map', { scrollWheelZoom: false }).setView([46.0, -81.0], 5);
+                const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false }).setView([46.5, -81.0], 5);
+                L.control.zoom({ position: 'topright' }).addTo(forecastMap);
 
-                // Use the dark theme carto tiles to match portfolio
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-                    subdomains: 'abcd',
-                    maxZoom: 19
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19
                 }).addTo(forecastMap);
 
                 setTimeout(() => { forecastMap.invalidateSize(); }, 500);
 
                 const regions = [
                     { id: 'toronto', name: 'Greater Toronto Area', lat: 43.6532, lng: -79.3832, baseLoad: 48.0, 
-                      sensitivity: { base: 1.01, ev: 1.02, ai: 1.025, ind: 1.00 } }, 
-                    { id: 'windsor', name: 'Windsor-Essex / SW', lat: 42.3149, lng: -83.0364, baseLoad: 25.0, 
-                      sensitivity: { base: 1.01, ev: 1.01, ai: 1.00, ind: 1.035 } }, 
-                    { id: 'ottawa', name: 'Ottawa / East', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, 
-                      sensitivity: { base: 1.01, ev: 1.01, ai: 1.02, ind: 1.00 } }, 
-                    { id: 'sudbury', name: 'Sudbury / North', lat: 46.4917, lng: -80.9930, baseLoad: 15.0, 
-                      sensitivity: { base: 1.01, ev: 1.00, ai: 1.00, ind: 1.025 } }, 
+                      mults: { base: 1.008, ev: 1.010, ai: 1.025, heat: 1.015, hydro: 1.00 } }, 
+                    { id: 'windsor', name: 'Windsor-Essex (Industrial Hub)', lat: 42.3149, lng: -83.0364, baseLoad: 25.0, 
+                      mults: { base: 1.005, ev: 1.035, ai: 1.005, heat: 1.010, hydro: 1.020 } }, 
+                    { id: 'ottawa', name: 'Ottawa (Tech Corridor)', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, 
+                      mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } }, 
+                    { id: 'sudbury', name: 'Sudbury (Mining/North)', lat: 46.4917, lng: -80.9930, baseLoad: 15.0, 
+                      mults: { base: 1.002, ev: 1.020, ai: 1.00, heat: 1.010, hydro: 1.030 } }, 
                     { id: 'london', name: 'London / Central', lat: 42.9849, lng: -81.2453, baseLoad: 18.0, 
-                      sensitivity: { base: 1.01, ev: 1.015, ai: 1.00, ind: 1.01 } }, 
-                    { id: 'thunderbay', name: 'Thunder Bay / NW', lat: 48.3809, lng: -89.2477, baseLoad: 8.0, 
-                      sensitivity: { base: 1.005, ev: 1.00, ai: 1.00, ind: 1.015 } } 
+                      mults: { base: 1.005, ev: 1.020, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
+                    { id: 'niagara', name: 'Niagara Region', lat: 43.0896, lng: -79.0849, baseLoad: 8.0, 
+                      mults: { base: 1.005, ev: 1.010, ai: 1.005, heat: 1.010, hydro: 1.040 } } 
                 ];
 
                 const circleMarkers = {};
 
                 regions.forEach(region => {
                     const circle = L.circleMarker([region.lat, region.lng], {
-                        color: '#2563eb',
-                        fillColor: '#3b82f6',
-                        fillOpacity: 0.6,
-                        weight: 1
+                        color: '#06b6d4', fillColor: '#06b6d4', fillOpacity: 0.5, weight: 2
                     }).addTo(forecastMap);
-                    
-                    circle.bindTooltip(`<b>${region.name}</b><br/>Load: ${region.baseLoad.toFixed(1)} TWh`, {
-                        className: 'dark-tooltip'
-                    });
+                    circle.bindTooltip(`<b>${region.name}</b>`, { className: 'dark-tooltip', permanent: false });
                     circleMarkers[region.id] = circle;
                 });
 
                 function updateForecast() {
-                    const currentYear = parseInt(document.getElementById('yearSlider').value);
+                    const currentYear = parseInt(document.getElementById('yearSliderPrem').value);
                     const yearsElapsed = currentYear - 2025;
                     
-                    const evActive = document.getElementById('evToggle').checked;
-                    const aiActive = document.getElementById('aiToggle').checked;
-                    const indActive = document.getElementById('indToggle').checked;
+                    const stEV = document.getElementById('t-ev').checked;
+                    const stAI = document.getElementById('t-ai').checked;
+                    const stHeat = document.getElementById('t-heat').checked;
+                    const stHydro = document.getElementById('t-hydro').checked;
 
-                    let totalProvincialLoad = 17.0; 
+                    let totalProvincialLoad = 17.0;
 
                     regions.forEach(region => {
-                        let annualMultiplier = region.sensitivity.base;
-                        if (evActive) annualMultiplier += (region.sensitivity.ev - 1);
-                        if (aiActive) annualMultiplier += (region.sensitivity.ai - 1);
-                        if (indActive) annualMultiplier += (region.sensitivity.ind - 1);
+                        let annualGrowthRate = region.mults.base;
+                        if (stEV) annualGrowthRate += (region.mults.ev - 1);
+                        if (stAI) annualGrowthRate += (region.mults.ai - 1);
+                        if (stHeat) annualGrowthRate += (region.mults.heat - 1);
+                        if (stHydro) annualGrowthRate += (region.mults.hydro - 1);
 
-                        const projectedLoad = region.baseLoad * Math.pow(annualMultiplier, yearsElapsed);
+                        const projectedLoad = region.baseLoad * Math.pow(annualGrowthRate, yearsElapsed);
                         totalProvincialLoad += projectedLoad;
 
-                        const radius = Math.sqrt(projectedLoad) * 7; 
+                        const radius = Math.max(10, Math.log(projectedLoad) * 12);
                         
-                        const growthRatio = projectedLoad / region.baseLoad;
-                        let color = '#3b82f6'; 
-                        if (growthRatio > 1.3) color = '#f59e0b'; 
-                        if (growthRatio > 1.6) color = '#ef4444'; 
+                        const ratio = projectedLoad / region.baseLoad;
+                        let color = '#06b6d4'; 
+                        if (ratio > 1.5) color = '#3b82f6'; 
+                        if (ratio > 2.5) color = '#8b5cf6'; 
+                        if (ratio > 3.5) color = '#d946ef'; 
+                        if (ratio > 5.0) color = '#f97316'; 
 
                         const marker = circleMarkers[region.id];
                         marker.setRadius(radius);
-                        marker.setStyle({ color: color, fillColor: color });
-                        marker.setTooltipContent(`<b>${region.name}</b><br/>Year: ${currentYear}<br/>Projected Load: ${projectedLoad.toFixed(1)} TWh`);
+                        marker.setStyle({ color: color, fillColor: color, fillOpacity: ratio > 3.5 ? 0.7 : 0.4 });
+                        marker.setTooltipContent(`
+                            <div style="font-family:'Plus Jakarta Sans',sans-serif; text-align:center;">
+                                <strong style="font-size:1.1rem; color:#fff;">${region.name}</strong><br>
+                                <span style="color:#a1a1aa; font-size:0.8rem;">Est. ${currentYear} Load</span><br>
+                                <strong style="color:${color}; font-size:1.3rem;">${projectedLoad.toFixed(1)} TWh</strong>
+                            </div>
+                        `);
                     });
 
-                    document.getElementById('yearLabel').innerText = currentYear;
-                    document.getElementById('totalLoad').innerText = totalProvincialLoad.toFixed(1);
+                    document.getElementById('yearLabelPrem').innerText = currentYear;
+                    document.getElementById('totalLoadPrem').innerHTML = `${totalProvincialLoad.toFixed(0)} <span>TWh</span>`;
                     
                     const startingTotal = 151.0;
                     const percentGrowth = ((totalProvincialLoad - startingTotal) / startingTotal) * 100;
-                    document.getElementById('growthPercent').innerText = percentGrowth > 0 ? `+${percentGrowth.toFixed(1)}%` : `0%`;
+                    const pill = document.getElementById('growthPercentPrem');
+                    
+                    if (percentGrowth > 0) {
+                        pill.innerText = `+${percentGrowth.toFixed(0)}% Growth`;
+                        pill.style.background = percentGrowth > 100 ? 'rgba(217, 70, 239, 0.1)' : 'rgba(16, 185, 129, 0.1)';
+                        pill.style.color = percentGrowth > 100 ? '#d946ef' : '#10b981';
+                        pill.style.borderColor = percentGrowth > 100 ? 'rgba(217, 70, 239, 0.3)' : 'rgba(16, 185, 129, 0.2)';
+                    } else {
+                        pill.innerText = `Baseline`;
+                    }
                 }
 
-                document.getElementById('yearSlider').addEventListener('input', updateForecast);
-                document.getElementById('evToggle').addEventListener('change', updateForecast);
-                document.getElementById('aiToggle').addEventListener('change', updateForecast);
-                document.getElementById('indToggle').addEventListener('change', updateForecast);
+                document.getElementById('yearSliderPrem').addEventListener('input', updateForecast);
+                document.querySelectorAll('.scenario-group input').forEach(input => {
+                    input.addEventListener('change', updateForecast);
+                });
 
                 updateForecast();
-                
                 window.addEventListener('resize', () => { forecastMap.invalidateSize(); });
             }
         });
