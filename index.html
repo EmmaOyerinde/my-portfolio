@@ -20,6 +20,9 @@
     <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+    <!-- Chart.js for Supply Deficit Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         /* ==========================================
            1. CSS VARIABLES (EXECUTIVE PALETTE)
@@ -223,7 +226,13 @@
         .growth-pill { display: inline-block; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(16,185,129,0.2); }
 
         /* ==========================================
-           9. CONTACT & FOOTER
+           9. CHART SECTION (SUPPLY DEFICIT)
+           ========================================== */
+        .chart-section { padding: 120px 5%; background: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05); }
+        .chart-container { position: relative; max-width: 1200px; margin: 0 auto; background: var(--zinc-900); padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--zinc-800); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        
+        /* ==========================================
+           10. CONTACT & FOOTER
            ========================================== */
         .contact { padding: 120px 5%; background: var(--bg-base); border-top: 1px solid var(--zinc-200); }
         .contact-container { max-width: 650px; margin: 0 auto; text-align: center; }
@@ -237,7 +246,7 @@
         footer { background: var(--zinc-950); color: var(--zinc-500); text-align: center; padding: 3rem 5%; font-size: 0.95rem; }
 
         /* ==========================================
-           10. RESPONSIVE
+           11. RESPONSIVE
            ========================================== */
         @media (max-width: 1024px) {
             .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -253,6 +262,7 @@
             .nav-links.active { opacity: 1; visibility: visible; transform: translateY(0); }
             .nav-links a { display: block; padding: 1.5rem; border-bottom: 1px solid var(--zinc-100); font-size: 1.1rem; }
             .contact-form { padding: 2rem; }
+            .chart-container { padding: 20px; }
         }
     </style>
 </head>
@@ -267,6 +277,7 @@
             <li><a href="#initiatives">Initiatives</a></li>
             <li><a href="#grid-map">Reliability</a></li>
             <li><a href="#load-growth">Forecasts</a></li>
+            <li><a href="#supply-deficit">Deficit</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
@@ -402,6 +413,11 @@
                                     <th>SAIFI</th>
                                 </tr>
                             </thead>
+                            <!-- 
+                                =====================================
+                                FIXED: THE TYPO BELOW IS NOW <tbody> 
+                                =====================================
+                            -->
                             <tbody id="utility-table-body"></tbody>
                         </table>
                     </div>
@@ -461,6 +477,18 @@
                 </div>
 
                 <div id="forecast-map-premium"></div>
+            </div>
+        </section>
+
+        <!-- CHART SECTION: SUPPLY DEFICIT -->
+        <section class="chart-section reveal" id="supply-deficit">
+            <div class="section-header" style="max-width: 1200px; margin: 0 auto 3rem;">
+                <h2 style="color: #ffffff;">The Capacity Deficit: Unserved Energy</h2>
+                <p style="color: var(--zinc-400);">Cross-comparing projected energy demand against committed generation capacity reveals a critical shortfall beginning in the 2030s as legacy nuclear and gas assets retire.</p>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="deficitChart" height="450"></canvas>
             </div>
         </section>
 
@@ -528,21 +556,40 @@
             });
 
             // ==========================================
-            // 3. MAP 1: UTILITY RELIABILITY
+            // 3. MAP 1: UTILITY RELIABILITY (WITH HIGH-FIDELITY POLYGONS)
             // ==========================================
             const utilitiesGeoJSON = {
                 "type": "FeatureCollection",
                 "features": [
-                    { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.90], [-81.38, 43.08], [-81.12, 43.08], [-81.12, 42.90], [-81.38, 42.90]]] } },
-                    { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.63, 43.58], [-79.52, 43.75], [-79.12, 43.85], [-79.15, 43.65], [-79.63, 43.58]]] } },
-                    { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.10, 45.15], [-75.90, 45.50], [-75.30, 45.55], [-75.40, 45.10], [-76.10, 45.15]]] } },
-                    { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton, ON", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.00, 43.15], [-79.80, 43.70], [-79.55, 43.60], [-79.75, 43.10], [-80.00, 43.15]]] } },
-                    { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.30, 50.85], [-114.30, 51.25], [-113.85, 51.25], [-113.85, 50.85], [-114.30, 50.85]]] } },
-                    { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 }, "geometry": { "type": "Polygon", "coordinates": [[[-113.75, 53.35], [-113.75, 53.70], [-113.25, 53.70], [-113.25, 53.35], [-113.75, 53.35]]] } },
-                    { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro (Metro Region)", "region": "SW British Columbia", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-123.30, 49.00], [-123.30, 49.50], [-122.30, 49.50], [-122.30, 49.00], [-123.30, 49.00]]] } },
-                    { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec (Greater Mtl)", "region": "Montreal Region, QC", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-74.00, 45.30], [-73.90, 45.70], [-73.30, 45.70], [-73.40, 45.30], [-74.00, 45.30]]] } },
-                    { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia Region", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 44.20], [-64.20, 45.20], [-63.00, 45.20], [-63.20, 44.20], [-64.50, 44.20]]] } },
-                    { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower (South)", "region": "Southern Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-105.00, 50.00], [-105.00, 51.00], [-103.50, 51.00], [-103.50, 50.00], [-105.00, 50.00]]] } }
+                    { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.93], [-81.33, 43.07], [-81.15, 43.05], [-81.12, 42.90], [-81.25, 42.88], [-81.38, 42.93]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.60, 43.75], [-79.15, 43.82], [-79.12, 43.77], [-79.25, 43.68], [-79.38, 43.63], [-79.54, 43.58]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.15, 45.55], [-75.75, 45.45], [-75.50, 45.55], [-75.30, 45.55], [-75.30, 45.20], [-75.80, 45.10], [-76.35, 45.45]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton", "saidi": 0.95, "saifi": 1.10 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-79.95, 43.25], [-79.80, 43.40], [-79.75, 43.60], [-79.60, 43.75], [-79.40, 43.85], [-79.20, 43.90], [-79.10, 43.85], [-79.15, 43.82], [-79.60, 43.75], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-113.70, 53.40], [-113.70, 53.65], [-113.30, 53.65], [-113.30, 53.40], [-113.70, 53.40]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "saidi": 1.02, "saifi": 0.98 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-114.05, 49.00], [-123.10, 49.00], [-125.00, 50.50], [-128.00, 51.00], [-130.50, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "saidi": 1.45, "saifi": 1.50 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-79.50, 51.50]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "saidi": 2.30, "saifi": 2.10 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
+                    
+                    { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower", "region": "Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, 
+                      "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } }
                 ]
             };
 
@@ -754,6 +801,102 @@
                 updateForecast();
                 window.addEventListener('resize', () => { forecastMap.invalidateSize(); });
             }
+
+            // ==========================================
+            // 5. CHART: SUPPLY DEFICIT (CHART.JS)
+            // ==========================================
+            const ctx = document.getElementById('deficitChart').getContext('2d');
+            
+            // Create a warning gradient for the Unserved Energy gap
+            const deficitGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            deficitGradient.addColorStop(0, 'rgba(239, 68, 68, 0.8)'); // Crimson
+            deficitGradient.addColorStop(1, 'rgba(249, 115, 22, 0.1)'); // Hot Orange faded
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2025', '2030', '2035', '2040', '2045', '2050'],
+                    datasets: [
+                        {
+                            label: 'Committed Capacity (TWh)',
+                            data: [155, 150, 130, 105, 90, 80],
+                            borderColor: '#10b981', // Emerald green
+                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                            borderWidth: 3,
+                            stepped: true,
+                            fill: 'origin',
+                            tension: 0,
+                            pointBackgroundColor: '#10b981',
+                            pointRadius: 4
+                        },
+                        {
+                            label: 'Forecasted Demand (TWh)',
+                            data: [151, 175, 195, 215, 235, 250],
+                            borderColor: '#3b82f6', // Bright blue
+                            borderWidth: 3,
+                            fill: {
+                                target: 0, // Fill the space down to the capacity line
+                                above: deficitGradient // Only shade it if demand is ABOVE capacity
+                            },
+                            tension: 0.4, // Smooth curve
+                            pointBackgroundColor: '#3b82f6',
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { 
+                            labels: { color: '#d4d4d8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 14 } },
+                            position: 'top'
+                        },
+                        tooltip: { 
+                            backgroundColor: 'rgba(24, 24, 27, 0.95)', 
+                            titleColor: '#ffffff', 
+                            bodyColor: '#d4d4d8', 
+                            borderColor: '#3f3f46', 
+                            borderWidth: 1,
+                            padding: 12,
+                            titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 14, weight: 'bold' },
+                            bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13 }
+                        },
+                        // Custom plugin to add the "Unserved Energy" label directly on the chart
+                        annotation: {
+                            annotations: {
+                                label1: {
+                                    type: 'label',
+                                    xValue: '2045',
+                                    yValue: 170,
+                                    color: '#ffffff',
+                                    content: ['UNSERVED ENERGY', '(The Deficit)'],
+                                    font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: 'bold' }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 60,
+                            max: 280,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#a1a1aa', font: { family: "'Plus Jakarta Sans', sans-serif" } },
+                            title: { display: true, text: 'Energy Profile (TWh)', color: '#d4d4d8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 14 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#a1a1aa', font: { family: "'Plus Jakarta Sans', sans-serif", size: 13 } }
+                        }
+                    }
+                }
+            });
+
         });
     </script>
 </body>
