@@ -194,7 +194,8 @@
         .map-table td { padding: 16px 24px; border-bottom: 1px solid var(--zinc-800); color: var(--zinc-300); text-align: left; }
         tr.utility-row { cursor: pointer; transition: var(--transition); }
         tr.utility-row:hover, tr.utility-row.active { background: rgba(37, 99, 235, 0.15); }
-        .status-badge { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
+        .status-badge { display: inline-block; width: 100px; height: 10px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
+        .status-badge { width: 10px; height: 10px; }
 
         /* ==========================================
            9. MAP 2 SPECIFIC (50-YEAR FORECAST)
@@ -308,7 +309,7 @@
                     <img src="headshot.jpg" alt="Emmanuel Oyerinde">
                 </div>
                 <span class="badge">
-                    <svg style="width:16px; height:16px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    <svg style="width:16px; height:16px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                     PMP® Certified Project Manager
                 </span>
                 <h1>Bridging Strategy, Enterprise Technology & Operational Excellence</h1>
@@ -402,7 +403,7 @@
             <div class="map-glow"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
                 <h2>National Utility Reliability Benchmark</h2>
-                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories, from the Pacific to the Atlantic.</p>
+                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories, from Coast to Coast to Coast.</p>
             </div>
 
             <div class="map-app-wrapper">
@@ -436,13 +437,13 @@
             </div>
         </section>
 
-        <!-- LIVE MAP 2: 50-YEAR FORECAST -->
+        <!-- LIVE MAP 2: 50-YEAR FORECAST (UPDATED FOR ENTIRE COUNTRY) -->
         <section class="map-section reveal" style="background-color: var(--bg-base);" id="load-growth">
             <div class="map-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 60%);"></div> 
             
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem;">
                 <h2>50-Year Enterprise Load Horizon</h2>
-                <p>Advanced strategic modeling projecting regional grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points and long-term capital requirements across Central and Atlantic Canada.</p>
+                <p>Advanced strategic modeling projecting regional grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points and long-term capital requirements across all Canadian provinces and territories.</p>
             </div>
 
             <div class="forecast-hero-wrapper">
@@ -474,14 +475,14 @@
                             <div class="switch"><input type="checkbox" id="t-heat"><span class="slider-toggle"></span></div>
                         </label>
                         <label class="toggle-row">
-                            <div class="toggle-label">Green Hydrogen Economy<span>Massive industrial electrolysis (Maritimes)</span></div>
+                            <div class="toggle-label">Green Hydrogen Economy<span>Massive industrial electrolysis</span></div>
                             <div class="switch"><input type="checkbox" id="t-hydro"><span class="slider-toggle"></span></div>
                         </label>
                     </div>
 
                     <div class="metric-readout">
-                        <div class="label">Simulated Macro Grid Load</div>
-                        <div class="value" id="totalLoadPrem">151 <span>TWh</span></div>
+                        <div class="label">Simulated National Load</div>
+                        <div class="value" id="totalLoadPrem">336 <span>TWh</span></div>
                         <div class="growth-pill" id="growthPercentPrem">Baseline</div>
                     </div>
                 </div>
@@ -604,10 +605,10 @@
             }, 100);
 
             // ==========================================
-            // 3. MAP 1: UTILITY RELIABILITY (HIGH-FIDELITY, INCL. ATLANTIC)
+            // 3. MAP 1: UTILITY RELIABILITY (HIGH-FIDELITY, ALL PROVINCES)
             // ==========================================
             function initReliabilityMap() {
-                const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([48.0, -85.0], 4);
+                const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([50.0, -96.0], 4);
                 setTimeout(() => { map.invalidateSize(); }, 500);
 
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }).addTo(map);
@@ -620,10 +621,10 @@
                         { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.15, 45.55], [-75.75, 45.45], [-75.50, 45.55], [-75.30, 45.55], [-75.30, 45.20], [-75.80, 45.10], [-76.35, 45.45]]] } },
                         { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-79.95, 43.25], [-79.80, 43.40], [-79.75, 43.60], [-79.60, 43.75], [-79.40, 43.85], [-79.20, 43.90], [-79.10, 43.85], [-79.15, 43.82], [-79.60, 43.75], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
                         { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]]] } },
+                        { "type": "Feature", "properties": { "id": "mh", "utility": "Manitoba Hydro", "region": "Manitoba", "saidi": 1.60, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.00, 49.00], [-102.00, 60.00], [-95.00, 60.00], [-89.00, 56.00], [-95.00, 51.50], [-95.00, 49.00], [-102.00, 49.00]]] } },
+                        { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower", "region": "Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } },
                         { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-114.05, 49.00], [-123.10, 49.00], [-125.00, 50.50], [-128.00, 51.00], [-130.50, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
                         { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-79.50, 51.50]]] } },
-                        
-                        /* ATLANTIC PROVINCES ADDED */
                         { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
                         { "type": "Feature", "properties": { "id": "nbp", "utility": "NB Power", "region": "New Brunswick", "saidi": 2.50, "saifi": 2.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-69.00, 47.30], [-68.00, 48.00], [-64.50, 48.00], [-64.00, 46.00], [-64.30, 45.90], [-66.15, 43.85], [-67.00, 45.00], [-67.80, 45.50], [-69.00, 47.30]]] } },
                         { "type": "Feature", "properties": { "id": "nfp", "utility": "Newfoundland Power", "region": "Island of Newfoundland", "saidi": 1.80, "saifi": 1.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-59.50, 51.50], [-55.50, 51.50], [-52.50, 47.50], [-54.00, 46.60], [-59.50, 47.50], [-59.50, 51.50]]] } },
@@ -706,24 +707,28 @@
             }
 
             // ==========================================
-            // 4. MAP 2: 50-YEAR BESPOKE FORECAST (INCL. ATLANTIC)
+            // 4. MAP 2: 50-YEAR BESPOKE FORECAST (ALL CANADA)
             // ==========================================
             function initForecastMap() {
-                const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false }).setView([46.0, -74.0], 5);
+                const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false }).setView([56.0, -96.0], 4);
                 L.control.zoom({ position: 'topright' }).addTo(forecastMap);
+                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(forecastMap);
+                
                 setTimeout(() => { forecastMap.invalidateSize(); }, 500);
 
                 const regions = [
+                    { id: 'vancouver', name: 'Metro Vancouver (Lower Mainland)', lat: 49.2827, lng: -123.1207, baseLoad: 35.0, mults: { base: 1.007, ev: 1.012, ai: 1.020, heat: 1.018, hydro: 1.005 } }, 
+                    { id: 'alberta', name: 'Calgary-Edmonton Corridor', lat: 51.0447, lng: -114.0719, baseLoad: 45.0, mults: { base: 1.006, ev: 1.015, ai: 1.015, heat: 1.012, hydro: 1.035 } }, 
+                    { id: 'sask', name: 'Saskatchewan Industrial Hub', lat: 52.1332, lng: -106.6700, baseLoad: 25.0, mults: { base: 1.004, ev: 1.010, ai: 1.005, heat: 1.010, hydro: 1.030 } }, 
+                    { id: 'manitoba', name: 'Winnipeg & Southern MB', lat: 49.8951, lng: -97.1384, baseLoad: 22.0, mults: { base: 1.005, ev: 1.012, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
                     { id: 'toronto', name: 'Greater Toronto Area', lat: 43.6532, lng: -79.3832, baseLoad: 48.0, mults: { base: 1.008, ev: 1.010, ai: 1.025, heat: 1.015, hydro: 1.00 } }, 
                     { id: 'windsor', name: 'Windsor-Essex (Industrial)', lat: 42.3149, lng: -83.0364, baseLoad: 25.0, mults: { base: 1.005, ev: 1.035, ai: 1.005, heat: 1.010, hydro: 1.020 } }, 
-                    { id: 'ottawa', name: 'Ottawa (Tech Corridor)', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } }, 
-                    { id: 'sudbury', name: 'Sudbury (Mining/North)', lat: 46.4917, lng: -80.9930, baseLoad: 15.0, mults: { base: 1.002, ev: 1.020, ai: 1.00, heat: 1.010, hydro: 1.030 } }, 
-                    { id: 'london', name: 'London / Central', lat: 42.9849, lng: -81.2453, baseLoad: 18.0, mults: { base: 1.005, ev: 1.020, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
-                    
-                    /* ATLANTIC REGIONS ADDED */
-                    { id: 'halifax', name: 'Halifax / Atlantic Hub', lat: 44.6488, lng: -63.5752, baseLoad: 12.0, mults: { base: 1.004, ev: 1.015, ai: 1.00, heat: 1.020, hydro: 1.045 } }, 
-                    { id: 'saintjohn', name: 'Saint John (Industrial)', lat: 45.2733, lng: -66.0633, baseLoad: 14.0, mults: { base: 1.005, ev: 1.010, ai: 1.00, heat: 1.015, hydro: 1.040 } } 
+                    { id: 'ottawa', name: 'Ottawa Tech & Capital Corridor', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } }, 
+                    { id: 'montreal', name: 'Greater Montreal & Southern QC', lat: 45.5017, lng: -73.5673, baseLoad: 75.0, mults: { base: 1.007, ev: 1.012, ai: 1.020, heat: 1.018, hydro: 1.025 } }, 
+                    { id: 'halifax', name: 'Halifax & Maritimes Hub', lat: 44.6488, lng: -63.5752, baseLoad: 18.0, mults: { base: 1.004, ev: 1.015, ai: 1.008, heat: 1.020, hydro: 1.045 } }, 
+                    { id: 'stjohns', name: 'St. John\'s & Eastern NL', lat: 47.5615, lng: -52.7126, baseLoad: 10.0, mults: { base: 1.003, ev: 1.010, ai: 1.005, heat: 1.015, hydro: 1.035 } }, 
+                    { id: 'north', name: 'Territories & Mining North', lat: 62.4540, lng: -114.3718, baseLoad: 8.0, mults: { base: 1.002, ev: 1.010, ai: 1.00, heat: 1.010, hydro: 1.020 } } 
                 ];
 
                 const circleMarkers = {};
@@ -743,7 +748,7 @@
                     const stHeat = document.getElementById('t-heat').checked;
                     const stHydro = document.getElementById('t-hydro').checked;
 
-                    let totalMacroLoad = 17.0; // Base unaccounted load
+                    let totalMacroLoad = 17.0;
 
                     regions.forEach(region => {
                         let annualGrowthRate = region.mults.base;
@@ -755,7 +760,7 @@
                         const projectedLoad = region.baseLoad * Math.pow(annualGrowthRate, yearsElapsed);
                         totalMacroLoad += projectedLoad;
 
-                        const radius = Math.max(10, Math.log(projectedLoad) * 12);
+                        const radius = Math.max(10, Math.log(projectedLoad) * 11);
                         const ratio = projectedLoad / region.baseLoad;
                         let color = '#06b6d4'; 
                         if (ratio > 1.5) color = '#3b82f6'; 
@@ -778,7 +783,7 @@
                     document.getElementById('yearLabelPrem').innerText = currentYear;
                     document.getElementById('totalLoadPrem').innerHTML = `${totalMacroLoad.toFixed(0)} <span>TWh</span>`;
                     
-                    const startingTotal = 169.0; // Adjusted starting total to include the new Atlantic bases
+                    const startingTotal = 336.0;
                     const percentGrowth = ((totalMacroLoad - startingTotal) / startingTotal) * 100;
                     const pill = document.getElementById('growthPercentPrem');
                     
@@ -799,28 +804,29 @@
             }
 
             // ==========================================
-            // 5. MAP 3: PROVINCIAL CAPACITY DEFICIT (INCL. ATLANTIC)
+            // 5. MAP 3: PROVINCIAL CAPACITY DEFICIT (INCL. SK & MB)
             // ==========================================
             function initDeficitMap() {
                 const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false }).setView([56.0, -96.0], 4);
+                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(deficitMap);
+                
                 setTimeout(() => { deficitMap.invalidateSize(); }, 500);
 
                 const gridData = [
                     { id: 'bc', name: 'BC Hydro', lat: 53.0, lng: -125.0, demand: 85, capacity: 78, unit: 'TWh' },
                     { id: 'ab', name: 'AESO (Alberta)', lat: 54.0, lng: -115.0, demand: 110, capacity: 85, unit: 'TWh' },
+                    { id: 'sk', name: 'SaskPower (Saskatchewan)', lat: 52.5, lng: -105.5, demand: 38, capacity: 28, unit: 'TWh' },
+                    { id: 'mb', name: 'Manitoba Hydro', lat: 51.5, lng: -97.5, demand: 42, capacity: 38, unit: 'TWh' },
                     { id: 'on', name: 'IESO (Ontario)', lat: 50.0, lng: -85.0, demand: 250, capacity: 155, unit: 'TWh' },
                     { id: 'qc', name: 'Hydro-Québec', lat: 53.0, lng: -70.0, demand: 280, capacity: 250, unit: 'TWh' },
                     { id: 'ns', name: 'Nova Scotia Power', lat: 45.0, lng: -63.5, demand: 18, capacity: 11, unit: 'TWh' },
-                    
-                    /* ATLANTIC PROVINCES ADDED */
                     { id: 'nb', name: 'NB Power', lat: 46.5, lng: -66.0, demand: 25, capacity: 20, unit: 'TWh' },
-                    { id: 'nl', name: 'NL Hydro (Surplus)', lat: 53.5, lng: -60.0, demand: 15, capacity: 18, unit: 'TWh' } // Rare Surplus
+                    { id: 'nl', name: 'NL Hydro (Surplus)', lat: 53.5, lng: -60.0, demand: 15, capacity: 18, unit: 'TWh' }
                 ];
 
                 gridData.forEach(grid => {
                     const deficit = grid.demand - grid.capacity;
-                    // Highlight green if it's a SURPLUS (like NL), otherwise red for deficit
                     const markerColor = deficit > 0 ? '#ef4444' : '#10b981'; 
                     const statusText = deficit > 0 ? 'Unserved Energy Deficit' : 'Capacity Surplus';
 
@@ -866,7 +872,9 @@
             // ==========================================
             function initOffGridMap() {
                 const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false }).setView([58.0, -90.0], 4);
+                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
+                
                 setTimeout(() => { offgridMap.invalidateSize(); }, 500);
 
                 const offgridZones = {
@@ -878,7 +886,7 @@
                         { "type": "Feature", "properties": { "id": "qc", "name": "Nunavik (Quebec)", "count": 14 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.5, 55.0], [-70.0, 55.0], [-64.0, 60.5], [-72.0, 62.5], [-78.0, 62.5], [-79.5, 55.0]]] } },
                         { "type": "Feature", "properties": { "id": "bc", "name": "Coastal & North BC", "count": 13 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.0, 60.0], [-125.0, 60.0], [-120.0, 54.0], [-123.0, 49.0], [-128.0, 51.0], [-133.0, 54.5], [-139.0, 60.0]]] } },
                         { "type": "Feature", "properties": { "id": "nl", "name": "Labrador Coast", "count": 11 }, "geometry": { "type": "Polygon", "coordinates": [[[-60.0, 51.5], [-55.0, 52.0], [-60.0, 60.0], [-64.0, 60.0], [-60.0, 51.5]]] } },
-                        { "type": "Feature", "properties": { "id": "mb", "name": "Northern Manitoba", "count": 3 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.0, 57.0], [-90.0, 57.0], [-94.0, 60.0], [-102.0, 60.0], [-102.0, 57.0]]] } },
+                        { "type": "Feature", "properties": { "id": "mb", "name": "Northern Manitoba", "count": 4 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.0, 56.0], [-90.0, 56.0], [-94.0, 60.0], [-102.0, 60.0], [-102.0, 56.0]]] } },
                         { "type": "Feature", "properties": { "id": "yk", "name": "Yukon", "count": 4 }, "geometry": { "type": "Polygon", "coordinates": [[[-141.0, 60.0], [-136.0, 60.0], [-136.0, 70.0], [-141.0, 70.0], [-141.0, 60.0]]] } }
                     ]
                 };
