@@ -245,7 +245,17 @@
         .offgrid-badge { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; margin-left: 8px; vertical-align: middle;}
 
         /* ==========================================
-           12. CONTACT & FOOTER
+           12. DATA GOVERNANCE & SOURCES
+           ========================================== */
+        .sources-section { padding: 80px 5%; background: var(--zinc-950); border-top: 1px solid var(--zinc-800); }
+        .sources-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .source-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: var(--radius-md); transition: var(--transition); }
+        .source-card:hover { border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
+        .source-card h4 { color: #f4f4f5; margin-bottom: 0.5rem; font-size: 1.05rem; }
+        .source-card p { color: var(--zinc-400); font-size: 0.85rem; margin-bottom: 0; line-height: 1.5; }
+
+        /* ==========================================
+           13. CONTACT & FOOTER
            ========================================== */
         .contact { padding: 120px 5%; background: var(--bg-base); border-top: 1px solid var(--zinc-200); }
         .contact-container { max-width: 650px; margin: 0 auto; text-align: center; }
@@ -259,7 +269,7 @@
         footer { background: var(--zinc-950); color: var(--zinc-500); text-align: center; padding: 3rem 5%; font-size: 0.95rem; }
 
         /* ==========================================
-           13. RESPONSIVE
+           14. RESPONSIVE
            ========================================== */
         @media (max-width: 1024px) {
             .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -287,10 +297,8 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#about">Profile</a></li>
             <li><a href="#initiatives">Initiatives</a></li>
-            <li><a href="#grid-map">Reliability</a></li>
-            <li><a href="#load-growth">Forecasts</a></li>
-            <li><a href="#supply-deficit">Deficit</a></li>
-            <li><a href="#off-grid">Off-Grid</a></li>
+            <li><a href="#grid-map">Analytics</a></li>
+            <li><a href="#sources">Sources</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
@@ -526,6 +534,34 @@
             </div>
         </section>
 
+        <!-- DATA GOVERNANCE & SOURCES SECTION -->
+        <section class="sources-section reveal" id="sources">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <div class="section-header" style="margin-bottom: 3rem;">
+                    <h2 style="color: #ffffff; font-size: 2rem;">Data Governance & Attributions</h2>
+                    <p style="color: var(--zinc-400); font-size: 1rem;">Enterprise analytics demand rigorous data provenance. The geospatial models and infrastructure datasets visualized on this platform are aggregated from official federal, provincial, and regulatory authorities.</p>
+                </div>
+                <div class="sources-grid">
+                    <div class="source-card">
+                        <h4>Load Forecasts & Capacity</h4>
+                        <p>Independent Electricity System Operator (IESO) Annual Planning Outlooks, Alberta Electric System Operator (AESO) Long-Term Outlook, and BC Hydro IRP.</p>
+                    </div>
+                    <div class="source-card">
+                        <h4>Reliability Benchmarks</h4>
+                        <p>SAIDI and SAIFI metrics sourced from the Ontario Energy Board (OEB) LDC Scorecards, Electricity Canada, and direct provincial utility annual performance reports.</p>
+                    </div>
+                    <div class="source-card">
+                        <h4>Off-Grid Infrastructure</h4>
+                        <p>Microgrid and remote community data cross-referenced via Natural Resources Canada (NRCan) Remote Communities Energy Database.</p>
+                    </div>
+                    <div class="source-card">
+                        <h4>Geospatial Basemaps</h4>
+                        <p>Map engine powered by Leaflet.js. Dark Matter basemaps provided by &copy; CARTO. Base geographic structural data contributed by &copy; OpenStreetMap contributors.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact Section -->
         <section class="contact reveal" id="contact">
             <div class="contact-container">
@@ -715,6 +751,7 @@
                         layer.on({ 
                             mouseover: (e) => { 
                                 e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.3 : 0.7 }); 
+                                // CRITICAL FIX: Only bring municipal LDCs to front so they don't get trapped by Hydro One
                                 if (!isProv) e.target.bringToFront(); 
                                 
                                 const r = document.getElementById(`row-${f.properties.id}`); 
@@ -972,7 +1009,6 @@
                 }).setView([58.0, -90.0], 4);
                 
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
-                
                 setTimeout(() => { offgridMap.invalidateSize(); }, 500);
 
                 const offgridZones = {
