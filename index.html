@@ -78,7 +78,7 @@
         nav { position: fixed; top: 0; width: 100%; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); padding: 1.25rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-bottom: 1px solid rgba(228, 228, 231, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); }
         .logo { font-size: 1.25rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
         .logo span { color: var(--accent); }
-        .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
         .nav-links a { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); transition: var(--transition); letter-spacing: 0.2px; }
         .nav-links a:hover { color: var(--text-main); }
         .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: var(--text-main); z-index: 1001; }
@@ -305,7 +305,7 @@
                     <img src="headshot.jpg" alt="Emmanuel Oyerinde">
                 </div>
                 <span class="badge">
-                    <svg style="width:16px; height:16px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    <svg style="width:16px; height:16px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                     PMP® Certified Project Manager
                 </span>
                 <h1>Bridging Strategy, Enterprise Technology & Operational Excellence</h1>
@@ -493,7 +493,7 @@
             
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
                 <h2 style="color: #ffffff;">The Capacity Deficit: Unserved Energy</h2>
-                <p style="color: var(--zinc-400);">Grid generation is pooled at the provincial system level. Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets (like NB Power's Mactaquac) retire against surging electrification.</p>
+                <p style="color: var(--zinc-400);">Grid generation is pooled at the provincial system level. Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire against surging electrification.</p>
             </div>
 
             <div class="forecast-hero-wrapper" style="height: 650px;">
@@ -601,10 +601,10 @@
             }, 100);
 
             // ==========================================
-            // 3. MAP 1: UTILITY RELIABILITY (WITH ENTERPRISE DATA CARDS)
+            // 3. MAP 1: UTILITY RELIABILITY (WITH HIGH-FIDELITY LDC POLYGONS)
             // ==========================================
             function initReliabilityMap() {
-                const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([50.0, -96.0], 4);
+                const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([48.0, -85.0], 5);
                 setTimeout(() => { map.invalidateSize(); }, 500);
 
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }).addTo(map);
@@ -612,19 +612,30 @@
                 const utilitiesGeoJSON = {
                     "type": "FeatureCollection",
                     "features": [
-                        { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro One", "region": "Rural & Provincial Ontario", "customers": "1.5M", "line_km": "125,000", "density": "12", "mix": "Nuclear, Hydro, Gas, Wind", "saidi": 7.5, "saifi": 2.8 }, "geometry": { "type": "Polygon", "coordinates": [[[-95.0, 51.5], [-85.0, 50.0], [-79.0, 46.5], [-76.0, 45.5], [-74.0, 45.0], [-80.0, 42.5], [-83.0, 42.0], [-95.0, 49.0]]] } },
-                        { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "customers": "780k", "line_km": "15,000", "density": "52", "mix": "Urban Distribution", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.60, 43.75], [-79.15, 43.82], [-79.12, 43.77], [-79.25, 43.68], [-79.38, 43.63], [-79.54, 43.58]]] } },
-                        { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "customers": "165k", "line_km": "3,000", "density": "55", "mix": "Urban Distribution", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.93], [-81.33, 43.07], [-81.15, 43.05], [-81.12, 42.90], [-81.25, 42.88], [-81.38, 42.93]]] } },
-                        { "type": "Feature", "properties": { "id": "ho_ottawa", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "customers": "350k", "line_km": "6,000", "density": "58", "mix": "Urban Distribution", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.15, 45.55], [-75.75, 45.45], [-75.50, 45.55], [-75.30, 45.55], [-75.30, 45.20], [-75.80, 45.10], [-76.35, 45.45]]] } },
-                        { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton", "customers": "1.1M", "line_km": "10,000", "density": "110", "mix": "Urban/Suburban Dist.", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-79.95, 43.25], [-79.80, 43.40], [-79.75, 43.60], [-79.60, 43.75], [-79.40, 43.85], [-79.20, 43.90], [-79.10, 43.85], [-79.15, 43.82], [-79.60, 43.75], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
-                        { "type": "Feature", "properties": { "id": "fa", "utility": "FortisAlberta", "region": "Alberta (Rural/Suburban)", "customers": "580k", "line_km": "124,000", "density": "4.6", "mix": "Coal, Gas, Wind, Solar", "saidi": 1.85, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [[[-119.0, 55.0], [-110.0, 55.0], [-110.0, 49.0], [-114.0, 49.0], [-119.0, 55.0]]] } },
+                        { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro One", "region": "Rural & Provincial Ontario", "customers": "1.5M", "line_km": "125,000", "density": "12", "mix": "Nuclear, Hydro, Gas, Wind", "saidi": 7.5, "saifi": 2.8 }, "geometry": { "type": "Polygon", "coordinates": [
+                            [[-95.1, 49.0], [-95.1, 53.0], [-89.0, 56.5], [-82.0, 55.5], [-79.5, 51.5], [-74.3, 45.5], [-76.0, 44.0], [-76.5, 43.8], [-79.0, 43.2], [-79.0, 42.8], [-81.0, 42.6], [-82.5, 41.8], [-83.1, 42.0], [-82.4, 43.0], [-82.0, 44.0], [-81.5, 45.0], [-84.0, 46.0], [-88.0, 48.5], [-90.0, 48.0], [-95.1, 49.0]]
+                        ] } },
+                        { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "customers": "780k", "line_km": "15,000", "density": "52", "mix": "Urban Distribution", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.62, 43.74], [-79.60, 43.76], [-79.17, 43.85], [-79.13, 43.80], [-79.15, 43.77], [-79.20, 43.72], [-79.25, 43.69], [-79.34, 43.66], [-79.38, 43.63], [-79.45, 43.62], [-79.54, 43.58]]] } },
+                        { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton / Vaughan", "customers": "1.1M", "line_km": "10,000", "density": "110", "mix": "Urban/Suburban Dist.", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-80.00, 43.25], [-79.85, 43.45], [-79.80, 43.75], [-79.70, 44.40], [-79.60, 44.40], [-79.30, 43.95], [-79.20, 43.90], [-79.15, 43.85], [-79.17, 43.85], [-79.60, 43.76], [-79.62, 43.74], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
+                        { "type": "Feature", "properties": { "id": "enov", "utility": "Enova Power Corp", "region": "Waterloo / Kitchener / Wilmot", "customers": "165k", "line_km": "3,400", "density": "48", "mix": "Urban/Suburban Dist.", "saidi": 0.98, "saifi": 1.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.70, 43.35], [-80.75, 43.50], [-80.65, 43.60], [-80.50, 43.65], [-80.40, 43.55], [-80.30, 43.45], [-80.40, 43.35], [-80.70, 43.35]]] } },
+                        { "type": "Feature", "properties": { "id": "bh", "utility": "Burlington Hydro", "region": "Burlington, ON", "customers": "69k", "line_km": "1,500", "density": "46", "mix": "Urban Distribution", "saidi": 1.25, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.85, 43.30], [-79.90, 43.45], [-79.75, 43.40], [-79.70, 43.30], [-79.85, 43.30]]] } },
+                        { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "customers": "165k", "line_km": "3,000", "density": "55", "mix": "Urban Distribution", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.35, 42.90], [-81.38, 42.95], [-81.33, 43.05], [-81.18, 43.05], [-81.15, 43.00], [-81.12, 42.92], [-81.20, 42.88], [-81.30, 42.88], [-81.35, 42.90]]] } },
+                        { "type": "Feature", "properties": { "id": "ew", "utility": "Enwin Utilities", "region": "Windsor, ON", "customers": "91k", "line_km": "1,100", "density": "82", "mix": "Urban Distribution", "saidi": 0.90, "saifi": 1.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-83.10, 42.25], [-83.05, 42.35], [-82.90, 42.35], [-82.90, 42.25], [-83.10, 42.25]]] } },
+                        { "type": "Feature", "properties": { "id": "elx", "utility": "Elexicon Energy", "region": "Durham Region (Oshawa / Whitby)", "customers": "173k", "line_km": "4,100", "density": "42", "mix": "Urban/Suburban Dist.", "saidi": 1.18, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.15, 43.82], [-79.10, 43.85], [-79.15, 44.05], [-78.80, 44.00], [-78.70, 43.85], [-79.15, 43.82]]] } },
+                        { "type": "Feature", "properties": { "id": "ho_ottawa", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "customers": "350k", "line_km": "6,000", "density": "58", "mix": "Urban Distribution", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.25, 45.50], [-76.00, 45.40], [-75.80, 45.52], [-75.70, 45.45], [-75.40, 45.55], [-75.30, 45.55], [-75.25, 45.40], [-75.40, 45.10], [-75.80, 45.00], [-76.00, 45.10], [-76.35, 45.45]]] } },
+                        
+                        { "type": "Feature", "properties": { "id": "fa", "utility": "FortisAlberta", "region": "Alberta (Rural/Suburban)", "customers": "580k", "line_km": "124,000", "density": "4.6", "mix": "Coal, Gas, Wind, Solar", "saidi": 1.85, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [
+                            [[-120.0, 54.0], [-120.0, 60.0], [-110.0, 60.0], [-110.0, 49.0], [-114.0, 49.0], [-114.5, 50.0], [-115.0, 51.0], [-117.0, 52.0], [-119.0, 53.0], [-120.0, 54.0]],
+                            [[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]],
+                            [[-113.70, 53.40], [-113.70, 53.65], [-113.30, 53.65], [-113.30, 53.40], [-113.70, 53.40]]
+                        ] } },
                         { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "customers": "520k", "line_km": "8,500", "density": "61", "mix": "Urban Distribution", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]]] } },
                         { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "customers": "415k", "line_km": "6,000", "density": "69", "mix": "Urban Distribution", "saidi": 1.51, "saifi": 0.72 }, "geometry": { "type": "Polygon", "coordinates": [[[-113.70, 53.40], [-113.70, 53.65], [-113.30, 53.65], [-113.30, 53.40], [-113.70, 53.40]]] } },
-                        { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "customers": "2.1M", "line_km": "79,000", "density": "26", "mix": "95% Hydroelectric", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-114.05, 49.00], [-123.10, 49.00], [-125.00, 50.50], [-128.00, 51.00], [-130.50, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
+                        { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "customers": "2.1M", "line_km": "79,000", "density": "26", "mix": "95% Hydroelectric", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-120.00, 49.00], [-123.00, 49.00], [-123.30, 48.30], [-124.00, 48.30], [-125.00, 48.80], [-128.00, 50.80], [-128.50, 51.00], [-130.00, 52.00], [-131.00, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
                         { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower", "region": "Saskatchewan", "customers": "540k", "line_km": "157,000", "density": "3.4", "mix": "Gas, Coal, Wind, Hydro", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } },
-                        { "type": "Feature", "properties": { "id": "mh", "utility": "Manitoba Hydro", "region": "Manitoba", "customers": "608k", "line_km": "75,000", "density": "8.1", "mix": "97% Hydroelectric", "saidi": 1.60, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.00, 49.00], [-102.00, 60.00], [-95.00, 60.00], [-89.00, 56.00], [-95.00, 51.50], [-95.00, 49.00], [-102.00, 49.00]]] } },
-                        { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "customers": "4.4M", "line_km": "118,000", "density": "37", "mix": "99% Hydroelectric", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-79.50, 51.50]]] } },
-                        { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "customers": "520k", "line_km": "32,000", "density": "16", "mix": "Coal, Gas, Wind, Hydro", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
+                        { "type": "Feature", "properties": { "id": "mh", "utility": "Manitoba Hydro", "region": "Manitoba", "customers": "608k", "line_km": "75,000", "density": "8.1", "mix": "97% Hydroelectric", "saidi": 1.60, "saifi": 1.40 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.00, 49.00], [-102.00, 60.00], [-95.00, 60.00], [-89.00, 56.50], [-95.00, 51.50], [-95.00, 49.00], [-102.00, 49.00]]] } },
+                        { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "customers": "4.4M", "line_km": "118,000", "density": "37", "mix": "99% Hydroelectric", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-64.00, 52.00], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-76.00, 46.00], [-79.50, 51.50]]] } },
+                        { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "customers": "520k", "line_km": "32,000", "density": "16", "mix": "Coal, Gas, Wind, Hydro", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
                         { "type": "Feature", "properties": { "id": "nbp", "utility": "NB Power", "region": "New Brunswick", "customers": "400k", "line_km": "21,000", "density": "19", "mix": "Nuclear, Hydro, Fossil", "saidi": 2.50, "saifi": 2.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-69.00, 47.30], [-68.00, 48.00], [-64.50, 48.00], [-64.00, 46.00], [-64.30, 45.90], [-66.15, 43.85], [-67.00, 45.00], [-67.80, 45.50], [-69.00, 47.30]]] } },
                         { "type": "Feature", "properties": { "id": "nfp", "utility": "Newfoundland Power", "region": "Island of Newfoundland", "customers": "270k", "line_km": "12,000", "density": "22", "mix": "Hydroelectric", "saidi": 1.80, "saifi": 1.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-59.50, 51.50], [-55.50, 51.50], [-52.50, 47.50], [-54.00, 46.60], [-59.50, 47.50], [-59.50, 51.50]]] } },
                         { "type": "Feature", "properties": { "id": "me", "utility": "Maritime Electric", "region": "Prince Edward Island", "customers": "86k", "line_km": "6,000", "density": "14", "mix": "Wind, Imports via Cable", "saidi": 3.00, "saifi": 2.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-64.50, 46.50], [-63.80, 46.50], [-62.00, 46.30], [-62.00, 46.00], [-63.50, 46.00], [-64.50, 46.50]]] } }
@@ -740,22 +751,31 @@
             }
 
             // ==========================================
-            // 4. MAP 2: 50-YEAR BESPOKE FORECAST
+            // 4. MAP 2: 50-YEAR BESPOKE FORECAST (DETAILED NODES)
             // ==========================================
             function initForecastMap() {
                 const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false }).setView([56.0, -96.0], 4);
                 L.control.zoom({ position: 'topright' }).addTo(forecastMap);
+                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(forecastMap);
+                
                 setTimeout(() => { forecastMap.invalidateSize(); }, 500);
 
                 const regions = [
-                    { id: 'vancouver', name: 'Metro Vancouver (Lower Mainland)', lat: 49.2827, lng: -123.1207, baseLoad: 35.0, mults: { base: 1.007, ev: 1.012, ai: 1.020, heat: 1.018, hydro: 1.005 } }, 
+                    { id: 'vancouver', name: 'Metro Vancouver', lat: 49.2827, lng: -123.1207, baseLoad: 35.0, mults: { base: 1.007, ev: 1.012, ai: 1.020, heat: 1.018, hydro: 1.005 } }, 
                     { id: 'alberta', name: 'Calgary-Edmonton Corridor', lat: 51.0447, lng: -114.0719, baseLoad: 45.0, mults: { base: 1.006, ev: 1.015, ai: 1.015, heat: 1.012, hydro: 1.035 } }, 
                     { id: 'sask', name: 'Saskatchewan Industrial Hub', lat: 52.1332, lng: -106.6700, baseLoad: 25.0, mults: { base: 1.004, ev: 1.010, ai: 1.005, heat: 1.010, hydro: 1.030 } }, 
                     { id: 'manitoba', name: 'Winnipeg & Southern MB', lat: 49.8951, lng: -97.1384, baseLoad: 22.0, mults: { base: 1.005, ev: 1.012, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
+                    
+                    /* Ontario Detailed Hubs */
                     { id: 'toronto', name: 'Greater Toronto Area', lat: 43.6532, lng: -79.3832, baseLoad: 48.0, mults: { base: 1.008, ev: 1.010, ai: 1.025, heat: 1.015, hydro: 1.00 } }, 
-                    { id: 'windsor', name: 'Windsor-Essex (Industrial)', lat: 42.3149, lng: -83.0364, baseLoad: 25.0, mults: { base: 1.005, ev: 1.035, ai: 1.005, heat: 1.010, hydro: 1.020 } }, 
+                    { id: 'k-w', name: 'Kitchener-Waterloo Tech Triangle', lat: 43.4516, lng: -80.4925, baseLoad: 14.0, mults: { base: 1.008, ev: 1.012, ai: 1.035, heat: 1.015, hydro: 1.00 } }, 
+                    { id: 'halton', name: 'Halton-Burlington-Hamilton', lat: 43.3255, lng: -79.7990, baseLoad: 16.0, mults: { base: 1.006, ev: 1.015, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
+                    { id: 'london', name: 'London & Middlesex Urban Core', lat: 42.9849, lng: -81.2453, baseLoad: 12.0, mults: { base: 1.005, ev: 1.018, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
+                    { id: 'windsor', name: 'Windsor-Essex (Industrial/Battery)', lat: 42.3149, lng: -83.0364, baseLoad: 18.0, mults: { base: 1.005, ev: 1.045, ai: 1.005, heat: 1.010, hydro: 1.020 } }, 
                     { id: 'ottawa', name: 'Ottawa Tech & Capital Corridor', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } }, 
+                    { id: 'sudbury', name: 'Sudbury & Mining North', lat: 46.4917, lng: -80.9930, baseLoad: 10.0, mults: { base: 1.002, ev: 1.020, ai: 1.00, heat: 1.010, hydro: 1.030 } }, 
+                    
                     { id: 'montreal', name: 'Greater Montreal & Southern QC', lat: 45.5017, lng: -73.5673, baseLoad: 75.0, mults: { base: 1.007, ev: 1.012, ai: 1.020, heat: 1.018, hydro: 1.025 } }, 
                     { id: 'halifax', name: 'Halifax & Maritimes Hub', lat: 44.6488, lng: -63.5752, baseLoad: 18.0, mults: { base: 1.004, ev: 1.015, ai: 1.008, heat: 1.020, hydro: 1.045 } }, 
                     { id: 'stjohns', name: 'St. John\'s & Eastern NL', lat: 47.5615, lng: -52.7126, baseLoad: 10.0, mults: { base: 1.003, ev: 1.010, ai: 1.005, heat: 1.015, hydro: 1.035 } }, 
@@ -779,7 +799,7 @@
                     const stHeat = document.getElementById('t-heat').checked;
                     const stHydro = document.getElementById('t-hydro').checked;
 
-                    let totalMacroLoad = 17.0;
+                    let totalMacroLoad = 17.0; 
 
                     regions.forEach(region => {
                         let annualGrowthRate = region.mults.base;
@@ -814,7 +834,7 @@
                     document.getElementById('yearLabelPrem').innerText = currentYear;
                     document.getElementById('totalLoadPrem').innerHTML = `${totalMacroLoad.toFixed(0)} <span>TWh</span>`;
                     
-                    const startingTotal = 336.0;
+                    const startingTotal = 393.0; // Updated national baseline sum
                     const percentGrowth = ((totalMacroLoad - startingTotal) / startingTotal) * 100;
                     const pill = document.getElementById('growthPercentPrem');
                     
@@ -839,7 +859,9 @@
             // ==========================================
             function initDeficitMap() {
                 const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false }).setView([56.0, -96.0], 4);
+                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(deficitMap);
+                
                 setTimeout(() => { deficitMap.invalidateSize(); }, 500);
 
                 const gridData = [
@@ -901,7 +923,9 @@
             // ==========================================
             function initOffGridMap() {
                 const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false }).setView([58.0, -90.0], 4);
+                
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
+                
                 setTimeout(() => { offgridMap.invalidateSize(); }, 500);
 
                 const offgridZones = {
