@@ -17,11 +17,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Leaflet CSS for Map -->
+    <!-- Leaflet CSS for Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-    <!-- Chart.js for Supply Deficit Graph -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         /* ==========================================
@@ -81,7 +78,7 @@
         nav { position: fixed; top: 0; width: 100%; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); padding: 1.25rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-bottom: 1px solid rgba(228, 228, 231, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); }
         .logo { font-size: 1.25rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
         .logo span { color: var(--accent); }
-        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links { display: flex; gap: 2.0rem; list-style: none; }
         .nav-links a { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); transition: var(--transition); letter-spacing: 0.2px; }
         .nav-links a:hover { color: var(--text-main); }
         .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: var(--text-main); z-index: 1001; }
@@ -155,45 +152,54 @@
         .project-link:hover { color: var(--accent); gap: 0.75rem; }
 
         /* ==========================================
-           7. LIVE MAP 1: RELIABILITY DASHBOARD
+           7. SHARED MAP LAYOUT STYLES
            ========================================== */
         .map-section { padding: 120px 5%; background: var(--bg-surface); border-top: 1px solid var(--zinc-200); position: relative; overflow: hidden; }
         .map-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 60%); border-radius: 50%; z-index: 0; pointer-events: none; filter: blur(80px); }
+        
         .map-app-wrapper { position: relative; z-index: 2; max-width: 1200px; height: 750px; margin: 0 auto; display: flex; flex-direction: row; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--zinc-800); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); background: var(--zinc-950); }
         .map-sidebar { width: 400px; background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(10px); border-right: 1px solid var(--zinc-800); display: flex; flex-direction: column; z-index: 10; color: var(--zinc-200); }
+        
         .map-sidebar-header { padding: 24px; border-bottom: 1px solid var(--zinc-800); }
         .map-sidebar-header h3 { font-size: 1.25rem; color: #ffffff; font-weight: 700; margin-bottom: 8px; }
         .map-sidebar-header p { font-size: 0.9rem; color: var(--zinc-400); line-height: 1.5; }
-        .legend-box { display: flex; justify-content: space-between; margin-top: 20px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; font-weight: 600; }
-        .legend-item { display: flex; align-items: center; gap: 8px; }
-        .legend-color { width: 12px; height: 12px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
+        
         .search-container { padding: 16px 24px; border-bottom: 1px solid var(--zinc-800); }
         .search-input { width: 100%; padding: 12px 16px; border: 1px solid var(--zinc-700); border-radius: var(--radius-sm); outline: none; transition: var(--transition); background: rgba(39, 39, 42, 0.5); color: #ffffff; }
         .search-input:focus { border-color: var(--accent); background: var(--zinc-800); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
+        
         .table-container { flex-grow: 1; overflow-y: auto; }
         .table-container::-webkit-scrollbar { width: 6px; }
         .table-container::-webkit-scrollbar-thumb { background: var(--zinc-700); border-radius: 3px; }
+        
+        .leaflet-map-container { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; background: var(--zinc-900); }
+        
+        /* Shared Leaflet Tooltip Styles */
+        .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--zinc-800); color: var(--zinc-300); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--zinc-700); }
+        .leaflet-popup-tip { background: var(--zinc-800); }
+        .popup-title { font-weight: 700; font-size: 1.1rem; color: #ffffff; margin-bottom: 8px; border-bottom: 1px solid var(--zinc-700); padding-bottom: 8px; }
+        .popup-stat { font-size: 0.9rem; color: var(--zinc-400); margin: 6px 0; }
+        .popup-stat strong { color: var(--zinc-200); }
+        .dark-tooltip { background: var(--zinc-800) !important; color: var(--zinc-200) !important; border: 1px solid var(--zinc-700) !important; border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-md) !important; font-family: 'Plus Jakarta Sans', sans-serif !important; }
+        .dark-tooltip.leaflet-tooltip::before { border-top-color: var(--zinc-800); border-bottom-color: var(--zinc-800); border-left-color: var(--zinc-800); border-right-color: var(--zinc-800); }
+
+        /* ==========================================
+           8. MAP 1 SPECIFIC (RELIABILITY)
+           ========================================== */
+        .legend-box { display: flex; justify-content: space-between; margin-top: 20px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; font-weight: 600; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-color { width: 12px; height: 12px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
         .map-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .map-table th { position: sticky; top: 0; background: rgba(24, 24, 27, 0.95); padding: 16px 24px; color: var(--zinc-400); font-weight: 600; border-bottom: 1px solid var(--zinc-800); z-index: 2; text-align: left; }
         .map-table td { padding: 16px 24px; border-bottom: 1px solid var(--zinc-800); color: var(--zinc-300); text-align: left; }
         tr.utility-row { cursor: pointer; transition: var(--transition); }
         tr.utility-row:hover, tr.utility-row.active { background: rgba(37, 99, 235, 0.15); }
         .status-badge { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
-        .leaflet-map-container { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; background: var(--zinc-900); }
-        
-        .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--zinc-800); color: var(--zinc-300); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--zinc-700); }
-        .leaflet-popup-tip { background: var(--zinc-800); }
-        .popup-title { font-weight: 700; font-size: 1.1rem; color: #ffffff; margin-bottom: 8px; border-bottom: 1px solid var(--zinc-700); padding-bottom: 8px; }
-        .popup-stat { font-size: 0.9rem; color: var(--zinc-400); margin: 6px 0; }
-        .popup-stat strong { color: var(--zinc-200); }
-        .dark-tooltip.leaflet-tooltip { background: var(--zinc-800); color: var(--zinc-200); border: 1px solid var(--zinc-700); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); font-family: 'Plus Jakarta Sans', sans-serif;}
-        .dark-tooltip.leaflet-tooltip::before { border-top-color: var(--zinc-800); }
 
         /* ==========================================
-           8. LIVE MAP 2: 50-YEAR BESPOKE FORECAST
+           9. MAP 2 SPECIFIC (50-YEAR FORECAST)
            ========================================== */
         .forecast-hero-wrapper { position: relative; width: 100%; height: 850px; max-width: 1200px; margin: 0 auto; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid rgba(255, 255, 255, 0.1); background: var(--zinc-950); }
-        #forecast-map-premium { width: 100%; height: 100%; z-index: 1; }
         .glass-dashboard { position: absolute; top: 40px; left: 40px; width: 380px; background: rgba(24, 24, 27, 0.75); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-md); padding: 32px; z-index: 10; color: white; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
         .glass-header h3 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px; background: linear-gradient(135deg, #ffffff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glass-header p { font-size: 0.85rem; color: var(--zinc-400); margin-bottom: 24px; line-height: 1.5; }
@@ -226,13 +232,21 @@
         .growth-pill { display: inline-block; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(16,185,129,0.2); }
 
         /* ==========================================
-           9. CHART SECTION (SUPPLY DEFICIT)
+           10. MAP 3 SPECIFIC (SUPPLY DEFICIT)
            ========================================== */
-        .chart-section { padding: 120px 5%; background: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05); }
-        .chart-container { position: relative; max-width: 1200px; margin: 0 auto; background: var(--zinc-900); padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--zinc-800); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        
+        .custom-pulse-icon { display: flex; align-items: center; justify-content: center; }
+
         /* ==========================================
-           10. CONTACT & FOOTER
+           11. MAP 4 SPECIFIC (OFF-GRID MICROGRIDS)
+           ========================================== */
+        .offgrid-item { padding: 12px 24px; border-bottom: 1px solid var(--zinc-800); transition: var(--transition); cursor: pointer; }
+        .offgrid-item:hover, .offgrid-item.active { background: rgba(245, 158, 11, 0.1); } /* Amber hover */
+        .offgrid-region-title { font-weight: 700; color: #f4f4f5; font-size: 1rem; margin-bottom: 4px; }
+        .offgrid-community-list { font-size: 0.75rem; color: var(--zinc-400); line-height: 1.6; }
+        .offgrid-badge { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; margin-left: 8px; vertical-align: middle;}
+
+        /* ==========================================
+           12. CONTACT & FOOTER
            ========================================== */
         .contact { padding: 120px 5%; background: var(--bg-base); border-top: 1px solid var(--zinc-200); }
         .contact-container { max-width: 650px; margin: 0 auto; text-align: center; }
@@ -246,7 +260,7 @@
         footer { background: var(--zinc-950); color: var(--zinc-500); text-align: center; padding: 3rem 5%; font-size: 0.95rem; }
 
         /* ==========================================
-           11. RESPONSIVE
+           13. RESPONSIVE
            ========================================== */
         @media (max-width: 1024px) {
             .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -256,13 +270,12 @@
             .leaflet-map-container { height: 500px; }
             .glass-dashboard { position: relative; top: 0; left: 0; width: 100%; border-radius: 0; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
             .forecast-hero-wrapper { height: auto; display: flex; flex-direction: column; }
-            #forecast-map-premium { height: 500px; }
+            #forecast-map-premium, #deficit-leaflet-map { height: 500px; }
             .mobile-menu-btn { display: block; }
             .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); flex-direction: column; gap: 0; text-align: center; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--zinc-200); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
             .nav-links.active { opacity: 1; visibility: visible; transform: translateY(0); }
             .nav-links a { display: block; padding: 1.5rem; border-bottom: 1px solid var(--zinc-100); font-size: 1.1rem; }
             .contact-form { padding: 2rem; }
-            .chart-container { padding: 20px; }
         }
     </style>
 </head>
@@ -278,6 +291,7 @@
             <li><a href="#grid-map">Reliability</a></li>
             <li><a href="#load-growth">Forecasts</a></li>
             <li><a href="#supply-deficit">Deficit</a></li>
+            <li><a href="#off-grid">Off-Grid</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
@@ -413,11 +427,6 @@
                                     <th>SAIFI</th>
                                 </tr>
                             </thead>
-                            <!-- 
-                                =====================================
-                                FIXED: THE TYPO BELOW IS NOW <tbody> 
-                                =====================================
-                            -->
                             <tbody id="utility-table-body"></tbody>
                         </table>
                     </div>
@@ -480,15 +489,42 @@
             </div>
         </section>
 
-        <!-- CHART SECTION: SUPPLY DEFICIT -->
-        <section class="chart-section reveal" id="supply-deficit">
-            <div class="section-header" style="max-width: 1200px; margin: 0 auto 3rem;">
-                <h2 style="color: #ffffff;">The Capacity Deficit: Unserved Energy</h2>
-                <p style="color: var(--zinc-400);">Cross-comparing projected energy demand against committed generation capacity reveals a critical shortfall beginning in the 2030s as legacy nuclear and gas assets retire.</p>
-            </div>
+        <!-- LIVE MAP 3: SUPPLY DEFICIT EXPLORER -->
+        <section class="map-section reveal" id="supply-deficit" style="background-color: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 60%);"></div>
             
-            <div class="chart-container">
-                <canvas id="deficitChart" height="450"></canvas>
+            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                <h2 style="color: #ffffff;">The Capacity Deficit: Unserved Energy</h2>
+                <p style="color: var(--zinc-400);">Grid generation is pooled at the provincial system level. Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire against surging electrification.</p>
+            </div>
+
+            <div class="forecast-hero-wrapper" style="height: 650px;">
+                <div id="deficit-leaflet-map" style="width: 100%; height: 100%; z-index: 1;"></div>
+            </div>
+        </section>
+
+        <!-- LIVE MAP 4: OFF-GRID MICROGRIDS -->
+        <section class="map-section reveal" id="off-grid">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 60%);"></div> 
+            <div class="section-header" style="position: relative; z-index: 2;">
+                <h2>Remote & Off-Grid Infrastructure</h2>
+                <p>Visualizing the 100+ Canadian communities, First Nations, and northern settlements that operate completely independently of the North American power grid, relying almost entirely on localized diesel microgrids.</p>
+            </div>
+
+            <div class="map-app-wrapper">
+                <div class="map-sidebar">
+                    <div class="map-sidebar-header">
+                        <h3>Off-Grid Directory</h3>
+                        <p>Select a massive off-grid zone to view the isolated settlements within it.</p>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" id="offgrid-search" class="search-input" placeholder="Search community or province...">
+                    </div>
+                    <div class="table-container" id="offgrid-list-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div id="offgrid-leaflet-map" class="leaflet-map-container"></div>
             </div>
         </section>
 
@@ -555,94 +591,62 @@
                 });
             });
 
-            // ==========================================
-            // 3. MAP 1: UTILITY RELIABILITY (WITH HIGH-FIDELITY POLYGONS)
-            // ==========================================
-            const utilitiesGeoJSON = {
-                "type": "FeatureCollection",
-                "features": [
-                    { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.93], [-81.33, 43.07], [-81.15, 43.05], [-81.12, 42.90], [-81.25, 42.88], [-81.38, 42.93]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.60, 43.75], [-79.15, 43.82], [-79.12, 43.77], [-79.25, 43.68], [-79.38, 43.63], [-79.54, 43.58]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.15, 45.55], [-75.75, 45.45], [-75.50, 45.55], [-75.30, 45.55], [-75.30, 45.20], [-75.80, 45.10], [-76.35, 45.45]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton", "saidi": 0.95, "saifi": 1.10 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-79.95, 43.25], [-79.80, 43.40], [-79.75, 43.60], [-79.60, 43.75], [-79.40, 43.85], [-79.20, 43.90], [-79.10, 43.85], [-79.15, 43.82], [-79.60, 43.75], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-113.70, 53.40], [-113.70, 53.65], [-113.30, 53.65], [-113.30, 53.40], [-113.70, 53.40]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "saidi": 1.02, "saifi": 0.98 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-114.05, 49.00], [-123.10, 49.00], [-125.00, 50.50], [-128.00, 51.00], [-130.50, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "saidi": 1.45, "saifi": 1.50 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-79.50, 51.50]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "saidi": 2.30, "saifi": 2.10 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
-                    
-                    { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower", "region": "Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, 
-                      "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } }
-                ]
-            };
-
-            function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
-
+            // Master Initialization Check for Leaflet
             let checkLeaflet = setInterval(() => {
                 if(window.L) {
                     clearInterval(checkLeaflet);
                     initReliabilityMap();
                     initForecastMap();
+                    initDeficitMap();
+                    initOffGridMap(); // New Map 4
                 }
             }, 100);
 
+            // ==========================================
+            // 3. MAP 1: UTILITY RELIABILITY (HIGH-FIDELITY)
+            // ==========================================
             function initReliabilityMap() {
                 const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([50.0, -90.0], 4);
                 setTimeout(() => { map.invalidateSize(); }, 500);
 
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    maxZoom: 18, attribution: '&copy; OpenStreetMap contributors, &copy; CARTO'
-                }).addTo(map);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18, attribution: '&copy; CARTO' }).addTo(map);
 
-                let geojsonLayer;
+                const utilitiesGeoJSON = {
+                    "type": "FeatureCollection",
+                    "features": [
+                        { "type": "Feature", "properties": { "id": "lh", "utility": "London Hydro", "region": "London, ON", "saidi": 1.05, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.93], [-81.33, 43.07], [-81.15, 43.05], [-81.12, 42.90], [-81.25, 42.88], [-81.38, 42.93]]] } },
+                        { "type": "Feature", "properties": { "id": "th", "utility": "Toronto Hydro", "region": "Toronto, ON", "saidi": 1.15, "saifi": 1.34 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.60, 43.75], [-79.15, 43.82], [-79.12, 43.77], [-79.25, 43.68], [-79.38, 43.63], [-79.54, 43.58]]] } },
+                        { "type": "Feature", "properties": { "id": "ho", "utility": "Hydro Ottawa", "region": "Ottawa, ON", "saidi": 1.28, "saifi": 1.45 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.35, 45.45], [-76.15, 45.55], [-75.75, 45.45], [-75.50, 45.55], [-75.30, 45.55], [-75.30, 45.20], [-75.80, 45.10], [-76.35, 45.45]]] } },
+                        { "type": "Feature", "properties": { "id": "al", "utility": "Alectra Utilities", "region": "Mississauga / Hamilton", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.20], [-79.95, 43.25], [-79.80, 43.40], [-79.75, 43.60], [-79.60, 43.75], [-79.40, 43.85], [-79.20, 43.90], [-79.10, 43.85], [-79.15, 43.82], [-79.60, 43.75], [-79.54, 43.58], [-79.65, 43.55], [-79.70, 43.40], [-79.75, 43.30], [-79.80, 43.20]]] } },
+                        { "type": "Feature", "properties": { "id": "en", "utility": "ENMAX Power", "region": "Calgary, AB", "saidi": 0.85, "saifi": 0.75 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.25, 50.85], [-114.25, 51.18], [-113.90, 51.18], [-113.90, 50.85], [-114.25, 50.85]]] } },
+                        { "type": "Feature", "properties": { "id": "ep", "utility": "EPCOR Utilities", "region": "Edmonton, AB", "saidi": 1.51, "saifi": 0.72 }, "geometry": { "type": "Polygon", "coordinates": [[[-113.70, 53.40], [-113.70, 53.65], [-113.30, 53.65], [-113.30, 53.40], [-113.70, 53.40]]] } },
+                        { "type": "Feature", "properties": { "id": "bc", "utility": "BC Hydro", "region": "British Columbia", "saidi": 1.02, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.05, 60.00], [-120.00, 60.00], [-120.00, 54.00], [-114.05, 49.00], [-123.10, 49.00], [-125.00, 50.50], [-128.00, 51.00], [-130.50, 54.00], [-133.00, 54.50], [-139.05, 60.00]]] } },
+                        { "type": "Feature", "properties": { "id": "hq", "utility": "Hydro-Québec", "region": "Quebec", "saidi": 1.45, "saifi": 1.50 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 51.50], [-79.50, 54.50], [-78.00, 62.50], [-72.00, 62.50], [-64.00, 60.50], [-57.00, 51.50], [-64.00, 48.50], [-68.00, 47.00], [-71.00, 45.00], [-74.50, 45.00], [-79.50, 51.50]]] } },
+                        { "type": "Feature", "properties": { "id": "nsp", "utility": "Nova Scotia Power", "region": "Nova Scotia", "saidi": 2.30, "saifi": 2.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-66.15, 43.85], [-64.80, 45.00], [-64.30, 45.90], [-63.80, 46.00], [-63.00, 47.00], [-59.80, 46.00], [-61.00, 45.30], [-63.50, 44.50], [-65.50, 43.40], [-66.15, 43.85]]] } },
+                        { "type": "Feature", "properties": { "id": "skp", "utility": "SaskPower", "region": "Saskatchewan", "saidi": 2.10, "saifi": 2.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-110.00, 49.00], [-110.00, 60.00], [-102.00, 60.00], [-101.50, 49.00], [-110.00, 49.00]]] } }
+                    ]
+                };
+
                 const layerMap = {};
+                function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
-                function style(feature) {
-                    return { fillColor: getColor(feature.properties.saidi), weight: 2, opacity: 0.9, color: getColor(feature.properties.saidi), fillOpacity: 0.35 };
-                }
-                function highlightFeature(e) {
-                    const layer = e.target;
-                    layer.setStyle({ weight: 3, color: '#ffffff', fillOpacity: 0.6 });
-                    layer.bringToFront();
-                    const row = document.getElementById(`row-${layer.feature.properties.id}`);
-                    if (row) row.classList.add('active');
-                }
-                function resetHighlight(e) {
-                    const layer = e.target;
-                    geojsonLayer.resetStyle(layer);
-                    const row = document.getElementById(`row-${layer.feature.properties.id}`);
-                    if (row) row.classList.remove('active');
-                }
-                function onEachFeature(feature, layer) {
-                    layerMap[feature.properties.id] = layer;
-                    const p = feature.properties;
-                    layer.bindPopup(`
-                        <div class="popup-title">${p.utility}</div>
-                        <div class="popup-stat"><strong>Region:</strong> ${p.region}</div>
-                        <div class="popup-stat"><strong>SAIDI:</strong> ${p.saidi} hrs/yr</div>
-                        <div class="popup-stat"><strong>SAIFI:</strong> ${p.saifi} outages/yr</div>
-                    `);
-                    layer.on({ mouseover: highlightFeature, mouseout: resetHighlight, click: () => selectUtility(p.id) });
-                }
-
-                geojsonLayer = L.geoJSON(utilitiesGeoJSON, { style: style, onEachFeature: onEachFeature }).addTo(map);
+                let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
+                    style: function(f) { return { fillColor: getColor(f.properties.saidi), weight: 2, opacity: 0.9, color: getColor(f.properties.saidi), fillOpacity: 0.35 }; }, 
+                    onEachFeature: function(f, layer) {
+                        layerMap[f.properties.id] = layer;
+                        layer.bindPopup(`
+                            <div class="popup-title">${f.properties.utility}</div>
+                            <div class="popup-stat"><strong>Region:</strong> ${f.properties.region}</div>
+                            <div class="popup-stat"><strong>SAIDI:</strong> ${f.properties.saidi} hrs/yr</div>
+                            <div class="popup-stat"><strong>SAIFI:</strong> ${f.properties.saifi} outages/yr</div>
+                        `);
+                        layer.on({ 
+                            mouseover: (e) => { e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: 0.6 }); e.target.bringToFront(); const r = document.getElementById(`row-${f.properties.id}`); if(r) r.classList.add('active'); }, 
+                            mouseout: (e) => { geojsonLayer.resetStyle(e.target); const r = document.getElementById(`row-${f.properties.id}`); if(r) r.classList.remove('active'); }, 
+                            click: () => selectUtility(f.properties.id) 
+                        });
+                    }
+                }).addTo(map);
 
                 const tableBody = document.getElementById('utility-table-body');
                 function buildTable(features) {
@@ -664,8 +668,8 @@
                             <td><strong style="color: #f4f4f5;">${p.saifi}</strong></td>
                         `;
                         row.addEventListener('click', () => selectUtility(p.id));
-                        row.addEventListener('mouseenter', () => { if(layerMap[p.id]) highlightFeature({ target: layerMap[p.id] }); });
-                        row.addEventListener('mouseleave', () => { if(layerMap[p.id]) resetHighlight({ target: layerMap[p.id] }); });
+                        row.addEventListener('mouseenter', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseover'); });
+                        row.addEventListener('mouseleave', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseout'); });
                         tableBody.appendChild(row);
                     });
                 }
@@ -686,13 +690,14 @@
 
                 document.getElementById('search-input').addEventListener('input', (e) => {
                     const query = e.target.value.toLowerCase();
-                    const filteredFeatures = utilitiesGeoJSON.features.filter(f => 
+                    const filtered = utilitiesGeoJSON.features.filter(f => 
                         f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query)
                     );
-                    buildTable(filteredFeatures);
+                    buildTable(filtered);
                     geojsonLayer.clearLayers();
-                    geojsonLayer.addData({ "type": "FeatureCollection", "features": filteredFeatures });
+                    geojsonLayer.addData({ "type": "FeatureCollection", "features": filtered });
                 });
+                
                 window.addEventListener('resize', () => { map.invalidateSize(); });
             }
 
@@ -702,34 +707,22 @@
             function initForecastMap() {
                 const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false }).setView([46.5, -81.0], 5);
                 L.control.zoom({ position: 'topright' }).addTo(forecastMap);
-
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19
-                }).addTo(forecastMap);
-
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(forecastMap);
                 setTimeout(() => { forecastMap.invalidateSize(); }, 500);
 
                 const regions = [
-                    { id: 'toronto', name: 'Greater Toronto Area', lat: 43.6532, lng: -79.3832, baseLoad: 48.0, 
-                      mults: { base: 1.008, ev: 1.010, ai: 1.025, heat: 1.015, hydro: 1.00 } }, 
-                    { id: 'windsor', name: 'Windsor-Essex (Industrial Hub)', lat: 42.3149, lng: -83.0364, baseLoad: 25.0, 
-                      mults: { base: 1.005, ev: 1.035, ai: 1.005, heat: 1.010, hydro: 1.020 } }, 
-                    { id: 'ottawa', name: 'Ottawa (Tech Corridor)', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, 
-                      mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } }, 
-                    { id: 'sudbury', name: 'Sudbury (Mining/North)', lat: 46.4917, lng: -80.9930, baseLoad: 15.0, 
-                      mults: { base: 1.002, ev: 1.020, ai: 1.00, heat: 1.010, hydro: 1.030 } }, 
-                    { id: 'london', name: 'London / Central', lat: 42.9849, lng: -81.2453, baseLoad: 18.0, 
-                      mults: { base: 1.005, ev: 1.020, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
-                    { id: 'niagara', name: 'Niagara Region', lat: 43.0896, lng: -79.0849, baseLoad: 8.0, 
-                      mults: { base: 1.005, ev: 1.010, ai: 1.005, heat: 1.010, hydro: 1.040 } } 
+                    { id: 'toronto', name: 'Greater Toronto Area', lat: 43.6532, lng: -79.3832, baseLoad: 48.0, mults: { base: 1.008, ev: 1.010, ai: 1.025, heat: 1.015, hydro: 1.00 } }, 
+                    { id: 'windsor', name: 'Windsor-Essex (Industrial)', lat: 42.3149, lng: -83.0364, baseLoad: 25.0, mults: { base: 1.005, ev: 1.035, ai: 1.005, heat: 1.010, hydro: 1.020 } }, 
+                    { id: 'ottawa', name: 'Ottawa (Tech Corridor)', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } }, 
+                    { id: 'sudbury', name: 'Sudbury (Mining/North)', lat: 46.4917, lng: -80.9930, baseLoad: 15.0, mults: { base: 1.002, ev: 1.020, ai: 1.00, heat: 1.010, hydro: 1.030 } }, 
+                    { id: 'london', name: 'London / Central', lat: 42.9849, lng: -81.2453, baseLoad: 18.0, mults: { base: 1.005, ev: 1.020, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
+                    { id: 'niagara', name: 'Niagara Region', lat: 43.0896, lng: -79.0849, baseLoad: 8.0, mults: { base: 1.005, ev: 1.010, ai: 1.005, heat: 1.010, hydro: 1.040 } } 
                 ];
 
                 const circleMarkers = {};
 
                 regions.forEach(region => {
-                    const circle = L.circleMarker([region.lat, region.lng], {
-                        color: '#06b6d4', fillColor: '#06b6d4', fillOpacity: 0.5, weight: 2
-                    }).addTo(forecastMap);
+                    const circle = L.circleMarker([region.lat, region.lng], { color: '#06b6d4', fillColor: '#06b6d4', fillOpacity: 0.5, weight: 2 }).addTo(forecastMap);
                     circle.bindTooltip(`<b>${region.name}</b>`, { className: 'dark-tooltip', permanent: false });
                     circleMarkers[region.id] = circle;
                 });
@@ -756,7 +749,6 @@
                         totalProvincialLoad += projectedLoad;
 
                         const radius = Math.max(10, Math.log(projectedLoad) * 12);
-                        
                         const ratio = projectedLoad / region.baseLoad;
                         let color = '#06b6d4'; 
                         if (ratio > 1.5) color = '#3b82f6'; 
@@ -794,108 +786,182 @@
                 }
 
                 document.getElementById('yearSliderPrem').addEventListener('input', updateForecast);
-                document.querySelectorAll('.scenario-group input').forEach(input => {
-                    input.addEventListener('change', updateForecast);
-                });
-
+                document.querySelectorAll('.scenario-group input').forEach(input => { input.addEventListener('change', updateForecast); });
                 updateForecast();
                 window.addEventListener('resize', () => { forecastMap.invalidateSize(); });
             }
 
             // ==========================================
-            // 5. CHART: SUPPLY DEFICIT (CHART.JS)
+            // 5. MAP 3: PROVINCIAL CAPACITY DEFICIT
             // ==========================================
-            const ctx = document.getElementById('deficitChart').getContext('2d');
-            
-            // Create a warning gradient for the Unserved Energy gap
-            const deficitGradient = ctx.createLinearGradient(0, 0, 0, 400);
-            deficitGradient.addColorStop(0, 'rgba(239, 68, 68, 0.8)'); // Crimson
-            deficitGradient.addColorStop(1, 'rgba(249, 115, 22, 0.1)'); // Hot Orange faded
+            function initDeficitMap() {
+                const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false }).setView([56.0, -96.0], 4);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(deficitMap);
+                setTimeout(() => { deficitMap.invalidateSize(); }, 500);
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['2025', '2030', '2035', '2040', '2045', '2050'],
-                    datasets: [
-                        {
-                            label: 'Committed Capacity (TWh)',
-                            data: [155, 150, 130, 105, 90, 80],
-                            borderColor: '#10b981', // Emerald green
-                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
-                            borderWidth: 3,
-                            stepped: true,
-                            fill: 'origin',
-                            tension: 0,
-                            pointBackgroundColor: '#10b981',
-                            pointRadius: 4
-                        },
-                        {
-                            label: 'Forecasted Demand (TWh)',
-                            data: [151, 175, 195, 215, 235, 250],
-                            borderColor: '#3b82f6', // Bright blue
-                            borderWidth: 3,
-                            fill: {
-                                target: 0, // Fill the space down to the capacity line
-                                above: deficitGradient // Only shade it if demand is ABOVE capacity
-                            },
-                            tension: 0.4, // Smooth curve
-                            pointBackgroundColor: '#3b82f6',
-                            pointRadius: 4
-                        }
+                const gridData = [
+                    { id: 'bc', name: 'BC Hydro', lat: 53.0, lng: -125.0, demand: 85, capacity: 78, unit: 'TWh' },
+                    { id: 'ab', name: 'AESO (Alberta)', lat: 54.0, lng: -115.0, demand: 110, capacity: 85, unit: 'TWh' },
+                    { id: 'on', name: 'IESO (Ontario)', lat: 50.0, lng: -85.0, demand: 250, capacity: 155, unit: 'TWh' },
+                    { id: 'qc', name: 'Hydro-Québec', lat: 53.0, lng: -70.0, demand: 280, capacity: 250, unit: 'TWh' },
+                    { id: 'ns', name: 'Nova Scotia Power', lat: 45.0, lng: -63.5, demand: 18, capacity: 11, unit: 'TWh' }
+                ];
+
+                gridData.forEach(grid => {
+                    const deficit = grid.demand - grid.capacity;
+                    const markerColor = deficit > 0 ? '#ef4444' : '#10b981'; 
+
+                    const pulseIcon = L.divIcon({
+                        className: 'custom-pulse-icon',
+                        html: `<div style="width: 20px; height: 20px; background: ${markerColor}; border-radius: 50%; box-shadow: 0 0 15px ${markerColor}; border: 2px solid #fff;"></div>`,
+                        iconSize: [20, 20], iconAnchor: [10, 10]
+                    });
+
+                    const marker = L.marker([grid.lat, grid.lng], { icon: pulseIcon }).addTo(deficitMap);
+                    
+                    const popupHTML = `
+                        <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 240px; padding: 5px;">
+                            <strong style="font-size: 1.15rem; color: #fff; display: block; margin-bottom: 12px; border-bottom: 1px solid #3f3f46; padding-bottom: 8px;">${grid.name}</strong>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="color: #a1a1aa; font-size: 0.85rem;">2050 Demand</span>
+                                <strong style="color: #3b82f6;">${grid.demand} ${grid.unit}</strong>
+                            </div>
+                            <div style="width: 100%; background: #27272a; height: 6px; border-radius: 3px; margin-bottom: 16px;">
+                                <div style="width: 100%; background: #3b82f6; height: 100%; border-radius: 3px;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="color: #a1a1aa; font-size: 0.85rem;">Committed Capacity</span>
+                                <strong style="color: #10b981;">${grid.capacity} ${grid.unit}</strong>
+                            </div>
+                            <div style="width: 100%; background: #27272a; height: 6px; border-radius: 3px; margin-bottom: 16px;">
+                                <div style="width: ${(grid.capacity / grid.demand) * 100}%; background: #10b981; height: 100%; border-radius: 3px;"></div>
+                            </div>
+                            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: 8px; text-align: center;">
+                                <span style="display: block; color: #ef4444; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Unserved Energy Deficit</span>
+                                <strong style="color: #ef4444; font-size: 1.6rem; line-height: 1;">${deficit} <span style="font-size: 1rem;">${grid.unit}</span></strong>
+                            </div>
+                        </div>
+                    `;
+                    marker.bindPopup(popupHTML, { className: 'dark-tooltip', minWidth: 260 });
+                });
+                
+                window.addEventListener('resize', () => { deficitMap.invalidateSize(); });
+            }
+
+            // ==========================================
+            // 6. MAP 4: OFF-GRID MICROGRIDS (NEW)
+            // ==========================================
+            function initOffGridMap() {
+                const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false }).setView([58.0, -90.0], 4);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
+                setTimeout(() => { offgridMap.invalidateSize(); }, 500);
+
+                // Delineated regional polygons for the massive off-grid zones
+                const offgridZones = {
+                    "type": "FeatureCollection",
+                    "features": [
+                        { "type": "Feature", "properties": { "id": "nu", "name": "Nunavut", "count": 25 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-120.0, 60.0], [-102.0, 60.0], [-95.0, 60.0], [-80.0, 62.0], [-70.0, 62.0], [-60.0, 65.0], [-60.0, 83.0], [-120.0, 83.0], [-120.0, 60.0]]] } },
+                        
+                        { "type": "Feature", "properties": { "id": "nwt", "name": "Northwest Territories", "count": 16 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-136.0, 60.0], [-120.0, 60.0], [-120.0, 75.0], [-136.0, 75.0], [-136.0, 60.0]]] } },
+                        
+                        { "type": "Feature", "properties": { "id": "on", "name": "Northern Ontario", "count": 21 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-95.0, 51.5], [-85.0, 50.0], [-79.5, 51.5], [-82.0, 55.0], [-89.0, 56.0], [-95.0, 55.0], [-95.0, 51.5]]] } },
+                        
+                        { "type": "Feature", "properties": { "id": "qc", "name": "Nunavik (Quebec)", "count": 14 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-79.5, 55.0], [-70.0, 55.0], [-64.0, 60.5], [-72.0, 62.5], [-78.0, 62.5], [-79.5, 55.0]]] } },
+                        
+                        { "type": "Feature", "properties": { "id": "bc", "name": "Coastal & North BC", "count": 13 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-139.0, 60.0], [-125.0, 60.0], [-120.0, 54.0], [-123.0, 49.0], [-128.0, 51.0], [-133.0, 54.5], [-139.0, 60.0]]] } },
+                          
+                        { "type": "Feature", "properties": { "id": "nl", "name": "Labrador Coast", "count": 11 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-60.0, 51.5], [-55.0, 52.0], [-60.0, 60.0], [-64.0, 60.0], [-60.0, 51.5]]] } },
+
+                        { "type": "Feature", "properties": { "id": "mb", "name": "Northern Manitoba", "count": 3 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-102.0, 57.0], [-90.0, 57.0], [-94.0, 60.0], [-102.0, 60.0], [-102.0, 57.0]]] } },
+
+                        { "type": "Feature", "properties": { "id": "yk", "name": "Yukon", "count": 4 }, 
+                          "geometry": { "type": "Polygon", "coordinates": [[[-141.0, 60.0], [-136.0, 60.0], [-136.0, 70.0], [-141.0, 70.0], [-141.0, 60.0]]] } }
                     ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
+                };
+
+                const zoneLayers = {};
+                let geojsonLayer = L.geoJSON(offgridZones, {
+                    style: function(f) {
+                        return { fillColor: '#f59e0b', weight: 2, color: '#fcd34d', dashArray: '5, 5', fillOpacity: 0.15 };
                     },
-                    plugins: {
-                        legend: { 
-                            labels: { color: '#d4d4d8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 14 } },
-                            position: 'top'
-                        },
-                        tooltip: { 
-                            backgroundColor: 'rgba(24, 24, 27, 0.95)', 
-                            titleColor: '#ffffff', 
-                            bodyColor: '#d4d4d8', 
-                            borderColor: '#3f3f46', 
-                            borderWidth: 1,
-                            padding: 12,
-                            titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 14, weight: 'bold' },
-                            bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13 }
-                        },
-                        // Custom plugin to add the "Unserved Energy" label directly on the chart
-                        annotation: {
-                            annotations: {
-                                label1: {
-                                    type: 'label',
-                                    xValue: '2045',
-                                    yValue: 170,
-                                    color: '#ffffff',
-                                    content: ['UNSERVED ENERGY', '(The Deficit)'],
-                                    font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: 'bold' }
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: 60,
-                            max: 280,
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#a1a1aa', font: { family: "'Plus Jakarta Sans', sans-serif" } },
-                            title: { display: true, text: 'Energy Profile (TWh)', color: '#d4d4d8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 14 } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#a1a1aa', font: { family: "'Plus Jakarta Sans', sans-serif", size: 13 } }
-                        }
+                    onEachFeature: function(f, layer) {
+                        zoneLayers[f.properties.id] = layer;
+                        layer.bindTooltip(`<b>${f.properties.name}</b><br/>${f.properties.count} Off-Grid Communities`, { className: 'dark-tooltip', direction: 'center' });
+                        layer.on('click', () => { mapFlyToZone(f.properties.id); });
+                    }
+                }).addTo(offgridMap);
+
+                // The exhaustive list of communities parsed for the sidebar directory
+                const directoryData = [
+                    { id: 'nu', region: 'Nunavut', comms: ['Arctic Bay', 'Arviat', 'Baker Lake', 'Cambridge Bay', 'Cape Dorset (Kinngait)', 'Chesterfield Inlet', 'Clyde River', 'Coral Harbour', 'Gjoa Haven', 'Grise Fiord', 'Hall Beach', 'Igloolik', 'Iqaluit', 'Kimmirut', 'Kugaaruk', 'Kugluktuk', 'Naujaat', 'Pangnirtung', 'Pond Inlet', 'Qikiqtarjuaq', 'Rankin Inlet', 'Resolute', 'Sanikiluaq', 'Taloyoak', 'Whale Cove'] },
+                    { id: 'on', region: 'Northern Ontario', comms: ['Bearskin Lake', 'Cat Lake', 'Eabametoong', 'Kasabonika Lake', 'Keewaywin', 'Kingfisher Lake', 'Kitchenuhmaykoosib Inninuwug', 'Marten Falls', 'Muskrat Dam Lake', 'Neskantaga', 'Nibinamik', 'North Caribou Lake', 'North Spirit Lake', 'Peawanuck', 'Pikangikum', 'Poplar Hill', 'Sachigo Lake', 'Sandy Lake', 'Wapekeka', 'Wawakapewin', 'Webequie', 'Weenusk', 'Winisk'] },
+                    { id: 'nwt', region: 'Northwest Territories', comms: ['Aklavik', 'Colville Lake', 'Fort Good Hope', 'Fort Liard', 'Fort McPherson', 'Gamètì', 'Jean Marie River', 'Kakisa', 'Lutsel K\'e', 'Nahanni Butte', 'Norman Wells', 'Paulatuk', 'Sachs Harbour', 'Sambaa K\'e', 'Tsiigehtchic', 'Tuktoyaktuk', 'Ulukhaktok', 'Wekweètì', 'Whatì', 'Wrigley'] },
+                    { id: 'qc', region: 'Nunavik (Quebec)', comms: ['Aupaluk', 'Inukjuak', 'Ivujivik', 'Kangiqsualujjuaq', 'Kangiqsujuaq', 'Kangirsuk', 'Kuujjuaq', 'Kuujjuarapik', 'Puvirnituq', 'Quaqtaq', 'Salluit', 'Tasiujaq', 'Umiujaq'] },
+                    { id: 'bc', region: 'Coastal & North BC', comms: ['Anahim Lake', 'Atlin', 'Bella Bella', 'Dease Lake', 'Eddontenajon', 'Good Hope Lake', 'Hartley Bay', 'Kwadacha (Fort Ware)', 'Telegraph Creek', 'Tsay Keh Dene', 'Iskut', 'Ahousaht', 'Hot Springs Cove', 'Kingcome Inlet', 'Klemtu', 'Ocean Falls', 'Rivers Inlet'] },
+                    { id: 'nl', region: 'Labrador Coast', comms: ['Black Tickle', 'Cartwright', 'Charlottetown', 'Mary\'s Harbour', 'Norman Bay', 'Paradise River', 'Port Hope Simpson', 'Rigolet', 'Postville', 'Makkovik', 'Hopedale', 'Nain'] },
+                    { id: 'mb', region: 'Northern Manitoba', comms: ['Brochet', 'Lac Brochet', 'Shamattawa', 'Tadoule Lake'] },
+                    { id: 'yk', region: 'Yukon', comms: ['Old Crow', 'Burwash Landing', 'Destruction Bay', 'Beaver Creek'] }
+                ];
+
+                const listContainer = document.getElementById('offgrid-list-container');
+
+                function renderDirectory(data) {
+                    listContainer.innerHTML = '';
+                    data.forEach(zone => {
+                        const div = document.createElement('div');
+                        div.className = 'offgrid-item';
+                        div.id = `dir-${zone.id}`;
+                        div.innerHTML = `
+                            <div class="offgrid-region-title">${zone.region} <span class="offgrid-badge">${zone.comms.length}</span></div>
+                            <div class="offgrid-community-list">${zone.comms.slice(0, 8).join(', ')}${zone.comms.length > 8 ? '...' : ''}</div>
+                        `;
+                        div.addEventListener('click', () => { mapFlyToZone(zone.id); });
+                        listContainer.appendChild(div);
+                    });
+                }
+                renderDirectory(directoryData);
+
+                function mapFlyToZone(id) {
+                    // Reset UI
+                    document.querySelectorAll('.offgrid-item').forEach(el => el.classList.remove('active'));
+                    const activeDir = document.getElementById(`dir-${id}`);
+                    if (activeDir) {
+                        activeDir.classList.add('active');
+                        activeDir.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                    
+                    // Reset Map Styles
+                    geojsonLayer.eachLayer(layer => {
+                        geojsonLayer.resetStyle(layer);
+                    });
+                    
+                    // Highlight and fly to selected polygon
+                    const targetLayer = zoneLayers[id];
+                    if (targetLayer) {
+                        targetLayer.setStyle({ fillColor: '#f59e0b', fillOpacity: 0.4, weight: 3 });
+                        offgridMap.fitBounds(targetLayer.getBounds(), { padding: [20, 20] });
                     }
                 }
-            });
+
+                document.getElementById('offgrid-search').addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    const filtered = directoryData.filter(zone => {
+                        const matchRegion = zone.region.toLowerCase().includes(query);
+                        const matchComms = zone.comms.some(c => c.toLowerCase().includes(query));
+                        return matchRegion || matchComms;
+                    });
+                    renderDirectory(filtered);
+                });
+
+                window.addEventListener('resize', () => { offgridMap.invalidateSize(); });
+            }
 
         });
     </script>
