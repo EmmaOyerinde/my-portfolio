@@ -298,7 +298,7 @@
         .project-link:hover { color: var(--accent); gap: 0.75rem; }
 
         /* ==========================================
-           7. LIVE MAP SECTION (PREMIUM DASHBOARD)
+           7. LIVE MAP SECTIONS (SHARED DASHBOARD STYLES)
            ========================================== */
         .map-section { padding: 120px 5%; background: var(--bg-surface); border-top: 1px solid var(--zinc-200); position: relative; overflow: hidden; }
         
@@ -309,14 +309,14 @@
             border-radius: 50%; z-index: 0; pointer-events: none; filter: blur(80px);
         }
 
-        #map-app-wrapper {
+        .map-app-wrapper {
             position: relative; z-index: 2;
             max-width: 1200px; height: 750px; margin: 0 auto; display: flex; flex-direction: row;
             border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--zinc-800);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); background: var(--zinc-950);
         }
 
-        #map-sidebar { width: 400px; background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(10px); border-right: 1px solid var(--zinc-800); display: flex; flex-direction: column; z-index: 10; color: var(--zinc-200); }
+        .map-sidebar { width: 400px; background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(10px); border-right: 1px solid var(--zinc-800); display: flex; flex-direction: column; z-index: 10; color: var(--zinc-200); }
         
         .map-sidebar-header { padding: 24px; border-bottom: 1px solid var(--zinc-800); }
         .map-sidebar-header h3 { font-size: 1.25rem; color: #ffffff; font-weight: 700; margin-bottom: 8px; }
@@ -344,16 +344,40 @@
         tr.utility-row:hover, tr.utility-row.active { background: rgba(37, 99, 235, 0.15); }
         .status-badge { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
 
-        #leaflet-map { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; background: var(--zinc-900); }
+        .leaflet-map-container { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; background: var(--zinc-900); }
 
+        /* Leaflet Popups & Tooltips Dark Mode */
         .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--zinc-800); color: var(--zinc-300); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--zinc-700); }
         .leaflet-popup-tip { background: var(--zinc-800); }
         .popup-title { font-weight: 700; font-size: 1.1rem; color: #ffffff; margin-bottom: 8px; border-bottom: 1px solid var(--zinc-700); padding-bottom: 8px; }
         .popup-stat { font-size: 0.9rem; color: var(--zinc-400); margin: 6px 0; }
         .popup-stat strong { color: var(--zinc-200); }
+        
+        .dark-tooltip.leaflet-tooltip { background: var(--zinc-800); color: var(--zinc-200); border: 1px solid var(--zinc-700); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); font-family: 'Plus Jakarta Sans', sans-serif;}
+        .dark-tooltip.leaflet-tooltip::before { border-top-color: var(--zinc-800); border-bottom-color: var(--zinc-800); border-left-color: var(--zinc-800); border-right-color: var(--zinc-800); }
 
         /* ==========================================
-           8. CONTACT & FOOTER
+           8. LOAD FORECAST SPECIFIC STYLES
+           ========================================== */
+        #forecast-app-wrapper { height: 600px; }
+        #forecast-sidebar { width: 350px; padding: 0 24px 24px; overflow-y: auto; border-right: 1px solid var(--zinc-800); background: rgba(24, 24, 27, 0.95); }
+        
+        .control-group { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--zinc-800); }
+        .control-group > label { font-weight: 600; color: var(--zinc-300); display: block; margin-bottom: 8px; font-size: 0.9rem; }
+        .year-display { font-size: 1.75rem; font-weight: 800; color: var(--accent); display: inline-block; margin-left: 10px; vertical-align: middle; }
+        
+        input[type="range"] { width: 100%; margin: 15px 0; accent-color: var(--accent); cursor: pointer; }
+        
+        .checkbox-container { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; font-size: 0.85rem; color: var(--zinc-400); transition: var(--transition); }
+        .checkbox-container:hover { color: var(--zinc-200); }
+        .checkbox-container input { margin-right: 10px; width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+        
+        .metrics-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); padding: 20px; margin-top: 24px; text-align: center;}
+        .metrics-value { font-size: 2.25rem; font-weight: 800; color: #ffffff; margin: 5px 0; line-height: 1; }
+        .metrics-label { font-size: 0.85rem; color: var(--zinc-500); }
+
+        /* ==========================================
+           9. CONTACT & FOOTER
            ========================================== */
         .contact { padding: 120px 5%; background: var(--bg-base); border-top: 1px solid var(--zinc-200); }
         .contact-container { max-width: 650px; margin: 0 auto; text-align: center; }
@@ -367,24 +391,24 @@
         }
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .form-group label { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
-        input, textarea {
+        input[type="text"], input[type="email"], textarea {
             width: 100%; padding: 1rem 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--zinc-200);
             background: var(--zinc-50); color: var(--text-main); transition: var(--transition);
         }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent); background: var(--bg-surface); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus { outline: none; border-color: var(--accent); background: var(--bg-surface); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
 
         footer { background: var(--zinc-950); color: var(--zinc-500); text-align: center; padding: 3rem 5%; font-size: 0.95rem; }
 
         /* ==========================================
-           9. RESPONSIVE MEDIA QUERIES
+           10. RESPONSIVE MEDIA QUERIES
            ========================================== */
         @media (max-width: 1024px) {
             .about-grid { grid-template-columns: 1fr; gap: 3rem; }
             .skills-grid { grid-template-columns: 1fr; }
             
-            #map-app-wrapper { flex-direction: column; height: auto; }
-            #map-sidebar { width: 100%; height: 450px; border-right: none; border-bottom: 1px solid var(--zinc-800); }
-            #leaflet-map { height: 500px; }
+            .map-app-wrapper, #forecast-app-wrapper { flex-direction: column; height: auto; }
+            .map-sidebar, #forecast-sidebar { width: 100%; height: auto; max-height: 450px; border-right: none; border-bottom: 1px solid var(--zinc-800); }
+            .leaflet-map-container { height: 500px; }
             
             .mobile-menu-btn { display: block; }
             .nav-links {
@@ -410,6 +434,7 @@
             <li><a href="#about">Profile</a></li>
             <li><a href="#initiatives">Initiatives</a></li>
             <li><a href="#grid-map">Analytics</a></li>
+            <li><a href="#load-growth">Forecasts</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
@@ -423,7 +448,7 @@
             <div class="hero-glow"></div> <!-- Ambient animated glow -->
             <div class="hero-content">
                 
-                <!-- Profile Headshot (Delete or comment out lines 352-354 if you don't have an image ready) -->
+                <!-- Profile Headshot -->
                 <div class="profile-avatar">
                     <img src="headshot.jpg" alt="Emmanuel Oyerinde">
                 </div>
@@ -519,16 +544,16 @@
             </div>
         </section>
 
-        <!-- LIVE MAP SECTION -->
+        <!-- LIVE MAP SECTION 1: RELIABILITY -->
         <section class="map-section reveal" id="grid-map">
-            <div class="map-glow"></div> <!-- Soft backdrop glow -->
+            <div class="map-glow"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
                 <h2>Utility Reliability Benchmark</h2>
                 <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories.</p>
             </div>
 
-            <div id="map-app-wrapper">
-                <div id="map-sidebar">
+            <div class="map-app-wrapper">
+                <div class="map-sidebar">
                     <div class="map-sidebar-header">
                         <h3>Service Territory Analytics</h3>
                         <p>Select a utility to focus on its territory bounds and performance metrics.</p>
@@ -553,12 +578,59 @@
                                     <th>SAIFI</th>
                                 </tr>
                             </thead>
-                            <tbody id="utility-table-body"></tbody>
+                            <tdoby id="utility-table-body"></tdoby>
                         </table>
                     </div>
                 </div>
 
-                <div id="leaflet-map"></div>
+                <div id="leaflet-map" class="leaflet-map-container"></div>
+            </div>
+        </section>
+
+        <!-- LIVE MAP SECTION 2: FORECASTING -->
+        <section class="map-section reveal" style="background-color: var(--bg-base);" id="load-growth">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 60%);"></div> 
+            <div class="section-header" style="position: relative; z-index: 2;">
+                <h2>Ontario Grid Demand Forecast</h2>
+                <p>Interactive 20-year demand projection based on IESO regional models and macroeconomic growth drivers.</p>
+            </div>
+
+            <div id="forecast-app-wrapper" class="map-app-wrapper">
+                <div id="forecast-sidebar">
+                    <div class="map-sidebar-header" style="padding-left: 0; padding-right: 0;">
+                        <h3>Regional Macro Drivers</h3>
+                        <p>Toggle economic factors to simulate localized infrastructure stress points.</p>
+                    </div>
+
+                    <div class="control-group" style="margin-top: 0;">
+                        <label>Forecast Year: <span class="year-display" id="yearLabel">2025</span></label>
+                        <input type="range" id="yearSlider" min="2025" max="2045" value="2025" step="1">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Key Growth Scenarios</label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="evToggle" checked>
+                            EV Adoption (Widespread)
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="aiToggle" checked>
+                            AI & Data Centers (Urban)
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="indToggle" checked>
+                            Industrial / Mining (SW & North)
+                        </label>
+                    </div>
+
+                    <div class="metrics-card">
+                        <div class="metrics-label">Estimated Provincial Load</div>
+                        <div class="metrics-value"><span id="totalLoad">151.0</span> <span style="font-size:1.2rem; color: var(--zinc-400);">TWh</span></div>
+                        <div class="metrics-label" style="margin-top: 10px;">% Growth from 2025: <span id="growthPercent" style="font-weight: bold; color: var(--accent);">0%</span></div>
+                    </div>
+                </div>
+
+                <div id="forecast-map" class="leaflet-map-container"></div>
             </div>
         </section>
 
@@ -606,7 +678,7 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        observer.unobserve(entry.target); // Only animate once
+                        observer.unobserve(entry.target); 
                     }
                 });
             }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
@@ -629,7 +701,9 @@
                 });
             });
 
-            // 3. MAP LOGIC
+            // ==========================================
+            // 3. MAP 1: UTILITY RELIABILITY (EXISTING)
+            // ==========================================
             const utilitiesGeoJSON = {
                 "type": "FeatureCollection",
                 "features": [
@@ -650,18 +724,17 @@
                 return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444';
             }
 
-            // Ensure Leaflet is loaded before initializing
             let checkLeaflet = setInterval(() => {
                 if(window.L) {
                     clearInterval(checkLeaflet);
-                    initMap();
+                    initReliabilityMap();
+                    initForecastMap();
                 }
             }, 100);
 
-            function initMap() {
+            function initReliabilityMap() {
                 const map = L.map('leaflet-map', { scrollWheelZoom: false }).setView([50.0, -90.0], 4);
                 
-                // Allow CSS flexbox to settle before sizing map
                 setTimeout(() => { map.invalidateSize(); }, 500);
 
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -783,6 +856,102 @@
                 });
                 
                 window.addEventListener('resize', () => { map.invalidateSize(); });
+            }
+
+            // ==========================================
+            // 4. MAP 2: ONTARIO LOAD FORECAST (NEW)
+            // ==========================================
+            function initForecastMap() {
+                const forecastMap = L.map('forecast-map', { scrollWheelZoom: false }).setView([46.0, -81.0], 5);
+
+                // Use the dark theme carto tiles to match portfolio
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+                    subdomains: 'abcd',
+                    maxZoom: 19
+                }).addTo(forecastMap);
+
+                setTimeout(() => { forecastMap.invalidateSize(); }, 500);
+
+                const regions = [
+                    { id: 'toronto', name: 'Greater Toronto Area', lat: 43.6532, lng: -79.3832, baseLoad: 48.0, 
+                      sensitivity: { base: 1.01, ev: 1.02, ai: 1.025, ind: 1.00 } }, 
+                    { id: 'windsor', name: 'Windsor-Essex / SW', lat: 42.3149, lng: -83.0364, baseLoad: 25.0, 
+                      sensitivity: { base: 1.01, ev: 1.01, ai: 1.00, ind: 1.035 } }, 
+                    { id: 'ottawa', name: 'Ottawa / East', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, 
+                      sensitivity: { base: 1.01, ev: 1.01, ai: 1.02, ind: 1.00 } }, 
+                    { id: 'sudbury', name: 'Sudbury / North', lat: 46.4917, lng: -80.9930, baseLoad: 15.0, 
+                      sensitivity: { base: 1.01, ev: 1.00, ai: 1.00, ind: 1.025 } }, 
+                    { id: 'london', name: 'London / Central', lat: 42.9849, lng: -81.2453, baseLoad: 18.0, 
+                      sensitivity: { base: 1.01, ev: 1.015, ai: 1.00, ind: 1.01 } }, 
+                    { id: 'thunderbay', name: 'Thunder Bay / NW', lat: 48.3809, lng: -89.2477, baseLoad: 8.0, 
+                      sensitivity: { base: 1.005, ev: 1.00, ai: 1.00, ind: 1.015 } } 
+                ];
+
+                const circleMarkers = {};
+
+                regions.forEach(region => {
+                    const circle = L.circleMarker([region.lat, region.lng], {
+                        color: '#2563eb',
+                        fillColor: '#3b82f6',
+                        fillOpacity: 0.6,
+                        weight: 1
+                    }).addTo(forecastMap);
+                    
+                    circle.bindTooltip(`<b>${region.name}</b><br/>Load: ${region.baseLoad.toFixed(1)} TWh`, {
+                        className: 'dark-tooltip'
+                    });
+                    circleMarkers[region.id] = circle;
+                });
+
+                function updateForecast() {
+                    const currentYear = parseInt(document.getElementById('yearSlider').value);
+                    const yearsElapsed = currentYear - 2025;
+                    
+                    const evActive = document.getElementById('evToggle').checked;
+                    const aiActive = document.getElementById('aiToggle').checked;
+                    const indActive = document.getElementById('indToggle').checked;
+
+                    let totalProvincialLoad = 17.0; 
+
+                    regions.forEach(region => {
+                        let annualMultiplier = region.sensitivity.base;
+                        if (evActive) annualMultiplier += (region.sensitivity.ev - 1);
+                        if (aiActive) annualMultiplier += (region.sensitivity.ai - 1);
+                        if (indActive) annualMultiplier += (region.sensitivity.ind - 1);
+
+                        const projectedLoad = region.baseLoad * Math.pow(annualMultiplier, yearsElapsed);
+                        totalProvincialLoad += projectedLoad;
+
+                        const radius = Math.sqrt(projectedLoad) * 7; 
+                        
+                        const growthRatio = projectedLoad / region.baseLoad;
+                        let color = '#3b82f6'; 
+                        if (growthRatio > 1.3) color = '#f59e0b'; 
+                        if (growthRatio > 1.6) color = '#ef4444'; 
+
+                        const marker = circleMarkers[region.id];
+                        marker.setRadius(radius);
+                        marker.setStyle({ color: color, fillColor: color });
+                        marker.setTooltipContent(`<b>${region.name}</b><br/>Year: ${currentYear}<br/>Projected Load: ${projectedLoad.toFixed(1)} TWh`);
+                    });
+
+                    document.getElementById('yearLabel').innerText = currentYear;
+                    document.getElementById('totalLoad').innerText = totalProvincialLoad.toFixed(1);
+                    
+                    const startingTotal = 151.0;
+                    const percentGrowth = ((totalProvincialLoad - startingTotal) / startingTotal) * 100;
+                    document.getElementById('growthPercent').innerText = percentGrowth > 0 ? `+${percentGrowth.toFixed(1)}%` : `0%`;
+                }
+
+                document.getElementById('yearSlider').addEventListener('input', updateForecast);
+                document.getElementById('evToggle').addEventListener('change', updateForecast);
+                document.getElementById('aiToggle').addEventListener('change', updateForecast);
+                document.getElementById('indToggle').addEventListener('change', updateForecast);
+
+                updateForecast();
+                
+                window.addEventListener('resize', () => { forecastMap.invalidateSize(); });
             }
         });
     </script>
