@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Decoupled, Modular, Dual-Pane Map Engine
+// Enterprise Logic Layer: Clean Vector Overlay & Polished Sidebar Layout
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -22,14 +22,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const menuBtn = document.getElementById('menu-btn');
     const navLinks = document.getElementById('nav-links');
-    menuBtn.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
-    });
+    if (menuBtn) {
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+    }
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
-            menuBtn.innerHTML = '☰';
+            if (menuBtn) menuBtn.innerHTML = '☰';
         });
     });
 
@@ -40,9 +42,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const db = await fetchEnterpriseData();
         
         let checkLeaflet = setInterval(() => {
-            if(window.L) {
+            if (window.L) {
                 clearInterval(checkLeaflet);
-                
                 const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
                 
                 initReliabilityMap(db.utilitiesGeoJSON, naBounds); 
@@ -52,22 +53,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 initNewsFeed();
             }
         }, 100);
-    } catch(err) {
+    } catch (err) {
         console.error("Failed to load Enterprise Data Layer", err);
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP (CLEAN NORTH AMERICAN VIEW)
+    // MAP 1: RELIABILITY MAP (POLISHED UX & TABLE)
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
             scrollWheelZoom: false,
-            dragging: !L.Browser.mobile, // Disables scroll trapping on mobile
+            dragging: !L.Browser.mobile,
             tap: false,
             maxBounds: naBounds, 
             maxBoundsViscosity: 1.0, 
             minZoom: 3 
-        }).setView([50.0, -95.0], 3); // CLEAN INITIAL VIEW: Zooms to North America ab initio
+        }).setView([50.0, -95.0], 3); 
         
         setTimeout(() => map.invalidateSize(), 500);
 
@@ -111,51 +112,51 @@ document.addEventListener('DOMContentLoaded', async () => {
                     setTimeout(() => layer.bringToFront(), 100);
                 }
 
-                // REMOVED PERMANENT TOOLTIPS: Now uses clean, sticky hover tooltips
+                // Clean Hover-Only Tooltip (Prevents text overlap on map)
                 layer.bindTooltip(`
-                    <div style="text-align: center; line-height: 1.3;">
-                        <strong style="color: #ffffff; font-size: 0.85rem;">${f.properties.utility}</strong><br>
-                        <span style="color: #10b981; font-size: 0.75rem; font-weight: 700;">${f.properties.customers} Customers</span>
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif; padding: 2px 4px;">
+                        <strong style="color: #ffffff; font-size: 0.85rem; display:block;">${f.properties.utility}</strong>
+                        <span style="color: #a1a1aa; font-size: 0.75rem;">${f.properties.region} &bull; ${f.properties.customers} Cust.</span>
                     </div>
                 `, { 
                     className: 'dark-tooltip', 
-                    sticky: true, // Appears smoothly on hover, preventing a crowded map
+                    sticky: true, 
                     direction: 'auto'
                 });
                 
                 const popupHTML = `
-                    <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 280px; padding: 5px;">
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 260px; padding: 4px;">
                         <div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">${f.properties.region}</div>
-                        <strong style="font-size: 1.25rem; color: #fff; display: block; margin-bottom: 12px; border-bottom: 1px solid #3f3f46; padding-bottom: 8px;">${f.properties.utility}</strong>
+                        <strong style="font-size: 1.15rem; color: #fff; display: block; margin-bottom: 10px; border-bottom: 1px solid #3f3f46; padding-bottom: 6px;">${f.properties.utility}</strong>
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
                             <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
                                 <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Customer Pop.</span>
-                                <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.customers}</strong>
+                                <strong style="color: #e4e4e7; font-size: 0.9rem;">${f.properties.customers}</strong>
                             </div>
                             <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
                                 <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Route Length</span>
-                                <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.line_km} km</strong>
+                                <strong style="color: #e4e4e7; font-size: 0.9rem;">${f.properties.line_km} km</strong>
                             </div>
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.8rem;">
                             <span style="color: #a1a1aa;">Grid Density:</span>
                             <strong style="color: #10b981;">${f.properties.density} /km</strong>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.85rem; border-bottom: 1px solid #3f3f46; padding-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.8rem; border-bottom: 1px solid #3f3f46; padding-bottom: 8px;">
                             <span style="color: #a1a1aa;">Generation Mix:</span>
-                            <strong style="color: #e4e4e7; text-align: right; max-width: 140px;">${f.properties.mix}</strong>
+                            <strong style="color: #e4e4e7; text-align: right;">${f.properties.mix}</strong>
                         </div>
 
                         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                             <div>
-                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">OEB Scorecard SAIDI</span>
-                                <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saidi} hrs</strong>
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">OEB SAIDI</span>
+                                <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saidi} hrs</strong>
                             </div>
                             <div style="text-align: right;">
-                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">OEB Scorecard SAIFI</span>
-                                <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saifi}</strong>
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">OEB SAIFI</span>
+                                <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saifi}</strong>
                             </div>
                         </div>
                     </div>
@@ -164,23 +165,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 layer.on({ 
                     mouseover: (e) => { 
-                        e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.2 : 0.5 }); 
+                        e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.2 : 0.4 }); 
                         if (!isProv) e.target.bringToFront(); 
                         const r = document.getElementById(`row-${f.properties.id}`); 
-                        if(r) r.classList.add('active'); 
+                        if (r) r.classList.add('active'); 
                     }, 
                     mouseout: (e) => { 
                         geojsonLayer.resetStyle(e.target); 
                         const r = document.getElementById(`row-${f.properties.id}`); 
-                        if(r) r.classList.remove('active'); 
+                        if (r) r.classList.remove('active'); 
                     }, 
                     click: () => selectUtility(f.properties.id) 
                 });
             }
         }).addTo(map);
 
+        // Sidebar Table Construction (Clean Vertical Alignment)
         const tableBody = document.getElementById('utility-table-body');
         function buildTable(features) {
+            if (!tableBody) return;
             tableBody.innerHTML = '';
             features.forEach(f => {
                 const p = f.properties;
@@ -189,21 +192,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 row.id = `row-${p.id}`;
                 
                 row.innerHTML = `
-                    <td>
-                        <div style="display:flex; align-items:center;">
-                            <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
-                            <strong style="color: #f4f4f5;">${p.utility}</strong>
+                    <td style="padding: 10px 8px;">
+                        <div style="display:flex; align-items:center; gap: 8px;">
+                            <span class="status-badge" style="background: ${getColor(p.saidi)}; width: 8px; height: 8px; border-radius: 50%; shrink: 0;"></span>
+                            <strong style="color: #f4f4f5; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${p.utility}</strong>
                         </div>
-                        <div style="font-size: 0.75rem; color: #a1a1aa; margin-left: 22px; margin-top: 2px;">
-                            ${p.customers} Pop. &bull; ${p.line_km} km Route
+                        <div style="font-size: 0.72rem; color: #71717a; margin-left: 16px; margin-top: 2px;">
+                            ${p.customers} &bull; ${p.line_km} km
                         </div>
                     </td>
-                    <td><strong style="color: #f4f4f5;">${p.saidi}</strong> hr</td>
-                    <td><strong style="color: #f4f4f5;">${p.saifi}</strong></td>
+                    <td style="text-align: right; padding: 10px 8px; vertical-align: middle;">
+                        <strong style="color: #f4f4f5; font-size: 0.88rem;">${p.saidi}</strong><span style="font-size:0.7rem; color:#71717a;"> hr</span>
+                    </td>
+                    <td style="text-align: right; padding: 10px 8px; vertical-align: middle;">
+                        <strong style="color: #f4f4f5; font-size: 0.88rem;">${p.saifi}</strong>
+                    </td>
                 `;
                 row.addEventListener('click', () => selectUtility(p.id));
-                row.addEventListener('mouseenter', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseover'); });
-                row.addEventListener('mouseleave', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseout'); });
+                row.addEventListener('mouseenter', () => { if (layerMap[p.id]) layerMap[p.id].fire('mouseover'); });
+                row.addEventListener('mouseleave', () => { if (layerMap[p.id]) layerMap[p.id].fire('mouseout'); });
                 tableBody.appendChild(row);
             });
         }
@@ -212,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         function selectUtility(id) {
             const layer = layerMap[id];
             if (!layer) return;
-            map.fitBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 9 });
+            map.fitBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 9 });
             layer.openPopup();
             document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
             const activeRow = document.getElementById(`row-${id}`);
@@ -222,18 +229,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // DEBOUNCED SEARCH FILTERING
+        // Debounced Search Filter
         let searchTimeout;
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const query = e.target.value.toLowerCase();
-                const filtered = utilitiesGeoJSON.features.filter(f => f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query));
-                buildTable(filtered);
-                geojsonLayer.clearLayers();
-                geojsonLayer.addData({ "type": "FeatureCollection", "features": filtered });
-            }, 300);
-        });
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const query = e.target.value.toLowerCase();
+                    const filtered = utilitiesGeoJSON.features.filter(f => f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query));
+                    buildTable(filtered);
+                    geojsonLayer.clearLayers();
+                    geojsonLayer.addData({ "type": "FeatureCollection", "features": filtered });
+                }, 250);
+            });
+        }
 
         window.addEventListener('resize', () => map.invalidateSize());
     }
@@ -242,6 +252,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // MAP 2: 50-YEAR BESPOKE FORECAST
     // ==========================================
     function initForecastMap(regions, naBounds) {
+        const mapEl = document.getElementById('forecast-map-premium');
+        if (!mapEl) return;
+        
         const forecastMap = L.map('forecast-map-premium', { 
             scrollWheelZoom: false, 
             zoomControl: false, 
@@ -264,12 +277,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         function updateForecast() {
-            const currentYear = parseInt(document.getElementById('yearSliderPrem').value);
+            const slider = document.getElementById('yearSliderPrem');
+            if (!slider) return;
+            const currentYear = parseInt(slider.value);
             const yearsElapsed = currentYear - 2025;
-            const stEV = document.getElementById('t-ev').checked;
-            const stAI = document.getElementById('t-ai').checked;
-            const stHeat = document.getElementById('t-heat').checked;
-            const stHydro = document.getElementById('t-hydro').checked;
+            const stEV = document.getElementById('t-ev')?.checked;
+            const stAI = document.getElementById('t-ai')?.checked;
+            const stHeat = document.getElementById('t-heat')?.checked;
+            const stHydro = document.getElementById('t-hydro')?.checked;
 
             let totalMacroLoad = 17.0; 
             regions.forEach(region => {
@@ -291,33 +306,40 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (ratio > 5.0) color = '#f97316'; 
 
                 const marker = circleMarkers[region.id];
-                marker.setRadius(radius);
-                marker.setStyle({ color: color, fillColor: color, fillOpacity: ratio > 3.5 ? 0.7 : 0.4 });
-                marker.setTooltipContent(`
-                    <div style="font-family:'Plus Jakarta Sans',sans-serif; text-align:center;">
-                        <strong style="font-size:1.1rem; color:#fff;">${region.name}</strong><br>
-                        <span style="color:#a1a1aa; font-size:0.8rem;">Est. ${currentYear} Load</span><br>
-                        <strong style="color:${color}; font-size:1.3rem;">${projectedLoad.toFixed(1)} TWh</strong>
-                    </div>
-                `);
+                if (marker) {
+                    marker.setRadius(radius);
+                    marker.setStyle({ color: color, fillColor: color, fillOpacity: ratio > 3.5 ? 0.7 : 0.4 });
+                    marker.setTooltipContent(`
+                        <div style="font-family:'Plus Jakarta Sans',sans-serif; text-align:center;">
+                            <strong style="font-size:1.1rem; color:#fff;">${region.name}</strong><br>
+                            <span style="color:#a1a1aa; font-size:0.8rem;">Est. ${currentYear} Load</span><br>
+                            <strong style="color:${color}; font-size:1.3rem;">${projectedLoad.toFixed(1)} TWh</strong>
+                        </div>
+                    `);
+                }
             });
 
-            document.getElementById('yearLabelPrem').innerText = currentYear;
-            document.getElementById('totalLoadPrem').innerHTML = `${totalMacroLoad.toFixed(0)} <span>TWh</span>`;
+            const yearLabel = document.getElementById('yearLabelPrem');
+            const totalLoad = document.getElementById('totalLoadPrem');
+            if (yearLabel) yearLabel.innerText = currentYear;
+            if (totalLoad) totalLoad.innerHTML = `${totalMacroLoad.toFixed(0)} <span>TWh</span>`;
             
             const startingTotal = 393.0; 
             const percentGrowth = ((totalMacroLoad - startingTotal) / startingTotal) * 100;
             const pill = document.getElementById('growthPercentPrem');
             
-            if (percentGrowth > 0) {
-                pill.innerText = `+${percentGrowth.toFixed(0)}% Growth`;
-                pill.style.background = percentGrowth > 100 ? 'rgba(217, 70, 239, 0.1)' : 'rgba(16, 185, 129, 0.1)';
-                pill.style.color = percentGrowth > 100 ? '#d946ef' : '#10b981';
-                pill.style.borderColor = percentGrowth > 100 ? 'rgba(217, 70, 239, 0.3)' : 'rgba(16, 185, 129, 0.2)';
-            } else { pill.innerText = `Baseline`; }
+            if (pill) {
+                if (percentGrowth > 0) {
+                    pill.innerText = `+${percentGrowth.toFixed(0)}% Growth`;
+                    pill.style.background = percentGrowth > 100 ? 'rgba(217, 70, 239, 0.1)' : 'rgba(16, 185, 129, 0.1)';
+                    pill.style.color = percentGrowth > 100 ? '#d946ef' : '#10b981';
+                    pill.style.borderColor = percentGrowth > 100 ? 'rgba(217, 70, 239, 0.3)' : 'rgba(16, 185, 129, 0.2)';
+                } else { pill.innerText = `Baseline`; }
+            }
         }
 
-        document.getElementById('yearSliderPrem').addEventListener('input', updateForecast);
+        const yearSlider = document.getElementById('yearSliderPrem');
+        if (yearSlider) yearSlider.addEventListener('input', updateForecast);
         document.querySelectorAll('.scenario-group input').forEach(input => input.addEventListener('change', updateForecast));
         updateForecast();
         window.addEventListener('resize', () => forecastMap.invalidateSize());
@@ -327,6 +349,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // MAP 3: PROVINCIAL CAPACITY DEFICIT
     // ==========================================
     function initDeficitMap(gridData, naBounds) {
+        const mapEl = document.getElementById('deficit-leaflet-map');
+        if (!mapEl) return;
+
         const deficitMap = L.map('deficit-leaflet-map', { 
             scrollWheelZoom: false, 
             dragging: !L.Browser.mobile,
@@ -376,6 +401,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // MAP 4: OFF-GRID MICROGRIDS
     // ==========================================
     function initOffGridMap(offgridZones, directoryData, naBounds) {
+        const mapEl = document.getElementById('offgrid-leaflet-map');
+        if (!mapEl) return;
+
         const offgridMap = L.map('offgrid-leaflet-map', { 
             scrollWheelZoom: false, 
             dragging: !L.Browser.mobile,
@@ -400,6 +428,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const listContainer = document.getElementById('offgrid-list-container');
         function renderDirectory(data) {
+            if (!listContainer) return;
             listContainer.innerHTML = '';
             data.forEach(zone => {
                 const div = document.createElement('div');
@@ -435,16 +464,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // DEBOUNCED SEARCH FILTERING
         let searchTimeout;
-        document.getElementById('offgrid-search').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const query = e.target.value.toLowerCase();
-                const filtered = directoryData.filter(zone => zone.region.toLowerCase().includes(query) || zone.comms.some(c => c.toLowerCase().includes(query)));
-                renderDirectory(filtered);
-            }, 300);
-        });
+        const searchInput = document.getElementById('offgrid-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const query = e.target.value.toLowerCase();
+                    const filtered = directoryData.filter(zone => zone.region.toLowerCase().includes(query) || zone.comms.some(c => c.toLowerCase().includes(query)));
+                    renderDirectory(filtered);
+                }, 250);
+            });
+        }
 
         window.addEventListener('resize', () => offgridMap.invalidateSize());
     }
