@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Fixed Leaflet Pane Allocation & Error-Free Rendering Engine
+// Enterprise Logic Layer: Dynamic Sorting, Pane Isolation & Live News Engine
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // Helper: Parse customer counts for numeric sorting (e.g. "4.4M" -> 4400000)
     function parseCustomers(custStr) {
         if (!custStr) return 0;
         const s = custStr.toString().toLowerCase().trim();
@@ -79,18 +80,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             maxBounds: naBounds, 
             maxBoundsViscosity: 1.0, 
             minZoom: 3 
-        }).setView([50.0, -95.0], 3); 
+        }); 
         
         setTimeout(() => map.invalidateSize(), 500);
 
+        // CREATE DEDICATED MAP PANES TO PREVENT POLYGON EVENT COLLISIONS
         map.createPane('provincialPane');
-        map.getPane('provincialPane').style.zIndex = 400;
+        map.getPane('provincialPane').style.zIndex = 400; // Background layer
 
         map.createPane('municipalPane');
-        map.getPane('municipalPane').style.zIndex = 500;
+        map.getPane('municipalPane').style.zIndex = 500; // Foreground layer
 
         map.createPane('labels');
-        map.getPane('labels').style.zIndex = 650;
+        map.getPane('labels').style.zIndex = 650; // Top text layer
         map.getPane('labels').style.pointerEvents = 'none';
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { 
@@ -125,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
 
-                // Fixed: Assign pane directly to layer options before rendering
+                // Explicit pane assignment fixes Leaflet render error
                 layer.options.pane = isProv ? 'provincialPane' : 'municipalPane';
 
                 layer.bindTooltip(`
@@ -194,9 +196,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }).addTo(map);
 
+        // AUTO-FIT MAP CAMERA
+        if (geojsonLayer.getBounds().isValid()) {
+            map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
+        }
+
+        // --- SIDEBAR TABLE STATE & DYNAMIC SORTING ENGINE ---
         const tableBody = document.getElementById('utility-table-body');
         let activeSortKey = 'customers'; 
-        let isAscending = false;
+        let isAscending = false; 
 
         function sortFeatures(features, key, asc) {
             return [...features].sort((a, b) => {
@@ -256,6 +264,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         buildTable(utilitiesGeoJSON.features);
 
+        // Clickable Column Header Listeners for Interactive Sorting
         const tableHeader = document.querySelector('#utility-table thead, .utility-table-header');
         if (tableHeader) {
             const headers = tableHeader.querySelectorAll('th');
@@ -271,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         isAscending = !isAscending;
                     } else {
                         activeSortKey = key;
-                        isAscending = (key === 'utility');
+                        isAscending = (key === 'utility'); 
                     }
 
                     const query = searchInput ? searchInput.value.toLowerCase() : '';
@@ -297,6 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        // Debounced Search Filter
         let searchTimeout;
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
@@ -316,7 +326,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 2: FORECAST MAP
+    // MAP 2: 50-YEAR BESPOKE FORECAST
     // ==========================================
     function initForecastMap(regions, naBounds) {
         const mapEl = document.getElementById('forecast-map-premium');
@@ -548,35 +558,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // LIVE UTILITY NEWS FEED ENGINE
+    // LIVE UTILITY NEWS FEED ENGINE (CACHE-BUSTED)
     // ==========================================
     function initNewsFeed() {
         const container = document.getElementById('news-feed-container');
         if (!container) return;
 
-        const rssUrl = 'https://news.google.com/rss/search?q=Canada+(utility+OR+"electric+utility"+OR+"natural+gas"+OR+"water+utility"+OR+hydro)&hl=en-CA&gl=CA&ceid=CA:en';
-        const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+        // Force recent news (7 days) and append a timestamp cache-buster so proxies never serve stale data
+        const rssUrl = 'https://news.google.com/rss/search?q=Canada+(utility+OR+"electric+utility"+OR+"natural+gas"+OR+"water+utility"+OR+hydro)+when:7d&hl=en-CA&gl=CA&ceid=CA:en';
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}&cb=${Date.now()}`;
 
-        fetch(apiUrl)
+        fetch(proxyUrl)
             .then(res => res.json())
             .then(data => {
-                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(data.contents, "text/xml");
+                const items = xml.querySelectorAll("item");
+
+                if (items.length > 0) {
                     container.innerHTML = '';
-                    data.items.slice(0, 6).forEach(item => {
-                        const date = new Date(item.pubDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
-                        
-                        let title = item.title || '';
-                        let source = 'Canada Utility Wire';
+                    Array.from(items).slice(0, 6).forEach(item => {
+                        const rawTitle = item.querySelector("title")?.textContent || '';
+                        const link = item.querySelector("link")?.textContent || '#';
+                        const pubDate = item.querySelector("pubDate")?.textContent || '';
+                        const date = pubDate ? new Date(pubDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Today';
+
+                        // Extract source if Google appends it (e.g. "Headline - CBC News")
+                        let title = rawTitle;
+                        let source = 'Live Utility Wire';
                         if (title.includes(' - ')) {
                             const parts = title.split(' - ');
                             source = parts.pop();
                             title = parts.join(' - ');
-                        }
-
-                        let snippet = item.description || '';
-                        snippet = snippet.replace(/<[^>]*>?/gm, ''); 
-                        if (snippet.length > 130) {
-                            snippet = snippet.substring(0, 127) + '...';
                         }
 
                         const card = document.createElement('article');
@@ -588,9 +601,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <span class="news-date">${date}</span>
                                 </div>
                                 <h3 class="news-title">${title}</h3>
-                                <p class="news-snippet">${snippet || 'Latest sector updates and regulatory developments.'}</p>
                             </div>
-                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-link">Read Coverage &rarr;</a>
+                            <a href="${link}" target="_blank" rel="noopener noreferrer" class="news-link">Read Coverage &rarr;</a>
                         `;
                         container.appendChild(card);
                     });
@@ -598,7 +610,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     renderFallbackNews(container);
                 }
             })
-            .catch(() => renderFallbackNews(container));
+            .catch((err) => {
+                console.error("News Feed Error:", err);
+                renderFallbackNews(container);
+            });
     }
 
     function renderFallbackNews(container) {
