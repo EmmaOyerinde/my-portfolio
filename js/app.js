@@ -70,9 +70,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
         let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
+            smoothFactor: 1.5, // Smooths out jagged polygon points
             style: function(f) { 
                 const isProv = f.properties.type_org === 'provincial';
-                return { fillColor: getColor(f.properties.saidi), weight: isProv ? 1.5 : 2.5, opacity: isProv ? 0.5 : 0.9, color: getColor(f.properties.saidi), fillOpacity: isProv ? 0.15 : 0.45 }; 
+                return { 
+                    fillColor: getColor(f.properties.saidi), 
+                    weight: isProv ? 1 : 2, // Thinner lines for a cleaner look
+                    opacity: isProv ? 0.4 : 0.8, 
+                    color: getColor(f.properties.saidi), 
+                    fillOpacity: isProv ? 0.1 : 0.35,
+                    lineJoin: 'round', // Rounds the corners of the polygons
+                    lineCap: 'round'
+                }; 
             }, 
             onEachFeature: function(f, layer) {
                 layerMap[f.properties.id] = layer;
@@ -301,14 +310,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).addTo(offgridMap);
 
         const listContainer = document.getElementById('offgrid-list-container');
-function renderDirectory(data) {
+        function renderDirectory(data) {
             listContainer.innerHTML = '';
             data.forEach(zone => {
                 const div = document.createElement('div');
                 div.className = 'offgrid-item';
                 div.id = `dir-${zone.id}`;
-                
-                // REMOVED: .slice(0, 8) truncation. Now joins and displays the entire array.
                 div.innerHTML = `
                     <div class="offgrid-region-title">
                         ${zone.region} <span class="offgrid-badge">${zone.comms.length}</span>
@@ -317,7 +324,6 @@ function renderDirectory(data) {
                         ${zone.comms.join(', ')}
                     </div>
                 `;
-                
                 div.addEventListener('click', () => mapFlyToZone(zone.id));
                 listContainer.appendChild(div);
             });
@@ -327,10 +333,16 @@ function renderDirectory(data) {
         function mapFlyToZone(id) {
             document.querySelectorAll('.offgrid-item').forEach(el => el.classList.remove('active'));
             const activeDir = document.getElementById(`dir-${id}`);
-            if (activeDir) { activeDir.classList.add('active'); activeDir.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+            if (activeDir) {
+                activeDir.classList.add('active');
+                activeDir.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
             geojsonLayer.eachLayer(layer => geojsonLayer.resetStyle(layer));
             const targetLayer = zoneLayers[id];
-            if (targetLayer) { targetLayer.setStyle({ fillColor: '#f59e0b', fillOpacity: 0.4, weight: 3 }); offgridMap.fitBounds(targetLayer.getBounds(), { padding: [20, 20] }); }
+            if (targetLayer) {
+                targetLayer.setStyle({ fillColor: '#f59e0b', fillOpacity: 0.4, weight: 3 });
+                offgridMap.fitBounds(targetLayer.getBounds(), { padding: [20, 20] });
+            }
         }
 
         document.getElementById('offgrid-search').addEventListener('input', (e) => {
@@ -341,9 +353,14 @@ function renderDirectory(data) {
         window.addEventListener('resize', () => offgridMap.invalidateSize());
     }
 
+    // ==========================================
+    // LIVE UTILITY NEWS FEED ENGINE
+    // ==========================================
     function initNewsFeed() {
         const container = document.getElementById('news-feed-container');
         if (!container) return;
+
+        // Google News RSS targeting Canadian Electric, Gas, and Water Utility sectors
         const rssUrl = 'https://news.google.com/rss/search?q=Canada+(utility+OR+"electric+utility"+OR+"natural+gas"+OR+"water+utility"+OR+hydro)&hl=en-CA&gl=CA&ceid=CA:en';
         const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
@@ -352,24 +369,48 @@ function renderDirectory(data) {
             .then(data => {
                 if (data.status === 'ok' && data.items && data.items.length > 0) {
                     container.innerHTML = '';
+                    // Render top 6 headlines
                     data.items.slice(0, 6).forEach(item => {
                         const date = new Date(item.pubDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+                        
                         let title = item.title || '';
                         let source = 'Canada Utility Wire';
-                        if (title.includes(' - ')) { const parts = title.split(' - '); source = parts.pop(); title = parts.join(' - '); }
-                        let snippet = item.description || ''; snippet = snippet.replace(/<[^>]*>?/gm, '');
-                        if (snippet.length > 130) snippet = snippet.substring(0, 127) + '...';
+                        if (title.includes(' - ')) {
+                            const parts = title.split(' - ');
+                            source = parts.pop();
+                            title = parts.join(' - ');
+                        }
+
+                        let snippet = item.description || '';
+                        snippet = snippet.replace(/<[^>]*>?/gm, ''); // Strip raw HTML tags
+                        if (snippet.length > 130) {
+                            snippet = snippet.substring(0, 127) + '...';
+                        }
 
                         const card = document.createElement('article');
                         card.className = 'news-card';
                         card.innerHTML = `
-                            <div><div class="news-card-header"><span class="news-source-badge">${source}</span><span class="news-date">${date}</span></div>
-                            <h3 class="news-title">${title}</h3><p class="news-snippet">${snippet || 'Latest sector updates and regulatory developments across Canadian distribution networks.'}</p></div>
-                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-link">Read Coverage &rarr;</a>`;
+                            <div>
+                                <div class="news-card-header">
+                                    <span class="news-source-badge">${source}</span>
+                                    <span class="news-date">${date}</span>
+                                </div>
+                                <h3 class="news-title">${title}</h3>
+                                <p class="news-snippet">${snippet || 'Latest sector updates and regulatory developments across Canadian distribution networks.'}</p>
+                            </div>
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-link">
+                                Read Coverage &rarr;
+                            </a>
+                        `;
                         container.appendChild(card);
                     });
-                } else { renderFallbackNews(container); }
-            }).catch(() => renderFallbackNews(container));
+                } else {
+                    renderFallbackNews(container);
+                }
+            })
+            .catch(() => {
+                renderFallbackNews(container);
+            });
     }
 
     function renderFallbackNews(container) {
@@ -378,11 +419,24 @@ function renderDirectory(data) {
             { title: 'Canadian Gas Utilities Advance Renewable Natural Gas & Hydrogen Frameworks', source: 'CGA Wire', date: 'Latest Update', link: 'https://www.cga.ca', snippet: 'Gas utilities across Canada scale up blend mandates for renewable natural gas (RNG) into existing distribution networks.' },
             { title: 'Municipal Water Utilities Invest in Climate-Resilient Infrastructure Upgrades', source: 'CWWA Report', date: 'Latest Update', link: 'https://www.cwwa.ca', snippet: 'Water distribution authorities deploy advanced spatial GIS and smart metering to mitigate aging infrastructure challenges.' }
         ];
+
         container.innerHTML = '';
         fallbacks.forEach(item => {
             const card = document.createElement('article');
             card.className = 'news-card';
-            card.innerHTML = `<div><div class="news-card-header"><span class="news-source-badge">${item.source}</span><span class="news-date">${item.date}</span></div><h3 class="news-title">${item.title}</h3><p class="news-snippet">${item.snippet}</p></div><a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-link">Read Coverage &rarr;</a>`;
+            card.innerHTML = `
+                <div>
+                    <div class="news-card-header">
+                        <span class="news-source-badge">${item.source}</span>
+                        <span class="news-date">${item.date}</span>
+                    </div>
+                    <h3 class="news-title">${item.title}</h3>
+                    <p class="news-snippet">${item.snippet}</p>
+                </div>
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-link">
+                    Read Coverage &rarr;
+                </a>
+            `;
             container.appendChild(card);
         });
     }
