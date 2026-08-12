@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Helper: Parse customer counts for numeric sorting (e.g. "4.4M" -> 4400000)
     function parseCustomers(custStr) {
         if (!custStr) return 0;
         const s = custStr.toString().toLowerCase().trim();
@@ -84,20 +83,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         setTimeout(() => map.invalidateSize(), 500);
 
-        // CREATE DEDICATED MAP PANES TO PREVENT POLYGON EVENT COLLISIONS
         map.createPane('provincialPane');
-        map.getPane('provincialPane').style.zIndex = 400; // Background layer
+        map.getPane('provincialPane').style.zIndex = 400;
 
         map.createPane('municipalPane');
-        map.getPane('municipalPane').style.zIndex = 500; // Foreground layer
+        map.getPane('municipalPane').style.zIndex = 500;
 
         map.createPane('labels');
-        map.getPane('labels').style.zIndex = 650; // Top text layer
+        map.getPane('labels').style.zIndex = 650;
         map.getPane('labels').style.pointerEvents = 'none';
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { 
             maxZoom: 18, 
-            attribution: '&copy; CARTO &copy; OpenStreetMap' 
+            attribution: '&copy; CARTO' 
         }).addTo(map);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', { 
@@ -127,7 +125,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
 
-                // Explicit pane assignment fixes Leaflet render error
                 layer.options.pane = isProv ? 'provincialPane' : 'municipalPane';
 
                 layer.bindTooltip(`
@@ -135,11 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <strong style="color: #ffffff; font-size: 0.85rem; display:block;">${f.properties.utility}</strong>
                         <span style="color: #a1a1aa; font-size: 0.75rem;">${f.properties.region} &bull; ${f.properties.customers} Cust.</span>
                     </div>
-                `, { 
-                    className: 'dark-tooltip', 
-                    sticky: true, 
-                    direction: 'auto'
-                });
+                `, { className: 'dark-tooltip', sticky: true, direction: 'auto' });
                 
                 const popupHTML = `
                     <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 260px; padding: 4px;">
@@ -196,12 +189,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }).addTo(map);
 
-        // AUTO-FIT MAP CAMERA
         if (geojsonLayer.getBounds().isValid()) {
             map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
         }
 
-        // --- SIDEBAR TABLE STATE & DYNAMIC SORTING ENGINE ---
         const tableBody = document.getElementById('utility-table-body');
         let activeSortKey = 'customers'; 
         let isAscending = false; 
@@ -239,20 +230,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 row.id = `row-${p.id}`;
                 
                 row.innerHTML = `
-                    <td style="padding: 10px 8px;">
-                        <div style="display:flex; align-items:center; gap: 8px;">
+                    <td style="padding: 12px 16px;">
+                        <div style="display:flex; align-items:center; gap: 10px;">
                             <span class="status-badge" style="background: ${getColor(p.saidi)}; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;"></span>
-                            <strong style="color: #f4f4f5; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${p.utility}</strong>
+                            <strong style="color: #f4f4f5; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;">${p.utility}</strong>
                         </div>
-                        <div style="font-size: 0.72rem; color: #71717a; margin-left: 16px; margin-top: 2px;">
-                            ${p.customers} &bull; ${p.line_km} km
+                        <div style="font-size: 0.75rem; color: #71717a; margin-left: 18px; margin-top: 4px;">
+                            ${p.customers} Pop &bull; ${p.line_km} km
                         </div>
                     </td>
-                    <td style="text-align: right; padding: 10px 8px; vertical-align: middle;">
-                        <strong style="color: #f4f4f5; font-size: 0.88rem;">${p.saidi}</strong><span style="font-size:0.7rem; color:#71717a;"> hr</span>
+                    <td style="text-align: right; padding: 12px 16px; vertical-align: middle;">
+                        <strong style="color: #f4f4f5; font-size: 0.95rem;">${p.saidi}</strong><span style="font-size:0.75rem; color:#71717a;"> hr</span>
                     </td>
-                    <td style="text-align: right; padding: 10px 8px; vertical-align: middle;">
-                        <strong style="color: #f4f4f5; font-size: 0.88rem;">${p.saifi}</strong>
+                    <td style="text-align: right; padding: 12px 16px; vertical-align: middle;">
+                        <strong style="color: #f4f4f5; font-size: 0.95rem;">${p.saifi}</strong>
                     </td>
                 `;
                 row.addEventListener('click', () => selectUtility(p.id));
@@ -264,13 +255,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         buildTable(utilitiesGeoJSON.features);
 
-        // Clickable Column Header Listeners for Interactive Sorting
-        const tableHeader = document.querySelector('#utility-table thead, .utility-table-header');
+        const tableHeader = document.querySelector('#utility-table thead');
         if (tableHeader) {
             const headers = tableHeader.querySelectorAll('th');
             headers.forEach((th, idx) => {
-                th.style.cursor = 'pointer';
-                th.title = 'Click to sort';
                 th.addEventListener('click', () => {
                     let key = 'utility';
                     if (idx === 1) key = 'saidi';
@@ -306,7 +294,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Debounced Search Filter
         let searchTimeout;
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
@@ -326,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 2: 50-YEAR BESPOKE FORECAST
+    // MAP 2: FORECAST MAP
     // ==========================================
     function initForecastMap(regions, naBounds) {
         const mapEl = document.getElementById('forecast-map-premium');
@@ -564,7 +551,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const container = document.getElementById('news-feed-container');
         if (!container) return;
 
-        // Force recent news (7 days) and append a timestamp cache-buster so proxies never serve stale data
         const rssUrl = 'https://news.google.com/rss/search?q=Canada+(utility+OR+"electric+utility"+OR+"natural+gas"+OR+"water+utility"+OR+hydro)+when:7d&hl=en-CA&gl=CA&ceid=CA:en';
         const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}&cb=${Date.now()}`;
 
@@ -583,7 +569,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const pubDate = item.querySelector("pubDate")?.textContent || '';
                         const date = pubDate ? new Date(pubDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Today';
 
-                        // Extract source if Google appends it (e.g. "Headline - CBC News")
                         let title = rawTitle;
                         let source = 'Live Utility Wire';
                         if (title.includes(' - ')) {
