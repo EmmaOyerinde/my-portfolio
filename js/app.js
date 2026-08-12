@@ -301,13 +301,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).addTo(offgridMap);
 
         const listContainer = document.getElementById('offgrid-list-container');
-        function renderDirectory(data) {
+function renderDirectory(data) {
             listContainer.innerHTML = '';
             data.forEach(zone => {
                 const div = document.createElement('div');
                 div.className = 'offgrid-item';
                 div.id = `dir-${zone.id}`;
-                div.innerHTML = `<div class="offgrid-region-title">${zone.region} <span class="offgrid-badge">${zone.comms.length}</span></div><div class="offgrid-community-list">${zone.comms.slice(0, 8).join(', ')}${zone.comms.length > 8 ? '...' : ''}</div>`;
+                
+                // REMOVED: .slice(0, 8) truncation. Now joins and displays the entire array.
+                div.innerHTML = `
+                    <div class="offgrid-region-title">
+                        ${zone.region} <span class="offgrid-badge">${zone.comms.length}</span>
+                    </div>
+                    <div class="offgrid-community-list">
+                        ${zone.comms.join(', ')}
+                    </div>
+                `;
+                
                 div.addEventListener('click', () => mapFlyToZone(zone.id));
                 listContainer.appendChild(div);
             });
