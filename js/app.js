@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP (RESTORED POPULATION & ROUTE LENGTH)
+    // MAP 1: RELIABILITY MAP (NATIONAL VIEWPORT)
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             maxBounds: naBounds, 
             maxBoundsViscosity: 1.0, 
             minZoom: 3 
-        }).setView([43.8, -80.0], 7); 
+        }).setView([55.0, -96.0], 4); // <--- FIXED: Now loads showing all of Canada!
         
         setTimeout(() => map.invalidateSize(), 500);
 
@@ -113,7 +113,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
                 
-                // RESTORED: Permanent Tooltip now visibly shows Customer Population and Route Length directly on the map
                 layer.bindTooltip(`
                     <div style="text-align: center; line-height: 1.3;">
                         <strong style="color: #ffffff; font-size: 0.85rem;">${f.properties.utility}</strong><br>
@@ -125,7 +124,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     direction: 'center'
                 });
                 
-                // RESTORED: Full Detailed Popup 
                 const popupHTML = `
                     <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 280px; padding: 5px;">
                         <div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">${f.properties.region}</div>
@@ -191,7 +189,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 row.className = 'utility-row';
                 row.id = `row-${p.id}`;
                 
-                // RESTORED: Appended Route Length and Customers to the table explicitly
                 row.innerHTML = `
                     <td>
                         <div style="display:flex; align-items:center;">
