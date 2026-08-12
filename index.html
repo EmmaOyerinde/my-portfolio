@@ -1,193 +1,227 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canadian Utility Intelligence | Executive Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#09090b">
+    <meta name="description" content="Emmanuel Oyerinde - Enterprise Project Manager specializing in utility infrastructure, GIS, and digital transformation.">
+    <title>Emmanuel Oyerinde | Enterprise Project Manager</title>
     
-    <!-- Fonts: Plus Jakarta Sans for premium data visualization -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Leaflet Mapping CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     
-    <!-- Custom Enterprise Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-    <!-- Fixed Executive Navigation -->
-    <nav class="enterprise-nav">
-        <div class="nav-brand">
-            <div class="brand-logo"></div>
-            <h1>Utility<span>Intel</span></h1>
-        </div>
-        <button id="menu-btn" class="mobile-menu-btn">☰</button>
-        <ul id="nav-links" class="nav-links">
-            <li><a href="#reliability">Grid Reliability</a></li>
-            <li><a href="#forecast">50-Year Forecast</a></li>
-            <li><a href="#deficit">Capacity Deficit</a></li>
-            <li><a href="#offgrid">Microgrids</a></li>
+    <nav>
+        <div class="logo">Emmanuel<span> Oyerinde</span></div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">Profile</a></li>
+            <li><a href="#grid-map">Analytics</a></li>
+            <li><a href="#load-growth">Forecasts</a></li>
+            <li><a href="#supply-deficit">Deficit</a></li>
+            <li><a href="#off-grid">Off-Grid</a></li>
+            <li><a href="#utility-news">News Wire</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
+        <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
     </nav>
 
-    <main class="dashboard-container">
-        
-        <!-- Header -->
-        <header class="dashboard-header reveal">
-            <span class="overline">National Infrastructure Overview</span>
-            <h2 class="gradient-text">Strategic Utility Intelligence</h2>
-            <p>Real-time geospatial analytics, regulatory scorecards, and capacity forecasting for Canadian energy distributors.</p>
-        </header>
-
-        <!-- MODULE 1: Reliability & Service Territories -->
-        <section id="reliability" class="dashboard-module reveal">
-            <div class="module-header">
-                <h3>Service Territory Analytics</h3>
-                <p>OEB Scorecard benchmarks and operational footprint.</p>
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero" id="home">
+            <div class="hero-glow"></div>
+            <div class="hero-content">
+                <div class="profile-avatar"><img src="headshot.jpg" alt="Emmanuel Oyerinde"></div>
+                <span class="badge">
+                    <svg style="width:16px; height:16px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>PMP® Certified Project Manager
+                </span>
+                <h1>Bridging Strategy, Enterprise Technology & Operational Excellence</h1>
+                <p>10+ years leading cross-functional IT, infrastructure, enterprise system implementation, and digital transformation initiatives across large utility and engineering organizations.</p>
+                <div class="btn-group">
+                    <a href="#grid-map" class="btn btn-primary">Explore Analytics</a>
+                    <a href="#about" class="btn btn-secondary">Executive Profile</a>
+                </div>
             </div>
-            
-            <div class="grid-layout split-layout">
-                <aside class="control-panel">
-                    <div class="panel-section">
-                        <input type="text" id="search-input" class="modern-input" placeholder="Search utility or region...">
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section class="about-section reveal" id="about">
+            <div class="about-container">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h2>Enterprise Leadership & Delivery</h2>
+                        <p>My work extends far beyond standard project delivery to ensure the critical infrastructure powering our communities operates flawlessly. I bridge the gap between complex technical execution and high-level business strategy, guiding enterprise IT, GIS, and operational teams through high-stakes deployments.</p>
+                        <p>Whether orchestrating large-scale technology rollouts, aligning executive stakeholders, or untangling legacy system migrations, my focus is entirely on delivering secure, scalable outcomes.</p>
                     </div>
+                    <div class="skills-grid">
+                        <div class="skill-card card-leadership"><h3>Project Leadership</h3><p>Executive governance, scope/budget management, Agile & hybrid delivery frameworks, and strategic vendor leadership.</p></div>
+                        <div class="skill-card card-systems"><h3>Enterprise Systems</h3><p>Full-lifecycle deployment of enterprise applications, GIS platform integrations, and real-time operational workflows.</p></div>
+                        <div class="skill-card card-process"><h3>Process & Transformation</h3><p>Operational optimization, rigorous risk mitigation, digital transformation, and legacy system modernization.</p></div>
+                        <div class="skill-card card-innovation"><h3>AI & Innovation</h3><p>Leveraging advanced AI tools for rapid project planning, documentation, workflow acceleration, and technical analytics.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LIVE MAP 1: RELIABILITY -->
+        <section class="map-section reveal" id="grid-map">
+            <div class="map-glow"></div> 
+            <div class="section-header" style="position: relative; z-index: 2;">
+                <h2>National Utility Reliability Benchmark</h2>
+                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories. Click any service territory to view deep structural metrics including customer density and generation mix.</p>
+            </div>
+            <div class="map-app-wrapper">
+                <div class="map-sidebar">
+                    <div class="map-sidebar-header">
+                        <h3>Service Territory Analytics</h3>
+                        <p>Select a utility to focus on its territory bounds and performance metrics.</p>
+                        <div class="legend-box">
+                            <div class="legend-item"><div class="legend-color" style="background: #10b981;"></div><span>&lt; 1.0 hr</span></div>
+                            <div class="legend-item"><div class="legend-color" style="background: #f59e0b;"></div><span>1.0 - 1.8 hrs</span></div>
+                            <div class="legend-item"><div class="legend-color" style="background: #ef4444;"></div><span>&gt; 1.8 hrs</span></div>
+                        </div>
+                    </div>
+                    <div class="search-container"><input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region..."></div>
                     <div class="table-container">
-                        <table id="utility-table" class="enterprise-table">
-                            <thead>
-                                <tr>
-                                    <th>Utility Name</th>
-                                    <th class="text-right">SAIDI</th>
-                                    <th class="text-right">SAIFI</th>
-                                </tr>
-                            </thead>
-                            <tbody id="utility-table-body">
-                                <!-- JS Injects Rows -->
-                            </tbody>
+                        <table class="map-table">
+                            <thead class="utility-table-header"><tr><th>Utility</th><th style="text-align:right;">SAIDI</th><th style="text-align:right;">SAIFI</th></tr></thead>
+                            <tbody id="utility-table-body"></tbody>
                         </table>
                     </div>
-                </aside>
-                <div class="map-wrapper">
-                    <div id="leaflet-map" class="map-container"></div>
                 </div>
+                <div id="leaflet-map" class="leaflet-map-container"></div>
             </div>
         </section>
 
-        <!-- MODULE 2: 50-Year Macro Forecast -->
-        <section id="forecast" class="dashboard-module reveal">
-            <div class="module-header">
-                <h3>Macro Load Forecasting (2025-2075)</h3>
-                <p>Simulate demand expansion driven by industrial electrification and AI.</p>
+        <!-- LIVE MAP 2: 50-YEAR FORECAST -->
+        <section class="map-section reveal" style="background-color: var(--bg-base);" id="load-growth">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 60%);"></div> 
+            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem;">
+                <h2>50-Year Enterprise Load Horizon</h2>
+                <p>Advanced strategic modeling projecting regional grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points and long-term capital requirements across all Canadian provinces and territories.</p>
             </div>
-
-            <div class="grid-layout split-layout reverse-layout">
-                <div class="map-wrapper">
-                    <div id="forecast-map-premium" class="map-container"></div>
+            <div class="forecast-hero-wrapper">
+                <div class="glass-dashboard">
+                    <div class="glass-header"><h3>Growth Parameters</h3><p>Simulate localized capacity strain.</p></div>
+                    <div class="premium-slider-container">
+                        <div class="slider-header"><label>Projection Year</label><div class="year-highlight" id="yearLabelPrem">2025</div></div>
+                        <input type="range" id="yearSliderPrem" class="premium-slider" min="2025" max="2075" value="2025" step="1">
+                    </div>
+                    <div class="scenario-group">
+                        <label class="toggle-row"><div class="toggle-label">EV Supply Chain & Industry<span>Heavy localized battery mfg load</span></div><div class="switch"><input type="checkbox" id="t-ev" checked><span class="slider-toggle"></span></div></label>
+                        <label class="toggle-row"><div class="toggle-label">Hyper-Scale Data & AI<span>Urban dense compute centers</span></div><div class="switch"><input type="checkbox" id="t-ai" checked><span class="slider-toggle"></span></div></label>
+                        <label class="toggle-row"><div class="toggle-label">Residential Electrification<span>Aggressive heat-pump adoption</span></div><div class="switch"><input type="checkbox" id="t-heat"><span class="slider-toggle"></span></div></label>
+                        <label class="toggle-row"><div class="toggle-label">Green Hydrogen Economy<span>Massive industrial electrolysis</span></div><div class="switch"><input type="checkbox" id="t-hydro"><span class="slider-toggle"></span></div></label>
+                    </div>
+                    <div class="metric-readout">
+                        <div class="label">Simulated National Load</div>
+                        <div class="value" id="totalLoadPrem">393 <span>TWh</span></div>
+                        <div class="growth-pill" id="growthPercentPrem">Baseline</div>
+                    </div>
                 </div>
-                <aside class="control-panel">
-                    <div class="panel-section highlight-panel">
-                        <span class="panel-label">Projected Year: <span id="yearLabelPrem" class="text-white">2025</span></span>
-                        <input type="range" id="yearSliderPrem" min="2025" max="2075" value="2025" step="1" class="modern-slider">
-                        
-                        <div class="metric-display mt-4">
-                            <span class="metric-title">National Peak Load</span>
-                            <div class="metric-value-row">
-                                <h4 id="totalLoadPrem" class="gradient-text">393 TWh</h4>
-                                <span id="growthPercentPrem" class="status-pill baseline">Baseline</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel-section">
-                        <span class="panel-label">Growth Scenarios</span>
-                        <div class="scenario-group">
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="t-ev" checked>
-                                <span class="toggle-slider"></span>
-                                <span class="toggle-label">EV & Supply Chain Megaprojects</span>
-                            </label>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="t-ai">
-                                <span class="toggle-slider"></span>
-                                <span class="toggle-label">Hyperscale AI Data Centers</span>
-                            </label>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="t-heat" checked>
-                                <span class="toggle-slider"></span>
-                                <span class="toggle-label">Residential Heat Pump Adoption</span>
-                            </label>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="t-hydro">
-                                <span class="toggle-slider"></span>
-                                <span class="toggle-label">Green Hydrogen Production</span>
-                            </label>
-                        </div>
-                    </div>
-                </aside>
+                <div id="forecast-map-premium" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;"></div>
             </div>
         </section>
 
-        <!-- MODULE 3: Capacity Deficit -->
-        <section id="deficit" class="dashboard-module reveal">
-            <div class="module-header">
-                <h3>Provincial Capacity Deficit (2050)</h3>
-                <p>Evaluating committed generation vs projected regional demand.</p>
+        <!-- LIVE MAP 3: SUPPLY DEFICIT EXPLORER -->
+        <section class="map-section reveal" id="supply-deficit" style="background-color: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 60%);"></div>
+            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                <h2 style="color: #ffffff;">The Capacity Deficit: Unserved Energy</h2>
+                <p style="color: var(--zinc-400);">Grid generation is pooled at the provincial system level. Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire against surging electrification.</p>
             </div>
-            <div class="map-wrapper full-width">
-                <div id="deficit-leaflet-map" class="map-container lg-map"></div>
+            <div class="forecast-hero-wrapper" style="height: 650px; position: relative;">
+                <div id="deficit-leaflet-map" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;"></div>
             </div>
         </section>
 
-        <!-- MODULE 4: Off-Grid Communities -->
-        <section id="offgrid" class="dashboard-module reveal">
-            <div class="module-header">
-                <h3>Remote Microgrids & Off-Grid Zones</h3>
-                <p>Isolated communities reliant on diesel generation.</p>
+        <!-- LIVE MAP 4: OFF-GRID MICROGRIDS -->
+        <section class="map-section reveal" id="off-grid">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 60%);"></div> 
+            <div class="section-header" style="position: relative; z-index: 2;">
+                <h2>Remote & Off-Grid Infrastructure</h2>
+                <p>Visualizing the 100+ Canadian communities, First Nations, and coastal settlements that operate completely independently of the North American power grid, relying almost entirely on localized diesel microgrids.</p>
             </div>
-
-            <div class="grid-layout split-layout">
-                <aside class="control-panel">
-                    <div class="panel-section">
-                        <input type="text" id="offgrid-search" class="modern-input" placeholder="Search community or territory...">
+            <div class="map-app-wrapper">
+                <div class="map-sidebar">
+                    <div class="map-sidebar-header">
+                        <h3>Off-Grid Directory</h3><p>Select a massive off-grid zone to view the isolated settlements within it.</p>
                     </div>
-                    <div id="offgrid-list-container" class="directory-list">
-                        <!-- JS Injects Directory -->
-                    </div>
-                </aside>
-                <div class="map-wrapper">
-                    <div id="offgrid-leaflet-map" class="map-container"></div>
+                    <div class="search-container"><input type="text" id="offgrid-search" class="search-input" placeholder="Search community or territory..."></div>
+                    <div class="table-container" id="offgrid-list-container" style="padding: 12px;"></div>
                 </div>
+                <div id="offgrid-leaflet-map" class="leaflet-map-container"></div>
             </div>
         </section>
 
-        <!-- MODULE 5: Live News Wire -->
-        <section id="news" class="dashboard-module reveal">
-            <div class="module-header flex-header">
+        <!-- LIVE UTILITY NEWS FEED SECTION -->
+        <section class="map-section reveal" id="utility-news" style="background-color: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="map-glow" style="background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 60%);"></div>
+            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 2.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
-                    <h3>Live Intelligence Wire</h3>
-                    <p>Real-time regulatory and grid announcements.</p>
+                    <h2 style="color: #ffffff;">Canada Utility Intelligence Wire</h2>
+                    <p style="color: var(--zinc-400);">Real-time live news feed tracking strategic developments, regulatory shifts, and grid announcements.</p>
                 </div>
-                <div class="live-indicator">
-                    <span class="pulse-dot"></span> Live
+                <div class="live-indicator" style="display: flex; align-items: center; gap: 8px; color: #ef4444; font-weight: bold; text-transform: uppercase; font-size: 0.85rem;">
+                    <span class="pulse-dot" style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></span> Live
                 </div>
             </div>
-            
-            <div id="news-feed-container" class="news-grid">
-                <!-- JS Injects News Cards -->
+            <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;">
+                <div id="news-feed-container" class="news-feed-grid"><div class="news-loading">Fetching live Canadian utility feed...</div></div>
             </div>
         </section>
 
+        <!-- DATA GOVERNANCE & SOURCES SECTION -->
+        <section class="sources-section" id="sources" style="padding: 40px 5%; background: var(--zinc-950); border-top: 1px solid var(--zinc-800);">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <details style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); padding: 15px 20px; cursor: pointer;">
+                    <summary style="color: var(--zinc-400); font-size: 0.9rem; font-weight: 600; outline: none; display: flex; align-items: center; gap: 10px;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        View Data Sources & Methodology
+                    </summary>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); color: var(--zinc-500); font-size: 0.8rem; line-height: 1.6;">
+                        <p style="margin-bottom: 8px;"><strong>Load Forecasts & Capacity:</strong> Independent Electricity System Operator (IESO) Annual Planning Outlooks, Alberta Electric System Operator (AESO) Long-Term Outlook, and BC Hydro IRP.</p>
+                        <p style="margin-bottom: 8px;"><strong>Reliability Benchmarks:</strong> SAIDI/SAIFI metrics sourced from Ontario Energy Board (OEB) LDC Scorecards, Electricity Canada, and direct utility annual performance reports.</p>
+                        <p style="margin-bottom: 8px;"><strong>Off-Grid Infrastructure:</strong> Microgrid data cross-referenced via Natural Resources Canada (NRCan) Remote Communities Energy Database.</p>
+                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Dark Matter basemaps provided by &copy; CARTO. Geographic structural data contributed by &copy; OpenStreetMap contributors.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section class="contact reveal" id="contact">
+            <div class="contact-container">
+                <h2>Get In Touch</h2>
+                <p>Interested in collaborating or discussing enterprise project management and business systems solutions? Send a direct message below.</p>
+                <form id="contact-form" class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
+                    <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Full Name" required></div>
+                    <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="email@example.com" required></div>
+                    <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" rows="5" placeholder="How can I help you?" required></textarea></div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Send Message</button>
+                </form>
+            </div>
+        </section>
     </main>
 
-    <footer class="enterprise-footer">
-        <p>&copy; 2026 Canadian Utility Intelligence. Data sourced for executive evaluation.</p>
+    <footer>
+        <p>&copy; 2026 Emmanuel Oyerinde, MBA, PMP&reg;. All rights reserved.</p>
     </footer>
 
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <!-- Enterprise Logic Layer -->
-    <script type="module" src="js/app.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    
+    <!-- ES6 Module import for Map Logic -->
+    <script type="module" src="js/app.js" defer></script>
+
 </body>
 </html>
