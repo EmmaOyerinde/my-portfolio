@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP (AUTO-FIT NATIONAL BOUNDS)
+    // MAP 1: RELIABILITY MAP (CLEAN NORTH AMERICAN VIEW)
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             tap: false,
             maxBounds: naBounds, 
             maxBoundsViscosity: 1.0, 
-            minZoom: 2 
-        });
+            minZoom: 3 
+        }).setView([50.0, -95.0], 3); // CLEAN INITIAL VIEW: Zooms to North America ab initio
         
         setTimeout(() => map.invalidateSize(), 500);
 
@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
                 
-                // Bring smaller municipal layers above large provincial overlays
                 if (!isProv) {
                     setTimeout(() => layer.bringToFront(), 100);
                 }
 
+                // REMOVED PERMANENT TOOLTIPS: Now uses clean, sticky hover tooltips
                 layer.bindTooltip(`
                     <div style="text-align: center; line-height: 1.3;">
                         <strong style="color: #ffffff; font-size: 0.85rem;">${f.properties.utility}</strong><br>
@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 `, { 
                     className: 'dark-tooltip', 
-                    permanent: true,
-                    direction: 'center'
+                    sticky: true, // Appears smoothly on hover, preventing a crowded map
+                    direction: 'auto'
                 });
                 
                 const popupHTML = `
@@ -178,11 +178,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         }).addTo(map);
-
-        // AUTO-FIT MAP CAMERA TO INCLUDE ALL PROVINCES & TERRITORIES (Yukon to NL)
-        if (geojsonLayer.getBounds().isValid()) {
-            map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
-        }
 
         const tableBody = document.getElementById('utility-table-body');
         function buildTable(features) {
