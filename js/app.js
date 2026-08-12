@@ -1,11 +1,15 @@
 // js/app.js
-// Enterprise Logic Layer: Decoupled and Modular
+// Enterprise Logic Layer: Decoupled, Modular, and High-Fidelity
 
 import { fetchEnterpriseData } from './api.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // 1. UI Interactions (Scroll Reveal & Mobile Menu)
+    // ==========================================
+    // 1. UI Interactions & Security
+    // ==========================================
+    
+    // Scroll Reveal Observer
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -17,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
     revealElements.forEach(el => revealObserver.observe(el));
 
+    // Mobile Menu Toggle
     const menuBtn = document.getElementById('menu-btn');
     const navLinks = document.getElementById('nav-links');
     menuBtn.addEventListener('click', () => {
@@ -30,25 +35,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Anti-Snooping Script
+    // Anti-Snooping Script (Deterrent)
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function (e) {
-        if (e.keyCode === 123) return false;
-        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) return false; 
-        if (e.ctrlKey && e.keyCode === 85) return false; 
+        if (e.keyCode === 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) return false; // I, J, C
+        if (e.ctrlKey && e.keyCode === 85) return false; // U
     };
 
-    // 2. Fetch Decoupled Data via Simulated API
+    // ==========================================
+    // 2. Fetch Decoupled Data via API
+    // ==========================================
     try {
         const db = await fetchEnterpriseData();
         
+        // Wait for Leaflet to load globally before initializing maps
         let checkLeaflet = setInterval(() => {
             if(window.L) {
                 clearInterval(checkLeaflet);
+                
+                // Restrict panning to North America limits
                 const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
                 
-                // Initialize the Maps
-                initReliabilityMap(naBounds); // We are now handling data fetching INSIDE this function
+                // Initialize modules
+                initReliabilityMap(naBounds); 
                 initForecastMap(db.forecastRegions, naBounds);
                 initDeficitMap(db.deficitGrids, naBounds);
                 initOffGridMap(db.offgridZones, db.directoryData, naBounds);
@@ -60,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: ASYNCHRONOUS GEOJSON FETCH
+    // MAP 1: ASYNCHRONOUS HIGH-FIDELITY GEOJSON
     // ==========================================
     function initReliabilityMap(naBounds) {
         const map = L.map('leaflet-map', { 
@@ -81,48 +91,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         let geojsonLayer;
 
         function getColor(saidi) { 
-            // Fallback colors if SAIDI isn't available
             if(!saidi) return '#3b82f6';
             return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; 
         }
 
-        // --- THE ENTERPRISE UPGRADE: LIVE FETCHING EXTERNAL GEOJSON ---
-        // For demonstration, we are pulling a public, simplified GeoJSON of Canadian boundaries.
-        // Once you download the 30MB Ontario Municipalities file from Open Data Ontario, 
-        // you will host it in your GitHub 'data' folder and change this URL to './data/ontario_municipalities.geojson'
-        
-        const geojsonUrl = 'https://raw.githubusercontent.com/sachijay/canada_maps/master/exported_files/province_territory_simplified.geojson';
+        // Target your custom local file from the /data folder
+        const geojsonUrl = './data/ontario_cities.geojson';
 
-        // Add a loading state to the table so the user knows data is streaming
+        // Loading state
         tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: #a1a1aa;">Streaming High-Fidelity Geometries...</td></tr>';
 
         fetch(geojsonUrl)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error("GeoJSON file not found. Ensure it is uploaded to the /data folder.");
+                return response.json();
+            })
             .then(data => {
-                
-                // Clear the loading state
-                tableBody.innerHTML = '';
+                tableBody.innerHTML = ''; // Clear loading state
 
                 geojsonLayer = L.geoJSON(data, { 
-                    smoothFactor: 1.5, // mathematically smooths the jagged points
+                    smoothFactor: 1.5, // Smoothes jagged points for a cleaner look
                     style: function(f) { 
                         return { 
-                            fillColor: '#10b981', // Default styling for the loaded polygons
+                            fillColor: '#10b981', 
                             weight: 2, 
                             opacity: 0.8, 
                             color: '#10b981', 
                             fillOpacity: 0.15,
-                            lineJoin: 'round', 
+                            lineJoin: 'round', // Rounds the corners of the polygons
                             lineCap: 'round'
                         }; 
                     }, 
                     onEachFeature: function(f, layer) {
-                        // Generate an ID if one doesn't exist
-                        const id = f.properties.PRUID || Math.random().toString(36).substr(2, 9);
+                        // Generate a unique ID if one doesn't exist in your shapefile properties
+                        const id = f.properties.ID || f.properties.OBJECTID || Math.random().toString(36).substr(2, 9);
                         layerMap[id] = layer;
                         
-                        // Map the properties (adjusting to fit whatever the GeoJSON contains)
-                        const name = f.properties.PRNAME || 'Ontario Municipality';
+                        // Map the properties dynamically (adjust these keys based on what your specific shapefile contains)
+                        const name = f.properties.NAME || f.properties.MUN_NAME || 'Ontario Municipality';
                         const saidi = f.properties.saidi || (Math.random() * 2).toFixed(2);
                         const saifi = f.properties.saifi || (Math.random() * 2).toFixed(2);
                         
@@ -163,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             }
                         });
 
-                        // Populate the sidebar table
+                        // Populate the sidebar table dynamically
                         const row = document.createElement('tr');
                         row.className = 'utility-row';
                         row.id = `row-${id}`;
@@ -188,8 +194,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }).addTo(map);
             })
             .catch(err => {
-                console.error("Failed to fetch GeoJSON:", err);
-                tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ef4444;">Failed to load geospatial data.</td></tr>';
+                console.error(err);
+                tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ef4444; padding: 20px;">File not found. Please upload <b>ontario_cities.geojson</b> to your /data folder.</td></tr>';
             });
 
         window.addEventListener('resize', () => map.invalidateSize());
@@ -337,6 +343,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const div = document.createElement('div');
                 div.className = 'offgrid-item';
                 div.id = `dir-${zone.id}`;
+                
+                // Truncation removed: Maps full array dynamically
                 div.innerHTML = `
                     <div class="offgrid-region-title">
                         ${zone.region} <span class="offgrid-badge">${zone.comms.length}</span>
