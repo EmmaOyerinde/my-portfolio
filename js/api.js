@@ -54,7 +54,12 @@ export const fetchEnterpriseData = async () => {
             { id: 'london', name: 'London & Middlesex Urban Core', lat: 42.9849, lng: -81.2453, baseLoad: 12.0, mults: { base: 1.005, ev: 1.018, ai: 1.010, heat: 1.015, hydro: 1.010 } }, 
             { id: 'windsor', name: 'Windsor-Essex (Industrial)', lat: 42.3149, lng: -83.0364, baseLoad: 18.0, mults: { base: 1.005, ev: 1.045, ai: 1.005, heat: 1.010, hydro: 1.020 } }, 
             { id: 'stthomas', name: 'Chatham-Kent / St. Thomas', lat: 42.7788, lng: -81.1895, baseLoad: 6.0, mults: { base: 1.005, ev: 1.065, ai: 1.00, heat: 1.010, hydro: 1.010 } }, 
-            { id: 'ottawa', name: 'Ottawa Tech & Capital Corridor', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } }
+            { id: 'ottawa', name: 'Ottawa Tech & Capital Corridor', lat: 45.4215, lng: -75.6972, baseLoad: 20.0, mults: { base: 1.008, ev: 1.010, ai: 1.030, heat: 1.015, hydro: 1.00 } },
+            { id: 'sudbury', name: 'Sudbury & Mining North', lat: 46.4917, lng: -80.9930, baseLoad: 10.0, mults: { base: 1.002, ev: 1.020, ai: 1.00, heat: 1.010, hydro: 1.030 } }, 
+            { id: 'montreal', name: 'Greater Montreal & Southern QC', lat: 45.5017, lng: -73.5673, baseLoad: 75.0, mults: { base: 1.007, ev: 1.012, ai: 1.020, heat: 1.018, hydro: 1.025 } }, 
+            { id: 'halifax', name: 'Halifax & Maritimes Hub', lat: 44.6488, lng: -63.5752, baseLoad: 18.0, mults: { base: 1.004, ev: 1.015, ai: 1.008, heat: 1.020, hydro: 1.045 } }, 
+            { id: 'stjohns', name: 'St. John\'s & Eastern NL', lat: 47.5615, lng: -52.7126, baseLoad: 10.0, mults: { base: 1.003, ev: 1.010, ai: 1.005, heat: 1.015, hydro: 1.035 } }, 
+            { id: 'north', name: 'Territories & Mining North', lat: 62.4540, lng: -114.3718, baseLoad: 8.0, mults: { base: 1.002, ev: 1.010, ai: 1.00, heat: 1.010, hydro: 1.020 } }
         ],
         deficitGrids: [
             { id: 'bc', name: 'BC Hydro', lat: 53.0, lng: -125.0, demand: 85, capacity: 78, unit: 'TWh' },
@@ -62,7 +67,10 @@ export const fetchEnterpriseData = async () => {
             { id: 'sk', name: 'SaskPower (Saskatchewan)', lat: 52.5, lng: -105.5, demand: 38, capacity: 28, unit: 'TWh' },
             { id: 'mb', name: 'Manitoba Hydro', lat: 51.5, lng: -97.5, demand: 42, capacity: 38, unit: 'TWh' },
             { id: 'on', name: 'IESO (Ontario)', lat: 50.0, lng: -85.0, demand: 250, capacity: 155, unit: 'TWh' },
-            { id: 'qc', name: 'Hydro-Québec', lat: 53.0, lng: -70.0, demand: 280, capacity: 250, unit: 'TWh' }
+            { id: 'qc', name: 'Hydro-Québec', lat: 53.0, lng: -70.0, demand: 280, capacity: 250, unit: 'TWh' },
+            { id: 'ns', name: 'Nova Scotia Power', lat: 45.0, lng: -63.5, demand: 18, capacity: 11, unit: 'TWh' },
+            { id: 'nb', name: 'NB Power', lat: 46.5, lng: -66.0, demand: 25, capacity: 20, unit: 'TWh' },
+            { id: 'nl', name: 'NL Hydro (Surplus)', lat: 53.5, lng: -60.0, demand: 15, capacity: 18, unit: 'TWh' }
         ],
         offgridZones: {
             "type": "FeatureCollection",
@@ -70,14 +78,22 @@ export const fetchEnterpriseData = async () => {
                 { "type": "Feature", "properties": { "id": "nu", "name": "Nunavut", "count": 25 }, "geometry": { "type": "Polygon", "coordinates": [[[-120.0, 60.0], [-102.0, 60.0], [-95.0, 60.0], [-80.0, 62.0], [-70.0, 62.0], [-60.0, 65.0], [-60.0, 83.0], [-120.0, 83.0], [-120.0, 60.0]]] } },
                 { "type": "Feature", "properties": { "id": "nwt", "name": "Northwest Territories", "count": 16 }, "geometry": { "type": "Polygon", "coordinates": [[[-136.0, 60.0], [-120.0, 60.0], [-120.0, 75.0], [-136.0, 75.0], [-136.0, 60.0]]] } },
                 { "type": "Feature", "properties": { "id": "on", "name": "Northern Ontario", "count": 21 }, "geometry": { "type": "Polygon", "coordinates": [[[-95.0, 51.5], [-85.0, 50.0], [-79.5, 51.5], [-82.0, 55.0], [-89.0, 56.0], [-95.0, 55.0], [-95.0, 51.5]]] } },
-                { "type": "Feature", "properties": { "id": "qc", "name": "Nunavik (Quebec)", "count": 14 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.5, 55.0], [-70.0, 55.0], [-64.0, 60.5], [-72.0, 62.5], [-78.0, 62.5], [-79.5, 55.0]]] } }
+                { "type": "Feature", "properties": { "id": "qc", "name": "Nunavik (Quebec)", "count": 14 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.5, 55.0], [-70.0, 55.0], [-64.0, 60.5], [-72.0, 62.5], [-78.0, 62.5], [-79.5, 55.0]]] } },
+                { "type": "Feature", "properties": { "id": "bc", "name": "Coastal & North BC", "count": 13 }, "geometry": { "type": "Polygon", "coordinates": [[[-139.0, 60.0], [-125.0, 60.0], [-120.0, 54.0], [-123.0, 49.0], [-128.0, 51.0], [-133.0, 54.5], [-139.0, 60.0]]] } },
+                { "type": "Feature", "properties": { "id": "nl", "name": "Labrador Coast", "count": 11 }, "geometry": { "type": "Polygon", "coordinates": [[[-60.0, 51.5], [-55.0, 52.0], [-60.0, 60.0], [-64.0, 60.0], [-60.0, 51.5]]] } },
+                { "type": "Feature", "properties": { "id": "mb", "name": "Northern Manitoba", "count": 4 }, "geometry": { "type": "Polygon", "coordinates": [[[-102.0, 56.0], [-90.0, 56.0], [-94.0, 60.0], [-102.0, 60.0], [-102.0, 56.0]]] } },
+                { "type": "Feature", "properties": { "id": "yk", "name": "Yukon", "count": 4 }, "geometry": { "type": "Polygon", "coordinates": [[[-141.0, 60.0], [-136.0, 60.0], [-136.0, 70.0], [-141.0, 70.0], [-141.0, 60.0]]] } }
             ]
         },
         directoryData: [
             { id: 'nu', region: 'Nunavut', comms: ['Arctic Bay', 'Arviat', 'Baker Lake', 'Cambridge Bay', 'Cape Dorset', 'Chesterfield Inlet', 'Clyde River', 'Coral Harbour', 'Gjoa Haven', 'Grise Fiord', 'Hall Beach', 'Igloolik', 'Iqaluit', 'Kimmirut', 'Kugaaruk', 'Kugluktuk', 'Naujaat', 'Pangnirtung', 'Pond Inlet', 'Qikiqtarjuaq', 'Rankin Inlet', 'Resolute', 'Sanikiluaq', 'Taloyoak', 'Whale Cove'] },
             { id: 'nl', region: 'Labrador Coast (NL)', comms: ['Black Tickle', 'Cartwright', 'Charlottetown', 'Mary\'s Harbour', 'Norman Bay', 'Paradise River', 'Port Hope Simpson', 'Rigolet', 'Postville', 'Makkovik', 'Hopedale', 'Nain'] },
             { id: 'on', region: 'Northern Ontario', comms: ['Bearskin Lake', 'Cat Lake', 'Eabametoong', 'Kasabonika Lake', 'Keewaywin', 'Kingfisher Lake', 'Kitchenuhmaykoosib Inninuwug', 'Marten Falls', 'Muskrat Dam Lake', 'Neskantaga', 'Nibinamik', 'North Caribou Lake', 'North Spirit Lake', 'Peawanuck', 'Pikangikum', 'Poplar Hill', 'Sachigo Lake', 'Sandy Lake', 'Wapekeka', 'Wawakapewin', 'Webequie', 'Weenusk', 'Winisk'] },
-            { id: 'nwt', region: 'Northwest Territories', comms: ['Aklavik', 'Colville Lake', 'Fort Good Hope', 'Fort Liard', 'Fort McPherson', 'Gamètì', 'Jean Marie River', 'Kakisa', 'Lutsel K\'e', 'Nahanni Butte', 'Norman Wells', 'Paulatuk', 'Sachs Harbour', 'Sambaa K\'e', 'Tsiigehtchic', 'Tuktoyaktuk', 'Ulukhaktok', 'Wekweètì', 'Whatì', 'Wrigley'] }
+            { id: 'nwt', region: 'Northwest Territories', comms: ['Aklavik', 'Colville Lake', 'Fort Good Hope', 'Fort Liard', 'Fort McPherson', 'Gamètì', 'Jean Marie River', 'Kakisa', 'Lutsel K\'e', 'Nahanni Butte', 'Norman Wells', 'Paulatuk', 'Sachs Harbour', 'Sambaa K\'e', 'Tsiigehtchic', 'Tuktoyaktuk', 'Ulukhaktok', 'Wekweètì', 'Whatì', 'Wrigley'] },
+            { id: 'qc', region: 'Nunavik (Quebec)', comms: ['Aupaluk', 'Inukjuak', 'Ivujivik', 'Kangiqsualujjuaq', 'Kangiqsujuaq', 'Kangirsuk', 'Kuujjuaq', 'Kuujjuarapik', 'Puvirnituq', 'Quaqtaq', 'Salluit', 'Tasiujaq', 'Umiujaq'] },
+            { id: 'bc', region: 'Coastal & North BC', comms: ['Anahim Lake', 'Atlin', 'Bella Bella', 'Dease Lake', 'Eddontenajon', 'Good Hope Lake', 'Hartley Bay', 'Kwadacha', 'Telegraph Creek', 'Tsay Keh Dene', 'Iskut', 'Ahousaht', 'Hot Springs Cove', 'Kingcome Inlet', 'Klemtu', 'Ocean Falls', 'Rivers Inlet'] },
+            { id: 'mb', region: 'Northern Manitoba', comms: ['Brochet', 'Lac Brochet', 'Shamattawa', 'Tadoule Lake'] },
+            { id: 'yk', region: 'Yukon', comms: ['Old Crow', 'Burwash Landing', 'Destruction Bay', 'Beaver Creek'] }
         ]
     };
 };
