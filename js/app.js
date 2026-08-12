@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Dynamic Column Sorting & Pane Isolation Engine
+// Enterprise Logic Layer: Fixed Leaflet Pane Allocation & Error-Free Rendering Engine
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Helper: Parse customer counts (e.g. "4.4M" -> 4400000, "780k" -> 780000)
     function parseCustomers(custStr) {
         if (!custStr) return 0;
         const s = custStr.toString().toLowerCase().trim();
@@ -67,9 +66,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP (WITH DYNAMIC SORTING)
+    // MAP 1: RELIABILITY MAP
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
+        const mapEl = document.getElementById('leaflet-map');
+        if (!mapEl) return;
+
         const map = L.map('leaflet-map', { 
             scrollWheelZoom: false,
             dragging: !L.Browser.mobile,
@@ -107,9 +109,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
             smoothFactor: 1.5, 
-            pane: function(f) {
-                return f.properties.type_org === 'provincial' ? 'provincialPane' : 'municipalPane';
-            },
             style: function(f) { 
                 const isProv = f.properties.type_org === 'provincial';
                 return { 
@@ -125,6 +124,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             onEachFeature: function(f, layer) {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
+
+                // Fixed: Assign pane directly to layer options before rendering
+                layer.options.pane = isProv ? 'provincialPane' : 'municipalPane';
 
                 layer.bindTooltip(`
                     <div style="font-family:'Plus Jakarta Sans',sans-serif; padding: 2px 4px;">
@@ -192,10 +194,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }).addTo(map);
 
-        // --- SIDEBAR TABLE STATE & DYNAMIC SORTING ENGINE ---
         const tableBody = document.getElementById('utility-table-body');
         let activeSortKey = 'customers'; 
-        let isAscending = false; // Default: Largest customer count first
+        let isAscending = false;
 
         function sortFeatures(features, key, asc) {
             return [...features].sort((a, b) => {
@@ -255,7 +256,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         buildTable(utilitiesGeoJSON.features);
 
-        // Clickable Column Header Listeners for Interactive Sorting
         const tableHeader = document.querySelector('#utility-table thead, .utility-table-header');
         if (tableHeader) {
             const headers = tableHeader.querySelectorAll('th');
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         isAscending = !isAscending;
                     } else {
                         activeSortKey = key;
-                        isAscending = (key === 'utility'); // Default A-Z for strings, high-to-low for numbers
+                        isAscending = (key === 'utility');
                     }
 
                     const query = searchInput ? searchInput.value.toLowerCase() : '';
@@ -297,7 +297,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Debounced Search Filter
         let searchTimeout;
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
@@ -317,7 +316,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 2: 50-YEAR BESPOKE FORECAST
+    // MAP 2: FORECAST MAP
     // ==========================================
     function initForecastMap(regions, naBounds) {
         const mapEl = document.getElementById('forecast-map-premium');
@@ -414,7 +413,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 3: PROVINCIAL CAPACITY DEFICIT
+    // MAP 3: CAPACITY DEFICIT MAP
     // ==========================================
     function initDeficitMap(gridData, naBounds) {
         const mapEl = document.getElementById('deficit-leaflet-map');
