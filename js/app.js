@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Decoupled, Modular, and High-Fidelity
+// Enterprise Logic Layer: Decoupled and Modular
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Anti-Snooping Script (Deterrent)
+    // Anti-Snooping Script
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function (e) {
-        if (e.keyCode === 123) return false; // F12
-        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) return false; // I, J, C
-        if (e.ctrlKey && e.keyCode === 85) return false; // U
+        if (e.keyCode === 123) return false;
+        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) return false; 
+        if (e.ctrlKey && e.keyCode === 85) return false; 
     };
 
     // ==========================================
@@ -49,16 +49,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const db = await fetchEnterpriseData();
         
-        // Wait for Leaflet to load globally before initializing maps
         let checkLeaflet = setInterval(() => {
             if(window.L) {
                 clearInterval(checkLeaflet);
                 
-                // Restrict panning to North America limits
                 const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
                 
-                // Initialize modules
-                initReliabilityMap(naBounds); 
+                initReliabilityMap(db.utilitiesGeoJSON, naBounds); 
                 initForecastMap(db.forecastRegions, naBounds);
                 initDeficitMap(db.deficitGrids, naBounds);
                 initOffGridMap(db.offgridZones, db.directoryData, naBounds);
@@ -70,9 +67,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: ASYNCHRONOUS HIGH-FIDELITY GEOJSON
+    // MAP 1: RELIABILITY MAP 
     // ==========================================
-    function initReliabilityMap(naBounds) {
+    function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
             scrollWheelZoom: false, 
             maxBounds: naBounds, 
@@ -87,117 +84,136 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).addTo(map);
 
         const layerMap = {};
-        const tableBody = document.getElementById('utility-table-body');
-        let geojsonLayer;
+        function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
-        function getColor(saidi) { 
-            if(!saidi) return '#3b82f6';
-            return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; 
+        let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
+            smoothFactor: 1.5, 
+            style: function(f) { 
+                const isProv = f.properties.type_org === 'provincial';
+                return { 
+                    fillColor: getColor(f.properties.saidi), 
+                    weight: isProv ? 1 : 2, 
+                    opacity: isProv ? 0.3 : 0.6,  // Drastically reduced border opacity
+                    color: getColor(f.properties.saidi), 
+                    fillOpacity: isProv ? 0.05 : 0.15, // Extremely transparent so underlying map labels show clearly
+                    lineJoin: 'round', 
+                    lineCap: 'round'
+                }; 
+            }, 
+            onEachFeature: function(f, layer) {
+                layerMap[f.properties.id] = layer;
+                const isProv = f.properties.type_org === 'provincial';
+                
+                // Sticky hover labels to identify the utilities
+                layer.bindTooltip(`<b>${f.properties.utility}</b><br><span style="color:#a1a1aa;font-size:0.75rem;">${f.properties.region}</span>`, { 
+                    className: 'dark-tooltip', 
+                    sticky: true,
+                    direction: 'auto'
+                });
+                
+                const popupHTML = `
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 280px; padding: 5px;">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">${f.properties.region}</div>
+                        <strong style="font-size: 1.25rem; color: #fff; display: block; margin-bottom: 12px; border-bottom: 1px solid #3f3f46; padding-bottom: 8px;">${f.properties.utility}</strong>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                            <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Customers</span>
+                                <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.customers}</strong>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Circuit Line (km)</span>
+                                <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.line_km}</strong>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem;">
+                            <span style="color: #a1a1aa;">Grid Density:</span>
+                            <strong style="color: #10b981;">${f.properties.density} /km</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.85rem; border-bottom: 1px solid #3f3f46; padding-bottom: 12px;">
+                            <span style="color: #a1a1aa;">Generation:</span>
+                            <strong style="color: #e4e4e7; text-align: right; max-width: 140px;">${f.properties.mix}</strong>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                            <div>
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">SAIDI (Duration)</span>
+                                <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saidi} hrs</strong>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">SAIFI (Freq.)</span>
+                                <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saifi}</strong>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                layer.bindPopup(popupHTML);
+
+                layer.on({ 
+                    mouseover: (e) => { 
+                        e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.2 : 0.4 }); 
+                        if (!isProv) e.target.bringToFront(); 
+                        const r = document.getElementById(`row-${f.properties.id}`); 
+                        if(r) r.classList.add('active'); 
+                    }, 
+                    mouseout: (e) => { 
+                        geojsonLayer.resetStyle(e.target); 
+                        const r = document.getElementById(`row-${f.properties.id}`); 
+                        if(r) r.classList.remove('active'); 
+                    }, 
+                    click: () => selectUtility(f.properties.id) 
+                });
+            }
+        }).addTo(map);
+
+        const tableBody = document.getElementById('utility-table-body');
+        function buildTable(features) {
+            tableBody.innerHTML = '';
+            features.forEach(f => {
+                const p = f.properties;
+                const row = document.createElement('tr');
+                row.className = 'utility-row';
+                row.id = `row-${p.id}`;
+                row.innerHTML = `
+                    <td>
+                        <div style="display:flex; align-items:center;">
+                            <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
+                            <strong style="color: #f4f4f5;">${p.utility}</strong>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #a1a1aa; margin-left: 22px; margin-top: 2px;">${p.region}</div>
+                    </td>
+                    <td><strong style="color: #f4f4f5;">${p.saidi}</strong> hr</td>
+                    <td><strong style="color: #f4f4f5;">${p.saifi}</strong></td>
+                `;
+                row.addEventListener('click', () => selectUtility(p.id));
+                row.addEventListener('mouseenter', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseover'); });
+                row.addEventListener('mouseleave', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseout'); });
+                tableBody.appendChild(row);
+            });
+        }
+        buildTable(utilitiesGeoJSON.features);
+
+        function selectUtility(id) {
+            const layer = layerMap[id];
+            if (!layer) return;
+            map.fitBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 9 });
+            layer.openPopup();
+            document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
+            const activeRow = document.getElementById(`row-${id}`);
+            if (activeRow) {
+                activeRow.classList.add('active');
+                activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
 
-        // Target your custom local file from the /data folder
-        const geojsonUrl = './data/ontario_cities.geojson';
-
-        // Loading state
-        tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: #a1a1aa;">Streaming High-Fidelity Geometries...</td></tr>';
-
-        fetch(geojsonUrl)
-            .then(response => {
-                if (!response.ok) throw new Error("GeoJSON file not found. Ensure it is uploaded to the /data folder.");
-                return response.json();
-            })
-            .then(data => {
-                tableBody.innerHTML = ''; // Clear loading state
-
-                geojsonLayer = L.geoJSON(data, { 
-                    smoothFactor: 1.5, // Smoothes jagged points for a cleaner look
-                    style: function(f) { 
-                        return { 
-                            fillColor: '#10b981', 
-                            weight: 2, 
-                            opacity: 0.8, 
-                            color: '#10b981', 
-                            fillOpacity: 0.15,
-                            lineJoin: 'round', // Rounds the corners of the polygons
-                            lineCap: 'round'
-                        }; 
-                    }, 
-                    onEachFeature: function(f, layer) {
-                        // Generate a unique ID if one doesn't exist in your shapefile properties
-                        const id = f.properties.ID || f.properties.OBJECTID || Math.random().toString(36).substr(2, 9);
-                        layerMap[id] = layer;
-                        
-                        // Map the properties dynamically (adjust these keys based on what your specific shapefile contains)
-                        const name = f.properties.NAME || f.properties.MUN_NAME || 'Ontario Municipality';
-                        const saidi = f.properties.saidi || (Math.random() * 2).toFixed(2);
-                        const saifi = f.properties.saifi || (Math.random() * 2).toFixed(2);
-                        
-                        const popupHTML = `
-                            <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 250px; padding: 5px;">
-                                <div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">Service Territory</div>
-                                <strong style="font-size: 1.25rem; color: #fff; display: block; margin-bottom: 12px; border-bottom: 1px solid #3f3f46; padding-bottom: 8px;">${name}</strong>
-                                
-                                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                                    <div>
-                                        <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Simulated SAIDI</span>
-                                        <strong style="color: ${getColor(saidi)}; font-size: 1.1rem;">${saidi} hrs</strong>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Simulated SAIFI</span>
-                                        <strong style="color: ${getColor(saidi)}; font-size: 1.1rem;">${saifi}</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        layer.bindPopup(popupHTML);
-
-                        layer.on({ 
-                            mouseover: (e) => { 
-                                e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: 0.4 }); 
-                                e.target.bringToFront(); 
-                                const r = document.getElementById(`row-${id}`); 
-                                if(r) r.classList.add('active'); 
-                            }, 
-                            mouseout: (e) => { 
-                                geojsonLayer.resetStyle(e.target); 
-                                const r = document.getElementById(`row-${id}`); 
-                                if(r) r.classList.remove('active'); 
-                            }, 
-                            click: () => {
-                                map.fitBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 9 });
-                                layer.openPopup();
-                            }
-                        });
-
-                        // Populate the sidebar table dynamically
-                        const row = document.createElement('tr');
-                        row.className = 'utility-row';
-                        row.id = `row-${id}`;
-                        row.innerHTML = `
-                            <td>
-                                <div style="display:flex; align-items:center;">
-                                    <span class="status-badge" style="background: ${getColor(saidi)};"></span>
-                                    <strong style="color: #f4f4f5;">${name.split('/')[0]}</strong>
-                                </div>
-                            </td>
-                            <td><strong style="color: #f4f4f5;">${saidi}</strong> hr</td>
-                            <td><strong style="color: #f4f4f5;">${saifi}</strong></td>
-                        `;
-                        row.addEventListener('click', () => {
-                            map.fitBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 9 });
-                            layer.openPopup();
-                        });
-                        row.addEventListener('mouseenter', () => layer.fire('mouseover'));
-                        row.addEventListener('mouseleave', () => layer.fire('mouseout'));
-                        tableBody.appendChild(row);
-                    }
-                }).addTo(map);
-            })
-            .catch(err => {
-                console.error(err);
-                tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ef4444; padding: 20px;">File not found. Please upload <b>ontario_cities.geojson</b> to your /data folder.</td></tr>';
-            });
-
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = utilitiesGeoJSON.features.filter(f => f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query));
+            buildTable(filtered);
+            geojsonLayer.clearLayers();
+            geojsonLayer.addData({ "type": "FeatureCollection", "features": filtered });
+        });
         window.addEventListener('resize', () => map.invalidateSize());
     }
 
@@ -344,7 +360,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 div.className = 'offgrid-item';
                 div.id = `dir-${zone.id}`;
                 
-                // Truncation removed: Maps full array dynamically
                 div.innerHTML = `
                     <div class="offgrid-region-title">
                         ${zone.region} <span class="offgrid-badge">${zone.comms.length}</span>
