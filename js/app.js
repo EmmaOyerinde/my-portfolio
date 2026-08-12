@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Decoupled and Modular
+// Enterprise Logic Layer: Decoupled, Modular, Dual-Pane Map Engine
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. UI Interactions & Security
     // ==========================================
     
-    // Scroll Reveal Observer
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // Mobile Menu Toggle
     const menuBtn = document.getElementById('menu-btn');
     const navLinks = document.getElementById('nav-links');
     menuBtn.addEventListener('click', () => {
@@ -35,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Anti-Snooping Script
+    // Anti-Snooping Security
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function (e) {
         if (e.keyCode === 123) return false;
@@ -44,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // ==========================================
-    // 2. Fetch Decoupled Data via API
+    // 2. Fetch Data & Initialize Maps
     // ==========================================
     try {
         const db = await fetchEnterpriseData();
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP 
+    // MAP 1: RELIABILITY MAP (RESTORED POPULATION & ROUTE LENGTH)
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
@@ -75,11 +73,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             maxBounds: naBounds, 
             maxBoundsViscosity: 1.0, 
             minZoom: 3 
-        }).setView([44.5, -79.0], 6);
+        }).setView([43.8, -80.0], 7); 
         
         setTimeout(() => map.invalidateSize(), 500);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { 
+
+        map.createPane('labels');
+        map.getPane('labels').style.zIndex = 650;
+        map.getPane('labels').style.pointerEvents = 'none';
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { 
             maxZoom: 18, 
+            attribution: '&copy; CARTO &copy; OpenStreetMap' 
+        }).addTo(map);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', { 
+            maxZoom: 18, 
+            pane: 'labels',
             attribution: '&copy; CARTO' 
         }).addTo(map);
 
@@ -93,9 +102,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return { 
                     fillColor: getColor(f.properties.saidi), 
                     weight: isProv ? 1 : 2, 
-                    opacity: isProv ? 0.3 : 0.6,  // Drastically reduced border opacity
+                    opacity: isProv ? 0.3 : 0.8, 
                     color: getColor(f.properties.saidi), 
-                    fillOpacity: isProv ? 0.05 : 0.15, // Extremely transparent so underlying map labels show clearly
+                    fillOpacity: isProv ? 0.05 : 0.25, 
                     lineJoin: 'round', 
                     lineCap: 'round'
                 }; 
@@ -104,13 +113,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
                 
-                // Sticky hover labels to identify the utilities
-                layer.bindTooltip(`<b>${f.properties.utility}</b><br><span style="color:#a1a1aa;font-size:0.75rem;">${f.properties.region}</span>`, { 
+                // RESTORED: Permanent Tooltip now visibly shows Customer Population and Route Length directly on the map
+                layer.bindTooltip(`
+                    <div style="text-align: center; line-height: 1.3;">
+                        <strong style="color: #ffffff; font-size: 0.85rem;">${f.properties.utility}</strong><br>
+                        <span style="color: #10b981; font-size: 0.75rem; font-weight: 700;">${f.properties.customers} Customers</span>
+                    </div>
+                `, { 
                     className: 'dark-tooltip', 
-                    sticky: true,
-                    direction: 'auto'
+                    permanent: true,
+                    direction: 'center'
                 });
                 
+                // RESTORED: Full Detailed Popup 
                 const popupHTML = `
                     <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width: 280px; padding: 5px;">
                         <div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">${f.properties.region}</div>
@@ -118,12 +133,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
                             <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
-                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Customers</span>
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Customer Pop.</span>
                                 <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.customers}</strong>
                             </div>
                             <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
-                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Circuit Line (km)</span>
-                                <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.line_km}</strong>
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">Route Length</span>
+                                <strong style="color: #e4e4e7; font-size: 0.95rem;">${f.properties.line_km} km</strong>
                             </div>
                         </div>
                         
@@ -132,17 +147,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <strong style="color: #10b981;">${f.properties.density} /km</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.85rem; border-bottom: 1px solid #3f3f46; padding-bottom: 12px;">
-                            <span style="color: #a1a1aa;">Generation:</span>
+                            <span style="color: #a1a1aa;">Generation Mix:</span>
                             <strong style="color: #e4e4e7; text-align: right; max-width: 140px;">${f.properties.mix}</strong>
                         </div>
 
                         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                             <div>
-                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">SAIDI (Duration)</span>
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">OEB Scorecard SAIDI</span>
                                 <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saidi} hrs</strong>
                             </div>
                             <div style="text-align: right;">
-                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">SAIFI (Freq.)</span>
+                                <span style="display:block; color: #a1a1aa; font-size: 0.7rem;">OEB Scorecard SAIFI</span>
                                 <strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.1rem;">${f.properties.saifi}</strong>
                             </div>
                         </div>
@@ -152,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 layer.on({ 
                     mouseover: (e) => { 
-                        e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.2 : 0.4 }); 
+                        e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.2 : 0.5 }); 
                         if (!isProv) e.target.bringToFront(); 
                         const r = document.getElementById(`row-${f.properties.id}`); 
                         if(r) r.classList.add('active'); 
@@ -175,13 +190,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const row = document.createElement('tr');
                 row.className = 'utility-row';
                 row.id = `row-${p.id}`;
+                
+                // RESTORED: Appended Route Length and Customers to the table explicitly
                 row.innerHTML = `
                     <td>
                         <div style="display:flex; align-items:center;">
                             <span class="status-badge" style="background: ${getColor(p.saidi)};"></span>
                             <strong style="color: #f4f4f5;">${p.utility}</strong>
                         </div>
-                        <div style="font-size: 0.75rem; color: #a1a1aa; margin-left: 22px; margin-top: 2px;">${p.region}</div>
+                        <div style="font-size: 0.75rem; color: #a1a1aa; margin-left: 22px; margin-top: 2px;">
+                            ${p.customers} Pop. &bull; ${p.line_km} km Route
+                        </div>
                     </td>
                     <td><strong style="color: #f4f4f5;">${p.saidi}</strong> hr</td>
                     <td><strong style="color: #f4f4f5;">${p.saifi}</strong></td>
