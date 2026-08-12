@@ -6,7 +6,7 @@ import { fetchEnterpriseData } from './api.js';
 document.addEventListener('DOMContentLoaded', async () => {
     
     // ==========================================
-    // 1. UI Interactions & Security
+    // 1. UI Interactions
     // ==========================================
     
     const revealElements = document.querySelectorAll('.reveal');
@@ -33,14 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Anti-Snooping Security
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.onkeydown = function (e) {
-        if (e.keyCode === 123) return false;
-        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) return false; 
-        if (e.ctrlKey && e.keyCode === 85) return false; 
-    };
-
     // ==========================================
     // 2. Fetch Data & Initialize Maps
     // ==========================================
@@ -65,15 +57,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP (NATIONAL VIEWPORT)
+    // MAP 1: RELIABILITY MAP (AUTO-FIT NATIONAL BOUNDS)
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
-            scrollWheelZoom: false, 
+            scrollWheelZoom: false,
+            dragging: !L.Browser.mobile, // Disables scroll trapping on mobile
+            tap: false,
             maxBounds: naBounds, 
             maxBoundsViscosity: 1.0, 
-            minZoom: 3 
-        }).setView([55.0, -96.0], 4); // <--- FIXED: Now loads showing all of Canada!
+            minZoom: 2 
+        });
         
         setTimeout(() => map.invalidateSize(), 500);
 
@@ -113,6 +107,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
                 
+                // Bring smaller municipal layers above large provincial overlays
+                if (!isProv) {
+                    setTimeout(() => layer.bringToFront(), 100);
+                }
+
                 layer.bindTooltip(`
                     <div style="text-align: center; line-height: 1.3;">
                         <strong style="color: #ffffff; font-size: 0.85rem;">${f.properties.utility}</strong><br>
@@ -180,6 +179,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }).addTo(map);
 
+        // AUTO-FIT MAP CAMERA TO INCLUDE ALL PROVINCES & TERRITORIES (Yukon to NL)
+        if (geojsonLayer.getBounds().isValid()) {
+            map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
+        }
+
         const tableBody = document.getElementById('utility-table-body');
         function buildTable(features) {
             tableBody.innerHTML = '';
@@ -223,13 +227,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        // DEBOUNCED SEARCH FILTERING
+        let searchTimeout;
         document.getElementById('search-input').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filtered = utilitiesGeoJSON.features.filter(f => f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query));
-            buildTable(filtered);
-            geojsonLayer.clearLayers();
-            geojsonLayer.addData({ "type": "FeatureCollection", "features": filtered });
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = e.target.value.toLowerCase();
+                const filtered = utilitiesGeoJSON.features.filter(f => f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query));
+                buildTable(filtered);
+                geojsonLayer.clearLayers();
+                geojsonLayer.addData({ "type": "FeatureCollection", "features": filtered });
+            }, 300);
         });
+
         window.addEventListener('resize', () => map.invalidateSize());
     }
 
@@ -237,7 +247,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // MAP 2: 50-YEAR BESPOKE FORECAST
     // ==========================================
     function initForecastMap(regions, naBounds) {
-        const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
+        const forecastMap = L.map('forecast-map-premium', { 
+            scrollWheelZoom: false, 
+            zoomControl: false, 
+            dragging: !L.Browser.mobile,
+            tap: false,
+            maxBounds: naBounds, 
+            maxBoundsViscosity: 1.0, 
+            minZoom: 3 
+        }).setView([56.0, -96.0], 4);
+
         L.control.zoom({ position: 'topright' }).addTo(forecastMap);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(forecastMap);
         setTimeout(() => forecastMap.invalidateSize(), 500);
@@ -313,7 +332,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // MAP 3: PROVINCIAL CAPACITY DEFICIT
     // ==========================================
     function initDeficitMap(gridData, naBounds) {
-        const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
+        const deficitMap = L.map('deficit-leaflet-map', { 
+            scrollWheelZoom: false, 
+            dragging: !L.Browser.mobile,
+            tap: false,
+            maxBounds: naBounds, 
+            maxBoundsViscosity: 1.0, 
+            minZoom: 3 
+        }).setView([56.0, -96.0], 4);
+
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(deficitMap);
         setTimeout(() => deficitMap.invalidateSize(), 500);
 
@@ -354,7 +381,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // MAP 4: OFF-GRID MICROGRIDS
     // ==========================================
     function initOffGridMap(offgridZones, directoryData, naBounds) {
-        const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([58.0, -90.0], 4);
+        const offgridMap = L.map('offgrid-leaflet-map', { 
+            scrollWheelZoom: false, 
+            dragging: !L.Browser.mobile,
+            tap: false,
+            maxBounds: naBounds, 
+            maxBoundsViscosity: 1.0, 
+            minZoom: 3 
+        }).setView([58.0, -90.0], 4);
+
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
         setTimeout(() => offgridMap.invalidateSize(), 500);
 
@@ -405,11 +440,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        // DEBOUNCED SEARCH FILTERING
+        let searchTimeout;
         document.getElementById('offgrid-search').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filtered = directoryData.filter(zone => zone.region.toLowerCase().includes(query) || zone.comms.some(c => c.toLowerCase().includes(query)));
-            renderDirectory(filtered);
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = e.target.value.toLowerCase();
+                const filtered = directoryData.filter(zone => zone.region.toLowerCase().includes(query) || zone.comms.some(c => c.toLowerCase().includes(query)));
+                renderDirectory(filtered);
+            }, 300);
         });
+
         window.addEventListener('resize', () => offgridMap.invalidateSize());
     }
 
