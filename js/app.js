@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             maxBounds: naBounds, 
             maxBoundsViscosity: 1.0, 
             minZoom: 3 
-        }); 
+        }).setView([50.0, -95.0], 3); 
         
         setTimeout(() => map.invalidateSize(), 500);
 
@@ -188,10 +188,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         }).addTo(map);
-
-        if (geojsonLayer.getBounds().isValid()) {
-            map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
-        }
 
         const tableBody = document.getElementById('utility-table-body');
         let activeSortKey = 'customers'; 
