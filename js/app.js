@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Decoupled, Modular, Multi-Pane Spatial Engine
+// Enterprise Logic Layer: Dynamic Column Sorting & Pane Isolation Engine
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -35,6 +35,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // Helper: Parse customer counts (e.g. "4.4M" -> 4400000, "780k" -> 780000)
+    function parseCustomers(custStr) {
+        if (!custStr) return 0;
+        const s = custStr.toString().toLowerCase().trim();
+        if (s.endsWith('m')) return parseFloat(s) * 1000000;
+        if (s.endsWith('k')) return parseFloat(s) * 1000;
+        return parseFloat(s) || 0;
+    }
+
     // ==========================================
     // 2. Fetch Data & Initialize Maps
     // ==========================================
@@ -58,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP (EXPLICIT STACKING PANES)
+    // MAP 1: RELIABILITY MAP (WITH DYNAMIC SORTING)
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
@@ -72,15 +81,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         setTimeout(() => map.invalidateSize(), 500);
 
-        // CREATE DEDICATED MAP PANES TO PREVENT POLYGON EVENT COLLISIONS
         map.createPane('provincialPane');
-        map.getPane('provincialPane').style.zIndex = 400; // Background layer
+        map.getPane('provincialPane').style.zIndex = 400;
 
         map.createPane('municipalPane');
-        map.getPane('municipalPane').style.zIndex = 500; // Foreground layer
+        map.getPane('municipalPane').style.zIndex = 500;
 
         map.createPane('labels');
-        map.getPane('labels').style.zIndex = 650; // Top text layer
+        map.getPane('labels').style.zIndex = 650;
         map.getPane('labels').style.pointerEvents = 'none';
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { 
@@ -184,11 +192,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }).addTo(map);
 
+        // --- SIDEBAR TABLE STATE & DYNAMIC SORTING ENGINE ---
         const tableBody = document.getElementById('utility-table-body');
+        let activeSortKey = 'customers'; 
+        let isAscending = false; // Default: Largest customer count first
+
+        function sortFeatures(features, key, asc) {
+            return [...features].sort((a, b) => {
+                let valA = a.properties[key];
+                let valB = b.properties[key];
+
+                if (key === 'customers') {
+                    valA = parseCustomers(valA);
+                    valB = parseCustomers(valB);
+                }
+
+                if (typeof valA === 'number' && typeof valB === 'number') {
+                    return asc ? valA - valB : valB - valA;
+                }
+                
+                valA = (valA || '').toString().toLowerCase();
+                valB = (valB || '').toString().toLowerCase();
+                return asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+            });
+        }
+
         function buildTable(features) {
             if (!tableBody) return;
             tableBody.innerHTML = '';
-            features.forEach(f => {
+
+            const sorted = sortFeatures(features, activeSortKey, isAscending);
+
+            sorted.forEach(f => {
                 const p = f.properties;
                 const row = document.createElement('tr');
                 row.className = 'utility-row';
@@ -197,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 row.innerHTML = `
                     <td style="padding: 10px 8px;">
                         <div style="display:flex; align-items:center; gap: 8px;">
-                            <span class="status-badge" style="background: ${getColor(p.saidi)}; width: 8px; height: 8px; border-radius: 50%; shrink: 0;"></span>
+                            <span class="status-badge" style="background: ${getColor(p.saidi)}; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;"></span>
                             <strong style="color: #f4f4f5; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${p.utility}</strong>
                         </div>
                         <div style="font-size: 0.72rem; color: #71717a; margin-left: 16px; margin-top: 2px;">
@@ -217,7 +252,37 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tableBody.appendChild(row);
             });
         }
+
         buildTable(utilitiesGeoJSON.features);
+
+        // Clickable Column Header Listeners for Interactive Sorting
+        const tableHeader = document.querySelector('#utility-table thead, .utility-table-header');
+        if (tableHeader) {
+            const headers = tableHeader.querySelectorAll('th');
+            headers.forEach((th, idx) => {
+                th.style.cursor = 'pointer';
+                th.title = 'Click to sort';
+                th.addEventListener('click', () => {
+                    let key = 'utility';
+                    if (idx === 1) key = 'saidi';
+                    if (idx === 2) key = 'saifi';
+
+                    if (activeSortKey === key) {
+                        isAscending = !isAscending;
+                    } else {
+                        activeSortKey = key;
+                        isAscending = (key === 'utility'); // Default A-Z for strings, high-to-low for numbers
+                    }
+
+                    const query = searchInput ? searchInput.value.toLowerCase() : '';
+                    const currentFeatures = query 
+                        ? utilitiesGeoJSON.features.filter(f => f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query))
+                        : utilitiesGeoJSON.features;
+                    
+                    buildTable(currentFeatures);
+                });
+            });
+        }
 
         function selectUtility(id) {
             const layer = layerMap[id];
@@ -232,6 +297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        // Debounced Search Filter
         let searchTimeout;
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
