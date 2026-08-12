@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Clean Vector Overlay & Polished Sidebar Layout
+// Enterprise Logic Layer: Decoupled, Modular, Multi-Pane Spatial Engine
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP (POLISHED UX & TABLE)
+    // MAP 1: RELIABILITY MAP (EXPLICIT STACKING PANES)
     // ==========================================
     function initReliabilityMap(utilitiesGeoJSON, naBounds) {
         const map = L.map('leaflet-map', { 
@@ -72,8 +72,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         setTimeout(() => map.invalidateSize(), 500);
 
+        // CREATE DEDICATED MAP PANES TO PREVENT POLYGON EVENT COLLISIONS
+        map.createPane('provincialPane');
+        map.getPane('provincialPane').style.zIndex = 400; // Background layer
+
+        map.createPane('municipalPane');
+        map.getPane('municipalPane').style.zIndex = 500; // Foreground layer
+
         map.createPane('labels');
-        map.getPane('labels').style.zIndex = 650;
+        map.getPane('labels').style.zIndex = 650; // Top text layer
         map.getPane('labels').style.pointerEvents = 'none';
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { 
@@ -92,14 +99,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
             smoothFactor: 1.5, 
+            pane: function(f) {
+                return f.properties.type_org === 'provincial' ? 'provincialPane' : 'municipalPane';
+            },
             style: function(f) { 
                 const isProv = f.properties.type_org === 'provincial';
                 return { 
                     fillColor: getColor(f.properties.saidi), 
                     weight: isProv ? 1 : 2, 
-                    opacity: isProv ? 0.3 : 0.8, 
+                    opacity: isProv ? 0.25 : 0.85, 
                     color: getColor(f.properties.saidi), 
-                    fillOpacity: isProv ? 0.05 : 0.25, 
+                    fillOpacity: isProv ? 0.03 : 0.30, 
                     lineJoin: 'round', 
                     lineCap: 'round'
                 }; 
@@ -107,12 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             onEachFeature: function(f, layer) {
                 layerMap[f.properties.id] = layer;
                 const isProv = f.properties.type_org === 'provincial';
-                
-                if (!isProv) {
-                    setTimeout(() => layer.bringToFront(), 100);
-                }
 
-                // Clean Hover-Only Tooltip (Prevents text overlap on map)
                 layer.bindTooltip(`
                     <div style="font-family:'Plus Jakarta Sans',sans-serif; padding: 2px 4px;">
                         <strong style="color: #ffffff; font-size: 0.85rem; display:block;">${f.properties.utility}</strong>
@@ -165,8 +170,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 layer.on({ 
                     mouseover: (e) => { 
-                        e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.2 : 0.4 }); 
-                        if (!isProv) e.target.bringToFront(); 
+                        e.target.setStyle({ weight: 3, color: '#ffffff', fillOpacity: isProv ? 0.15 : 0.50 }); 
                         const r = document.getElementById(`row-${f.properties.id}`); 
                         if (r) r.classList.add('active'); 
                     }, 
@@ -180,7 +184,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }).addTo(map);
 
-        // Sidebar Table Construction (Clean Vertical Alignment)
         const tableBody = document.getElementById('utility-table-body');
         function buildTable(features) {
             if (!tableBody) return;
@@ -229,7 +232,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Debounced Search Filter
         let searchTimeout;
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
