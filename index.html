@@ -28,9 +28,12 @@
 
     <!-- EXECUTIVE NAVIGATION -->
     <nav class="enterprise-nav">
+        <!-- Reading Progress Bar -->
+        <div class="scroll-progress" id="scroll-progress"></div>
+        
         <div class="logo">Emmanuel<span> Oyerinde</span></div>
         <ul class="nav-links" id="nav-links">
-            <li><a href="#home">Home</a></li>
+            <li><a href="#home" class="active">Home</a></li>
             <li><a href="#about">Profile</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
             <li><a href="#grid-map">Analytics</a></li>
@@ -40,7 +43,7 @@
             <li><a href="#utility-news">News Wire</a></li>
         </ul>
         <div class="nav-controls">
-            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">☀️</button>
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme" title="Switch to Light Mode">☀️</button>
             <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
         </div>
     </nav>
@@ -90,12 +93,15 @@
                 <h2>Featured Projects & Publications</h2>
                 <p>A selection of my recent enterprise deployments, GIS architecture designs, and global infrastructure initiatives.</p>
             </div>
+            
             <div class="portfolio-grid">
                 
                 <!-- Tile 1 -->
                 <div class="project-card">
                     <div class="project-image-wrapper" style="background: linear-gradient(135deg, #1e3a8a, #0f172a); display: flex; align-items: center; justify-content: center;">
-                        <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.8)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                        <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.8)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
                     </div>
                     <div class="project-content">
                         <div class="project-category">GIS & Enterprise IT</div>
@@ -108,7 +114,9 @@
                 <!-- Tile 2 -->
                 <div class="project-card">
                     <div class="project-image-wrapper" style="background: linear-gradient(135deg, #065f46, #022c22); display: flex; align-items: center; justify-content: center;">
-                        <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.8)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.8)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
                     </div>
                     <div class="project-content">
                         <div class="project-category">Global Publication</div>
@@ -278,6 +286,9 @@
     <footer>
         <p>&copy; 2026 Emmanuel Oyerinde, MBA, PMP&reg;. All rights reserved.</p>
     </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
     <script type="module" src="js/app.js" defer></script>
