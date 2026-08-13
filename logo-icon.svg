@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+    <defs>
+        <!-- Deep Executive Dark Background Gradient -->
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#09090b" />
+            <stop offset="100%" stop-color="#18181b" />
+        </linearGradient>
+
+        <!-- Electric Tech Blue for E.O Construct -->
+        <linearGradient id="eoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#60a5fa" />
+            <stop offset="50%" stop-color="#2563eb" />
+            <stop offset="100%" stop-color="#1d4ed8" />
+        </linearGradient>
+
+        <!-- Vivid Cyan Accent Gradient -->
+        <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#22d3ee" />
+            <stop offset="100%" stop-color="#06b6d4" />
+        </linearGradient>
+
+        <!-- Tech Glow Effects -->
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="12" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+    </defs>
+
+    <!-- Base Badge Container -->
+    <rect width="512" height="512" rx="112" fill="url(#bgGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="6" />
+
+    <!-- Orbital Latitude Grid Circle (Geospatial Element) -->
+    <circle cx="256" cy="256" r="190" fill="none" stroke="rgba(37, 99, 235, 0.15)" stroke-width="2" stroke-dasharray="8 12" />
+
+    <!-- The Integrated E.O Monogram -->
+    <g filter="url(#glow)">
+        <!-- Outer Loop forming the 'O' -->
+        <path d="M 276 136 
+                 H 326 
+                 A 120 120 0 1 1 326 376 
+                 H 276" 
+              fill="none" 
+              stroke="url(#eoGrad)" 
+              stroke-width="36" 
+              stroke-linecap="round" 
+              stroke-linejoin="round" />
+
+        <!-- Vertical Backbone & Arms forming the 'E' -->
+        <!-- Spine -->
+        <path d="M 186 136 V 376" 
+              fill="none" 
+              stroke="url(#eoGrad)" 
+              stroke-width="36" 
+              stroke-linecap="round" />
+
+        <!-- Top Arm of E -->
+        <path d="M 186 136 H 260" 
+              fill="none" 
+              stroke="url(#eoGrad)" 
+              stroke-width="36" 
+              stroke-linecap="round" />
+
+        <!-- Middle Arm of E (Extends into the central O focal point) -->
+        <path d="M 186 256 H 300" 
+              fill="none" 
+              stroke="url(#eoGrad)" 
+              stroke-width="36" 
+              stroke-linecap="round" />
+
+        <!-- Bottom Arm of E -->
+        <path d="M 186 376 H 260" 
+              fill="none" 
+              stroke="url(#eoGrad)" 
+              stroke-width="36" 
+              stroke-linecap="round" />
+    </g>
+
+    <!-- Essential Initial Period Dots (E . O .) -->
+    <g filter="url(#glow)">
+        <!-- Dot after 'E' (Central Node) -->
+        <circle cx="310" cy="256" r="14" fill="#ffffff" stroke="url(#cyanGrad)" stroke-width="6" />
+        
+        <!-- Dot after 'O' (Trailing Network Node) -->
+        <circle cx="410" cy="316" r="10" fill="url(#cyanGrad)" />
+    </g>
+</svg>
