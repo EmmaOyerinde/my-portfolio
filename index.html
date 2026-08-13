@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -7,18 +7,21 @@
     <meta name="description" content="Emmanuel Oyerinde - Enterprise Project Manager specializing in utility infrastructure, GIS, and digital transformation.">
     <title>Emmanuel Oyerinde | Enterprise Project Manager</title>
     
+    <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Leaflet Mapping CSS -->
+    <!-- Leaflet Geospatial CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     
+    <!-- Enterprise Stylesheet -->
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-    <nav>
+    <!-- EXECUTIVE NAVIGATION -->
+    <nav class="enterprise-nav">
         <div class="logo">Emmanuel<span> Oyerinde</span></div>
         <ul class="nav-links" id="nav-links">
             <li><a href="#home">Home</a></li>
@@ -29,13 +32,12 @@
             <li><a href="#supply-deficit">Deficit</a></li>
             <li><a href="#off-grid">Off-Grid</a></li>
             <li><a href="#utility-news">News Wire</a></li>
-            <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
     </nav>
 
     <main>
-        <!-- HERO SECTION -->
+        <!-- 1. HERO SECTION -->
         <section class="hero" id="home">
             <div class="hero-glow"></div>
             <div class="hero-content">
@@ -54,7 +56,7 @@
             </div>
         </section>
 
-        <!-- ABOUT SECTION -->
+        <!-- 2. ABOUT & COMPETENCIES -->
         <section class="about-section reveal" id="about">
             <div class="about-container">
                 <div class="about-grid">
@@ -73,9 +75,7 @@
             </div>
         </section>
 
-        <!-- ==========================================
-             PORTFOLIO / PROJECTS SECTION 
-             ========================================== -->
+        <!-- 3. PORTFOLIO / IFRAME PROJECTS -->
         <section class="portfolio reveal" id="portfolio">
             <div class="section-header">
                 <h2>Featured Projects & Publications</h2>
@@ -84,41 +84,41 @@
             
             <div class="portfolio-grid">
                 
-                <!-- Project Tile 1: SpatialNode Network Monitoring -->
+                <!-- Tile 1: SpatialNode -->
                 <div class="project-card">
                     <div class="project-image-wrapper">
-                        <img src="project1.jpg" alt="Geographic Network Monitoring System" class="project-image">
+                        <iframe src="https://www.spatialnode.net/projects/geographic-network-monitoring-system-4228ae" scrolling="no" title="Geographic Network Monitoring System" loading="lazy"></iframe>
                     </div>
                     <div class="project-content">
                         <div class="project-category">GIS & Enterprise IT</div>
-                        <h3 class="project-title">Geographic Network Monitoring System</h3>
+                        <h3 class="project-title">Geographic Network Monitoring</h3>
                         <p class="project-description">A comprehensive spatial tracking tool designed for real-time monitoring, asset tracking, and utility infrastructure management.</p>
                         <a href="https://www.spatialnode.net/projects/geographic-network-monitoring-system-4228ae" class="project-link" target="_blank" rel="noopener noreferrer">View on SpatialNode &rarr;</a>
                     </div>
                 </div>
 
-                <!-- Project Tile 2: Esri Ikeja Electric Case Study -->
+                <!-- Tile 2: Esri Case Study -->
                 <div class="project-card">
                     <div class="project-image-wrapper">
-                        <img src="project2.jpg" alt="Esri Ikeja Electric Case Study" class="project-image">
+                        <iframe src="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" scrolling="no" title="Esri Ikeja Electric Case Study" loading="lazy"></iframe>
                     </div>
                     <div class="project-content">
                         <div class="project-category">Global Publication</div>
                         <h3 class="project-title">Ikeja Electric Power Availability</h3>
-                        <p class="project-description">Featured Esri case study detailing how advanced GIS and spatial analytics were utilized to improve power availability, track network reliability, and optimize distribution operations.</p>
+                        <p class="project-description">Featured Esri case study detailing how advanced GIS and spatial analytics were utilized to improve power availability and optimize operations.</p>
                         <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" class="project-link" target="_blank" rel="noopener noreferrer">Read Case Study on Esri &rarr;</a>
                     </div>
                 </div>
 
-                <!-- Project Tile 3: UNDP Ukraine Transition -->
+                <!-- Tile 3: UNDP PDF -->
                 <div class="project-card">
                     <div class="project-image-wrapper">
-                        <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" style="width:100%; height:100%; border:none;" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy"></iframe>
+                        <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy" style="pointer-events: auto;"></iframe>
                     </div>
                     <div class="project-content">
                         <div class="project-category">International Analysis</div>
-                        <h3 class="project-title">UNDP Ukraine: Transition of Coal Cities</h3>
-                        <p class="project-description">Generated GIS-based environmental assessments for UNDP Ukraine's initiative preparing coal-dependent communities for economic diversification by 2035.</p>
+                        <h3 class="project-title">UNDP Ukraine: Coal Cities</h3>
+                        <p class="project-description">Generated GIS-based environmental assessments for UNDP Ukraine's initiative preparing communities for economic diversification by 2035.</p>
                         <a href="https://www.spatialnode.net/projects/undp-ukraine-transition-of-coal-cities-ec3d51" class="project-link" target="_blank" rel="noopener noreferrer">View Full Assessment &rarr;</a>
                     </div>
                 </div>
@@ -126,12 +126,12 @@
             </div>
         </section>
 
-        <!-- LIVE MAP 1: RELIABILITY -->
+        <!-- 4. LIVE MAP 1: RELIABILITY -->
         <section class="map-section reveal" id="grid-map">
             <div class="map-glow"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
                 <h2>National Utility Reliability Benchmark</h2>
-                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories. Click any service territory to view deep structural metrics including customer density and generation mix.</p>
+                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories. Click any service territory to view deep structural metrics.</p>
             </div>
             <div class="map-app-wrapper">
                 <div class="map-sidebar">
@@ -156,12 +156,12 @@
             </div>
         </section>
 
-        <!-- LIVE MAP 2: 50-YEAR FORECAST -->
-        <section class="map-section reveal" style="background-color: var(--bg-base);" id="load-growth">
+        <!-- 5. LIVE MAP 2: 50-YEAR FORECAST -->
+        <section class="map-section reveal" id="load-growth">
             <div class="map-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 60%);"></div> 
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem;">
                 <h2>50-Year Enterprise Load Horizon</h2>
-                <p>Advanced strategic modeling projecting regional grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points and long-term capital requirements across all Canadian provinces and territories.</p>
+                <p>Advanced strategic modeling projecting regional grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points and long-term capital requirements.</p>
             </div>
             <div class="forecast-hero-wrapper">
                 <div class="glass-dashboard">
@@ -186,24 +186,24 @@
             </div>
         </section>
 
-        <!-- LIVE MAP 3: SUPPLY DEFICIT EXPLORER -->
-        <section class="map-section reveal" id="supply-deficit" style="background-color: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05);">
+        <!-- 6. LIVE MAP 3: SUPPLY DEFICIT EXPLORER -->
+        <section class="map-section reveal" id="supply-deficit" style="border-top: 1px solid rgba(255,255,255,0.05);">
             <div class="map-glow" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 60%);"></div>
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
                 <h2 style="color: #ffffff;">The Capacity Deficit: Unserved Energy</h2>
-                <p style="color: var(--zinc-400);">Grid generation is pooled at the provincial system level. Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire against surging electrification.</p>
+                <p style="color: var(--zinc-400);">Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire against surging electrification.</p>
             </div>
             <div class="forecast-hero-wrapper" style="height: 650px; position: relative;">
                 <div id="deficit-leaflet-map" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;"></div>
             </div>
         </section>
 
-        <!-- LIVE MAP 4: OFF-GRID MICROGRIDS -->
+        <!-- 7. LIVE MAP 4: OFF-GRID MICROGRIDS -->
         <section class="map-section reveal" id="off-grid">
             <div class="map-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 60%);"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
                 <h2>Remote & Off-Grid Infrastructure</h2>
-                <p>Visualizing the 100+ Canadian communities, First Nations, and coastal settlements that operate completely independently of the North American power grid, relying almost entirely on localized diesel microgrids.</p>
+                <p>Visualizing the 100+ Canadian communities, First Nations, and coastal settlements that operate completely independently of the North American power grid.</p>
             </div>
             <div class="map-app-wrapper">
                 <div class="map-sidebar">
@@ -217,8 +217,8 @@
             </div>
         </section>
 
-        <!-- LIVE UTILITY NEWS FEED SECTION -->
-        <section class="map-section reveal" id="utility-news" style="background-color: var(--zinc-950); position: relative; border-top: 1px solid rgba(255,255,255,0.05);">
+        <!-- 8. LIVE UTILITY NEWS FEED SECTION -->
+        <section class="map-section reveal" id="utility-news" style="border-top: 1px solid rgba(255,255,255,0.05);">
             <div class="map-glow" style="background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 60%);"></div>
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 2.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
@@ -234,25 +234,25 @@
             </div>
         </section>
 
-        <!-- DATA GOVERNANCE & SOURCES SECTION -->
+        <!-- 9. DATA GOVERNANCE & SOURCES -->
         <section class="sources-section" id="sources" style="padding: 40px 5%; background: var(--zinc-950); border-top: 1px solid var(--zinc-800);">
             <div style="max-width: 800px; margin: 0 auto;">
-                <details style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); padding: 15px 20px; cursor: pointer;">
+                <details style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); padding: 15px 20px; cursor: pointer; transition: 0.3s;">
                     <summary style="color: var(--zinc-400); font-size: 0.9rem; font-weight: 600; outline: none; display: flex; align-items: center; gap: 10px;">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         View Data Sources & Methodology
                     </summary>
                     <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); color: var(--zinc-500); font-size: 0.8rem; line-height: 1.6;">
                         <p style="margin-bottom: 8px;"><strong>Load Forecasts & Capacity:</strong> Independent Electricity System Operator (IESO) Annual Planning Outlooks, Alberta Electric System Operator (AESO) Long-Term Outlook, and BC Hydro IRP.</p>
-                        <p style="margin-bottom: 8px;"><strong>Reliability Benchmarks:</strong> SAIDI/SAIFI metrics sourced from Ontario Energy Board (OEB) LDC Scorecards, Electricity Canada, and direct utility annual performance reports.</p>
-                        <p style="margin-bottom: 8px;"><strong>Off-Grid Infrastructure:</strong> Microgrid data cross-referenced via Natural Resources Canada (NRCan) Remote Communities Energy Database.</p>
-                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Dark Matter basemaps provided by &copy; CARTO. Geographic structural data contributed by &copy; OpenStreetMap contributors.</p>
+                        <p style="margin-bottom: 8px;"><strong>Reliability Benchmarks:</strong> SAIDI/SAIFI metrics sourced from Ontario Energy Board (OEB) LDC Scorecards, Electricity Canada, and direct utility reports.</p>
+                        <p style="margin-bottom: 8px;"><strong>Off-Grid Infrastructure:</strong> Microgrid data cross-referenced via Natural Resources Canada (NRCan).</p>
+                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Dark Matter basemaps provided by &copy; CARTO.</p>
                     </div>
                 </details>
             </div>
         </section>
 
-        <!-- CONTACT SECTION -->
+        <!-- 10. CONTACT SECTION -->
         <section class="contact reveal" id="contact">
             <div class="contact-container">
                 <h2>Get In Touch</h2>
@@ -274,7 +274,7 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
     
-    <!-- ES6 Module import for Map Logic -->
+    <!-- ES6 Module import for Map Logic & UI -->
     <script type="module" src="js/app.js" defer></script>
 
 </body>
