@@ -13,6 +13,10 @@
         document.documentElement.setAttribute('data-theme', savedTheme);
     </script>
 
+    <!-- E.O. Brand Favicons -->
+    <link rel="icon" type="image/svg+xml" href="logo-icon.svg">
+    <link rel="apple-touch-icon" href="logo-icon.svg">
+
     <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +35,12 @@
         <!-- Reading Progress Bar -->
         <div class="scroll-progress" id="scroll-progress"></div>
         
-        <div class="logo">Emmanuel<span> Oyerinde</span></div>
+        <!-- E.O. Integrated Logo -->
+        <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+            <img src="logo-icon.svg" alt="E.O. Logo" style="width: 32px; height: 32px;">
+            <span>Emmanuel <span>Oyerinde</span></span>
+        </div>
+        
         <ul class="nav-links" id="nav-links">
             <li><a href="#home" class="active">Home</a></li>
             <li><a href="#about">Profile</a></li>
@@ -109,7 +118,7 @@
                     </div>
                 </div>
 
-                <!-- Tile 2: Ikeja Electric Power Availability (Using Magodo Bilateral 2022.PNG) -->
+                <!-- Tile 2: Ikeja Electric Power Availability -->
                 <div class="project-card">
                     <div class="project-image-wrapper">
                         <img src="Magodo Bilateral 2022.PNG" alt="Ikeja Electric Power Availability Case Study" style="width: 100%; height: 100%; object-fit: cover; border: none; display: block;">
@@ -229,7 +238,7 @@
             </div>
         </section>
 
-        <!-- 8. LIVE UTILITY NEWS FEED -->
+        <!-- 8. LIVE UTILITY NEWS FEED SECTION -->
         <section class="map-section reveal" id="utility-news" style="border-top: 1px solid var(--border-light);">
             <div class="map-glow-accent"></div>
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 2.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; justify-content: space-between; align-items: flex-end;">
