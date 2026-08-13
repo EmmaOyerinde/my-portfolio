@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Dynamic Map Theme Swapping & Engine UI
+// Enterprise Logic Layer: Dynamic Theme Swapping & Map Analytics Engine
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -12,30 +12,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const themeBtn = document.getElementById('theme-toggle');
     window.mapTileLayers = []; // Stores map layers for hot-swapping
 
-    // Check Local Storage
-    if (localStorage.getItem('theme') === 'light') {
-        rootHtml.classList.remove('dark');
-        rootHtml.classList.add('light');
+    // Sync button icon with current state established in <head>
+    if (rootHtml.getAttribute('data-theme') === 'light') {
         themeBtn.innerHTML = '🌙'; 
     } else {
         themeBtn.innerHTML = '☀️'; 
     }
 
     themeBtn.addEventListener('click', () => {
-        const isLight = rootHtml.classList.contains('light');
-        if (isLight) {
-            rootHtml.classList.remove('light');
-            rootHtml.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-            themeBtn.innerHTML = '☀️';
-            updateMapTiles('dark');
-        } else {
-            rootHtml.classList.remove('dark');
-            rootHtml.classList.add('light');
-            localStorage.setItem('theme', 'light');
-            themeBtn.innerHTML = '🌙';
-            updateMapTiles('light');
-        }
+        const currentTheme = rootHtml.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        rootHtml.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeBtn.innerHTML = newTheme === 'light' ? '🌙' : '☀️';
+        
+        updateMapTiles(newTheme);
     });
 
     function updateMapTiles(theme) {
@@ -125,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         map.createPane('municipalPane'); map.getPane('municipalPane').style.zIndex = 500;
         map.createPane('labels'); map.getPane('labels').style.zIndex = 650; map.getPane('labels').style.pointerEvents = 'none';
 
-        const isLight = document.documentElement.classList.contains('light');
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }).addTo(map);
         const labelLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', { maxZoom: 18, pane: 'labels', attribution: '&copy; CARTO' }).addTo(map);
         window.mapTileLayers.push({layer: baseLayer, type: 'base'}, {layer: labelLayer, type: 'label'});
@@ -143,9 +135,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 layerMap[f.properties.id] = layer;
                 layer.options.pane = f.properties.type_org === 'provincial' ? 'provincialPane' : 'municipalPane';
                 
-                layer.bindTooltip(`<div style="padding: 2px 4px;"><strong style="font-size: 0.85rem; display:block;">${f.properties.utility}</strong><span style="color: var(--text-muted); font-size: 0.75rem;">${f.properties.region} &bull; ${f.properties.customers} Cust.</span></div>`, { className: 'dark-tooltip', sticky: true, direction: 'auto' });
+                layer.bindTooltip(`<div style="padding: 2px 4px;"><strong style="font-size: 0.85rem; display:block; color: var(--text-main);">${f.properties.utility}</strong><span style="color: var(--text-muted); font-size: 0.75rem;">${f.properties.region} &bull; ${f.properties.customers} Cust.</span></div>`, { className: 'dark-tooltip', sticky: true, direction: 'auto' });
                 
-                layer.bindPopup(`<div style="min-width: 260px; padding: 4px;"><div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; margin-bottom: 4px;">${f.properties.region}</div><strong style="font-size: 1.15rem; display: block; margin-bottom: 10px; border-bottom: 1px solid var(--border-main); padding-bottom: 6px;">${f.properties.utility}</strong><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;"><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Customer Pop.</span><strong style="font-size: 0.9rem;">${f.properties.customers}</strong></div><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Route Length</span><strong style="font-size: 0.9rem;">${f.properties.line_km} km</strong></div></div><div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.8rem;"><span style="color: var(--text-muted);">Grid Density:</span><strong style="color: #10b981;">${f.properties.density} /km</strong></div><div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.8rem; border-bottom: 1px solid var(--border-main); padding-bottom: 8px;"><span style="color: var(--text-muted);">Generation Mix:</span><strong style="text-align: right;">${f.properties.mix}</strong></div><div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIDI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saidi} hrs</strong></div><div style="text-align: right;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIFI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saifi}</strong></div></div></div>`);
+                layer.bindPopup(`<div style="min-width: 260px; padding: 4px;"><div style="font-size: 0.75rem; text-transform: uppercase; color: #3b82f6; font-weight: 800; margin-bottom: 4px;">${f.properties.region}</div><strong style="font-size: 1.15rem; color: var(--text-main); display: block; margin-bottom: 10px; border-bottom: 1px solid var(--border-main); padding-bottom: 6px;">${f.properties.utility}</strong><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;"><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Customer Pop.</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.customers}</strong></div><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Route Length</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.line_km} km</strong></div></div><div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.8rem;"><span style="color: var(--text-muted);">Grid Density:</span><strong style="color: #10b981;">${f.properties.density} /km</strong></div><div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.8rem; border-bottom: 1px solid var(--border-main); padding-bottom: 8px;"><span style="color: var(--text-muted);">Generation Mix:</span><strong style="text-align: right; color: var(--text-main);">${f.properties.mix}</strong></div><div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIDI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saidi} hrs</strong></div><div style="text-align: right;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIFI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saifi}</strong></div></div></div>`);
                 
                 layer.on({ 
                     mouseover: (e) => { e.target.setStyle({ weight: 3, fillOpacity: 0.50 }); document.getElementById(`row-${f.properties.id}`)?.classList.add('active'); }, 
@@ -214,7 +206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
         L.control.zoom({ position: 'topright' }).addTo(forecastMap);
         
-        const isLight = document.documentElement.classList.contains('light');
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 19 }).addTo(forecastMap);
         window.mapTileLayers.push({layer: baseLayer, type: 'base'});
         setTimeout(() => forecastMap.invalidateSize(), 500);
@@ -222,7 +214,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const circleMarkers = {};
         regions.forEach(region => {
             const circle = L.circleMarker([region.lat, region.lng], { color: '#06b6d4', fillColor: '#06b6d4', fillOpacity: 0.5, weight: 2 }).addTo(forecastMap);
-            circle.bindTooltip(`<b>${region.name}</b>`, { className: 'dark-tooltip' }); circleMarkers[region.id] = circle;
+            circle.bindTooltip(`<b>${region.name}</b>`, { className: 'dark-tooltip', permanent: false });
+            circleMarkers[region.id] = circle;
         });
 
         function updateForecast() {
@@ -237,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if(document.getElementById('t-hydro')?.checked) mult += (r.mults.hydro - 1);
                 const projected = r.baseLoad * Math.pow(mult, yearsElapsed); totalLoad += projected;
                 const ratio = projected / r.baseLoad; let color = ratio > 5 ? '#f97316' : ratio > 3.5 ? '#d946ef' : ratio > 2.5 ? '#8b5cf6' : ratio > 1.5 ? '#3b82f6' : '#06b6d4';
-                circleMarkers[r.id]?.setRadius(Math.max(10, Math.log(projected) * 11)).setStyle({ color: color, fillColor: color, fillOpacity: ratio > 3.5 ? 0.7 : 0.4 }).setTooltipContent(`<div style="text-align:center;"><strong style="font-size:1.1rem;">${r.name}</strong><br><span style="color:var(--text-muted); font-size:0.8rem;">Est. ${currentYear} Load</span><br><strong style="color:${color}; font-size:1.3rem;">${projected.toFixed(1)} TWh</strong></div>`);
+                circleMarkers[r.id]?.setRadius(Math.max(10, Math.log(projected) * 11)).setStyle({ color: color, fillColor: color, fillOpacity: ratio > 3.5 ? 0.7 : 0.4 }).setTooltipContent(`<div style="text-align:center;"><strong style="font-size:1.1rem; color: var(--text-main);">${r.name}</strong><br><span style="color:var(--text-muted); font-size:0.8rem;">Est. ${currentYear} Load</span><br><strong style="color:${color}; font-size:1.3rem;">${projected.toFixed(1)} TWh</strong></div>`);
             });
             if(document.getElementById('yearLabelPrem')) document.getElementById('yearLabelPrem').innerText = currentYear;
             if(document.getElementById('totalLoadPrem')) document.getElementById('totalLoadPrem').innerHTML = `${totalLoad.toFixed(0)} <span>TWh</span>`;
@@ -256,15 +249,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         const mapEl = document.getElementById('deficit-leaflet-map'); if (!mapEl) return;
         const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
         
-        const isLight = document.documentElement.classList.contains('light');
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 19 }).addTo(deficitMap);
         window.mapTileLayers.push({layer: baseLayer, type: 'base'});
         setTimeout(() => deficitMap.invalidateSize(), 500);
 
         gridData.forEach(grid => {
             const deficit = grid.demand - grid.capacity; const markerColor = deficit > 0 ? '#ef4444' : '#10b981';
-            const pulseIcon = L.divIcon({ className: 'custom-pulse-icon', html: `<div style="width: 20px; height: 20px; background: ${markerColor}; border-radius: 50%; box-shadow: 0 0 15px ${markerColor}; border: 2px solid #fff;"></div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
-            L.marker([grid.lat, grid.lng], { icon: pulseIcon }).addTo(deficitMap).bindPopup(`<div style="min-width: 240px; padding: 5px;"><strong style="font-size: 1.15rem; display: block; margin-bottom: 12px; border-bottom: 1px solid var(--border-main); padding-bottom: 8px;">${grid.name}</strong><div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--text-muted); font-size: 0.85rem;">2050 Demand</span><strong style="color: #3b82f6;">${grid.demand} ${grid.unit}</strong></div><div style="width: 100%; background: var(--border-main); height: 6px; border-radius: 3px; margin-bottom: 16px;"><div style="width: 100%; background: #3b82f6; height: 100%; border-radius: 3px;"></div></div><div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--text-muted); font-size: 0.85rem;">Committed Capacity</span><strong style="color: #10b981;">${grid.capacity} ${grid.unit}</strong></div><div style="width: 100%; background: var(--border-main); height: 6px; border-radius: 3px; margin-bottom: 16px;"><div style="width: ${(grid.capacity / grid.demand) * 100}%; background: #10b981; height: 100%; border-radius: 3px;"></div></div><div style="background: ${deficit > 0 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; border: 1px solid ${deficit > 0 ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)'}; padding: 12px; border-radius: 8px; text-align: center;"><span style="display: block; color: ${markerColor}; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">${deficit > 0 ? 'Unserved Energy Deficit' : 'Capacity Surplus'}</span><strong style="color: ${markerColor}; font-size: 1.6rem; line-height: 1;">${Math.abs(deficit)} <span style="font-size: 1rem;">${grid.unit}</span></strong></div></div>`, { className: 'dark-tooltip' });
+            const pulseIcon = L.divIcon({ className: 'custom-pulse-icon', html: `<div style="width: 20px; height: 20px; background: ${markerColor}; border-radius: 50%; box-shadow: 0 0 15px ${markerColor}; border: 2px solid var(--text-main);"></div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
+            L.marker([grid.lat, grid.lng], { icon: pulseIcon }).addTo(deficitMap).bindPopup(`<div style="min-width: 240px; padding: 5px;"><strong style="font-size: 1.15rem; display: block; margin-bottom: 12px; border-bottom: 1px solid var(--border-main); padding-bottom: 8px; color: var(--text-main);">${grid.name}</strong><div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--text-muted); font-size: 0.85rem;">2050 Demand</span><strong style="color: #3b82f6;">${grid.demand} ${grid.unit}</strong></div><div style="width: 100%; background: var(--border-main); height: 6px; border-radius: 3px; margin-bottom: 16px;"><div style="width: 100%; background: #3b82f6; height: 100%; border-radius: 3px;"></div></div><div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--text-muted); font-size: 0.85rem;">Committed Capacity</span><strong style="color: #10b981;">${grid.capacity} ${grid.unit}</strong></div><div style="width: 100%; background: var(--border-main); height: 6px; border-radius: 3px; margin-bottom: 16px;"><div style="width: ${(grid.capacity / grid.demand) * 100}%; background: #10b981; height: 100%; border-radius: 3px;"></div></div><div style="background: ${deficit > 0 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; border: 1px solid ${deficit > 0 ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)'}; padding: 12px; border-radius: 8px; text-align: center;"><span style="display: block; color: ${markerColor}; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">${deficit > 0 ? 'Unserved Energy Deficit' : 'Capacity Surplus'}</span><strong style="color: ${markerColor}; font-size: 1.6rem; line-height: 1;">${Math.abs(deficit)} <span style="font-size: 1rem;">${grid.unit}</span></strong></div></div>`, { className: 'dark-tooltip' });
         });
     }
 
@@ -275,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const mapEl = document.getElementById('offgrid-leaflet-map'); if (!mapEl) return;
         const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([58.0, -90.0], 4);
         
-        const isLight = document.documentElement.classList.contains('light');
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
         window.mapTileLayers.push({layer: baseLayer, type: 'all'});
         setTimeout(() => offgridMap.invalidateSize(), 500);
