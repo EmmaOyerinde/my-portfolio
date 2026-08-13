@@ -7,20 +7,15 @@
     <meta name="description" content="Emmanuel Oyerinde - Enterprise Project Manager specializing in utility infrastructure, GIS, and digital transformation.">
     <title>Emmanuel Oyerinde | Enterprise Project Manager</title>
     
-    <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Leaflet Geospatial CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    
-    <!-- Enterprise Stylesheet -->
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-    <!-- EXECUTIVE NAVIGATION -->
     <nav class="enterprise-nav">
         <div class="logo">Emmanuel<span> Oyerinde</span></div>
         <ul class="nav-links" id="nav-links">
@@ -33,7 +28,10 @@
             <li><a href="#off-grid">Off-Grid</a></li>
             <li><a href="#utility-news">News Wire</a></li>
         </ul>
-        <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
+        <div class="nav-controls">
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">☀️</button>
+            <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
+        </div>
     </nav>
 
     <main>
@@ -84,7 +82,6 @@
             
             <div class="portfolio-grid">
                 
-                <!-- Tile 1: SpatialNode (Enterprise Vector Icon) -->
                 <div class="project-card">
                     <div class="project-image-wrapper" style="background: linear-gradient(135deg, #1e3a8a, #0f172a); display: flex; align-items: center; justify-content: center;">
                         <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.8)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -99,7 +96,6 @@
                     </div>
                 </div>
 
-                <!-- Tile 2: Esri Case Study (Enterprise Vector Icon) -->
                 <div class="project-card">
                     <div class="project-image-wrapper" style="background: linear-gradient(135deg, #065f46, #022c22); display: flex; align-items: center; justify-content: center;">
                         <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.8)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -114,7 +110,6 @@
                     </div>
                 </div>
 
-                <!-- Tile 3: UNDP PDF (Local Iframe) -->
                 <div class="project-card">
                     <div class="project-image-wrapper">
                         <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy" style="pointer-events: auto;"></iframe>
@@ -162,7 +157,7 @@
 
         <!-- 5. LIVE MAP 2: 50-YEAR FORECAST -->
         <section class="map-section reveal" id="load-growth">
-            <div class="map-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 60%);"></div> 
+            <div class="map-glow-accent"></div> 
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem;">
                 <h2>50-Year Enterprise Load Horizon</h2>
                 <p>Advanced strategic modeling projecting regional grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points.</p>
@@ -191,11 +186,11 @@
         </section>
 
         <!-- 6. LIVE MAP 3: SUPPLY DEFICIT -->
-        <section class="map-section reveal" id="supply-deficit" style="border-top: 1px solid rgba(255,255,255,0.05);">
-            <div class="map-glow" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 60%);"></div>
+        <section class="map-section reveal" id="supply-deficit" style="border-top: 1px solid var(--border-light);">
+            <div class="map-glow-danger"></div>
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
-                <h2 style="color: #ffffff;">The Capacity Deficit: Unserved Energy</h2>
-                <p style="color: var(--zinc-400);">Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire.</p>
+                <h2>The Capacity Deficit: Unserved Energy</h2>
+                <p>Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire against surging electrification.</p>
             </div>
             <div class="forecast-hero-wrapper" style="height: 650px; position: relative;">
                 <div id="deficit-leaflet-map" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;"></div>
@@ -204,7 +199,7 @@
 
         <!-- 7. LIVE MAP 4: OFF-GRID -->
         <section class="map-section reveal" id="off-grid">
-            <div class="map-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 60%);"></div> 
+            <div class="map-glow-warning"></div> 
             <div class="section-header" style="position: relative; z-index: 2;">
                 <h2>Remote & Off-Grid Infrastructure</h2>
                 <p>Visualizing the 100+ Canadian communities and coastal settlements that operate completely independently of the North American power grid.</p>
@@ -221,16 +216,16 @@
             </div>
         </section>
 
-        <!-- 8. LIVE UTILITY NEWS FEED -->
-        <section class="map-section reveal" id="utility-news" style="border-top: 1px solid rgba(255,255,255,0.05);">
-            <div class="map-glow" style="background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 60%);"></div>
+        <!-- 8. LIVE UTILITY NEWS FEED SECTION -->
+        <section class="map-section reveal" id="utility-news" style="border-top: 1px solid var(--border-light);">
+            <div class="map-glow-accent"></div>
             <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 2.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
-                    <h2 style="color: #ffffff;">Canada Utility Intelligence Wire</h2>
-                    <p style="color: var(--zinc-400);">Real-time live news feed tracking strategic developments, regulatory shifts, and grid announcements.</p>
+                    <h2>Canada Utility Intelligence Wire</h2>
+                    <p>Real-time live news feed tracking strategic developments, regulatory shifts, and grid announcements.</p>
                 </div>
-                <div class="live-indicator" style="display: flex; align-items: center; gap: 8px; color: #ef4444; font-weight: bold; text-transform: uppercase; font-size: 0.85rem;">
-                    <span class="pulse-dot" style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></span> Live
+                <div class="live-indicator">
+                    <span class="pulse-dot"></span> Live
                 </div>
             </div>
             <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;">
@@ -239,18 +234,18 @@
         </section>
 
         <!-- 9. DATA GOVERNANCE & SOURCES -->
-        <section class="sources-section" id="sources" style="padding: 40px 5%; background: var(--zinc-950); border-top: 1px solid var(--zinc-800);">
+        <section class="sources-section" id="sources">
             <div style="max-width: 800px; margin: 0 auto;">
-                <details style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); padding: 15px 20px; cursor: pointer; transition: 0.3s;">
-                    <summary style="color: var(--zinc-400); font-size: 0.9rem; font-weight: 600; outline: none; display: flex; align-items: center; gap: 10px;">
+                <details class="source-details">
+                    <summary>
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         View Data Sources & Methodology
                     </summary>
-                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); color: var(--zinc-500); font-size: 0.8rem; line-height: 1.6;">
-                        <p style="margin-bottom: 8px;"><strong>Load Forecasts & Capacity:</strong> IESO Planning Outlooks, AESO Long-Term Outlook, BC Hydro IRP.</p>
-                        <p style="margin-bottom: 8px;"><strong>Reliability Benchmarks:</strong> SAIDI/SAIFI from Ontario Energy Board LDC Scorecards & Electricity Canada.</p>
-                        <p style="margin-bottom: 8px;"><strong>Off-Grid Infrastructure:</strong> Microgrid data cross-referenced via Natural Resources Canada (NRCan).</p>
-                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Dark Matter basemaps provided by &copy; CARTO.</p>
+                    <div class="source-content">
+                        <p><strong>Load Forecasts & Capacity:</strong> IESO Planning Outlooks, AESO Long-Term Outlook, BC Hydro IRP.</p>
+                        <p><strong>Reliability Benchmarks:</strong> SAIDI/SAIFI from Ontario Energy Board LDC Scorecards & Electricity Canada.</p>
+                        <p><strong>Off-Grid Infrastructure:</strong> Microgrid data cross-referenced via Natural Resources Canada (NRCan).</p>
+                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Basemaps by &copy; CARTO.</p>
                     </div>
                 </details>
             </div>
@@ -275,9 +270,7 @@
         <p>&copy; 2026 Emmanuel Oyerinde, MBA, PMP&reg;. All rights reserved.</p>
     </footer>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-    <!-- ES6 Module import -->
     <script type="module" src="js/app.js" defer></script>
 
 </body>
