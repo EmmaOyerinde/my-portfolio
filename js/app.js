@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const defaultBasemap = isLight ? baseMaps["Light Mode"] : baseMaps["Dark Mode"];
         
         defaultBasemap.addTo(mapInstance);
-        L.control.layers(baseMaps, null, { position: 'topleft' }).addTo(mapInstance);
+        L.control.layers(baseMaps, null, { position: 'topleft', collapsed: true }).addTo(mapInstance);
         attachLocateControl(mapInstance);
         attachGeocoder(mapInstance);
     }
