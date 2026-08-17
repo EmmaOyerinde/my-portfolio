@@ -407,7 +407,7 @@ footer { background: var(--bg-base); color: var(--text-muted); text-align: cente
 .custom-intellisense-dropdown {
     position: absolute;
     top: 110%;
-    left: 0;
+    right: 0; /* Updated to align to the right edge */
     width: 280px;
     background: var(--bg-panel);
     border: 1px solid var(--border-main);
