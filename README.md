@@ -3,7 +3,7 @@
 **Executive Portfolio & Geospatial Analytics Platform**  
 *London, Ontario, Canada | v.2026*
 
-> **Live Deployment:** [View the Interactive Dashboard](https://[Your-GitHub-Username].github.io/[Your-Repo-Name])
+> **Live Deployment:** [View the Interactive Dashboard](https://[emmaoyerinde.github.io/my-portfolio])
 
 This repository houses the front-end architecture for an interactive executive briefing platform. Designed to bridge the gap between high-level business strategy and complex technical execution, this platform demonstrates over a decade of leadership in utility infrastructure, GIS integration, and enterprise IT deployments.
 
@@ -47,21 +47,3 @@ A searchable, interactive directory mapping over 100 coastal and northern Canadi
 * **Asynchronous Enterprise Wire:** A live Google News RSS integration fetching strategic utility developments over a 7-day rolling window. It utilizes an automated proxy to bypass enterprise CORS restrictions, complete with a hardcoded fallback UI to prevent failures behind corporate firewalls.
 * **Instantaneous Theme Orchestration:** A JavaScript-driven Light/Dark mode engine that not only alters CSS variables but dynamically repaints the Leaflet base-tiles (CARTO Dark Matter vs. Positron) and updates the iOS Safari browser chrome (`theme-color`) in real-time.
 
----
-
-## 🖥️ Local Deployment Protocol
-
-To instantiate this environment locally for code review or development:
-
-```bash
-# 1. Clone the repository
-git clone [https://github.com/](https://github.com/)[Your-GitHub-Username]/[Your-Repo-Name].git
-
-# 2. Navigate to the working directory
-cd [Your-Repo-Name]
-
-# 3. Initialize a local web server (Required for ES6 Module execution)
-python -m http.server 8000
-
-# 4. Access the environment
-# Open http://localhost:8000 in any modern browser
