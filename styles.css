@@ -302,7 +302,22 @@ input:checked + .slider-toggle:before { transform: translateX(20px); }
 .leaflet-control-zoom a:hover { background-color: var(--border-main) !important; }
 
 /* ==========================================
-   13. FOOTER & DATA GOVERNANCE
+   13. GEOCODER OVERRIDES
+   ========================================== */
+.leaflet-control-geocoder { background: var(--bg-panel) !important; border: 1px solid var(--border-main) !important; border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-md) !important; backdrop-filter: blur(8px); transition: var(--transition); }
+.leaflet-control-geocoder-form input { background: transparent !important; color: var(--text-main) !important; border: none !important; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem !important; }
+.leaflet-control-geocoder-form input:focus { outline: none !important; }
+.leaflet-control-geocoder-icon { border-radius: var(--radius-sm) !important; }
+html[data-theme="dark"] .leaflet-control-geocoder-icon { filter: invert(1); opacity: 0.7; }
+html[data-theme="light"] .leaflet-control-geocoder-icon { filter: invert(0); opacity: 0.7; }
+.leaflet-control-geocoder-alternatives { background: var(--bg-panel) !important; border: 1px solid var(--border-main) !important; border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-lg) !important; margin-top: 5px !important; overflow: hidden; }
+.leaflet-control-geocoder-alternatives li { border-bottom: 1px solid var(--border-light) !important; }
+.leaflet-control-geocoder-alternatives li a { color: var(--text-main) !important; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem !important; transition: var(--transition); padding: 8px 12px !important; }
+.leaflet-control-geocoder-alternatives li a:hover { background: var(--hover-active) !important; color: var(--accent) !important; }
+.leaflet-control-geocoder-throbber .leaflet-control-geocoder-icon { background-image: none !important; }
+
+/* ==========================================
+   14. FOOTER & DATA GOVERNANCE
    ========================================== */
 .sources-section { padding: 40px 5%; background: var(--bg-base); border-top: 1px solid var(--border-main); transition: var(--transition); }
 .source-details { background: var(--hover-overlay); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 15px 20px; cursor: pointer; transition: 0.3s; }
@@ -320,7 +335,7 @@ input[type="text"]:focus, input[type="email"]:focus, textarea:focus { outline: n
 footer { background: var(--bg-base); color: var(--text-muted); text-align: center; padding: 3rem 5%; font-size: 0.95rem; border-top: 1px solid var(--border-main); transition: var(--transition); }
 
 /* ==========================================
-   14. MOBILE RESPONSIVE
+   15. MOBILE RESPONSIVE
    ========================================== */
 @media (max-width: 1024px) {
     .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -333,7 +348,7 @@ footer { background: var(--bg-base); color: var(--text-muted); text-align: cente
     .forecast-hero-wrapper { height: auto; display: flex; flex-direction: column; border: 1px solid var(--border-main); }
     #forecast-map-premium, #deficit-leaflet-map { height: 500px; position: relative !important; }
     .mobile-menu-btn { display: block; }
-    .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-panel); backdrop-filter: blur(20px); flex-direction: column; gap: 0; text-align: center; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--border-main); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: var(--transition); }
+    .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-panel); backdrop-filter: blur(20px); flex-direction: column; gap: 0; text-align: center; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--border-main); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
     .nav-links.active { opacity: 1; visibility: visible; transform: translateY(0); }
     .nav-links a { display: block; padding: 1.5rem; border-bottom: 1px solid var(--border-main); font-size: 1.1rem; }
     .contact-form { padding: 2rem; }
