@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     themeBtn.addEventListener('click', () => {
-        // Animation trigger
         themeBtn.classList.add('rotate');
         setTimeout(() => themeBtn.classList.remove('rotate'), 400);
 
@@ -67,7 +66,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if(backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    // ScrollSpy Logic
     const sections = document.querySelectorAll('section[id]');
     const navItems = document.querySelectorAll('.nav-links a');
     const observerOptions = { root: null, rootMargin: '-20% 0px -70% 0px', threshold: 0 };
@@ -86,7 +84,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, observerOptions);
     sections.forEach(sec => observer.observe(sec));
 
-    // Form Submit UX Feedback
     const contactForm = document.getElementById('contact-form');
     if(contactForm) {
         contactForm.addEventListener('submit', () => {
@@ -145,7 +142,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const db = await fetchEnterpriseData();
         
         let checkLeaflet = setInterval(() => {
-            if (window.L) {
+            // Check that Leaflet AND the Geocoder plugin have loaded
+            if (window.L && L.Control.Geocoder) {
                 clearInterval(checkLeaflet);
                 const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
                 
@@ -158,6 +156,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 100);
     } catch (err) {
         console.error("Failed to load Enterprise Data Layer", err);
+    }
+
+    // ==========================================
+    // GLOBAL GEOCODER ENGINE
+    // ==========================================
+    function attachGeocoder(mapInstance) {
+        let geocodeMarker;
+        L.Control.geocoder({
+            defaultMarkGeocode: false,
+            position: 'topright',
+            placeholder: 'Search address or region...'
+        }).on('markgeocode', function(e) {
+            const bbox = e.geocode.bbox;
+            const center = e.geocode.center;
+            mapInstance.fitBounds(bbox);
+            if (geocodeMarker) { mapInstance.removeLayer(geocodeMarker); }
+            
+            geocodeMarker = L.circleMarker(center, { color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.8, radius: 10, weight: 3 })
+                .addTo(mapInstance)
+                .bindTooltip(`<b>${e.geocode.name}</b>`, { className: 'dark-tooltip', direction: 'top' })
+                .openTooltip();
+        }).addTo(mapInstance);
     }
 
     // ==========================================
@@ -180,6 +200,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }).addTo(map);
         const labelLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', { maxZoom: 18, pane: 'labels', attribution: '&copy; CARTO' }).addTo(map);
         window.mapTileLayers.push({layer: baseLayer, type: 'base'}, {layer: labelLayer, type: 'label'});
+
+        // Attach Universal Search Bar
+        attachGeocoder(map);
 
         const layerMap = {};
         function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
@@ -270,6 +293,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.mapTileLayers.push({layer: baseLayer, type: 'base'});
         setTimeout(() => forecastMap.invalidateSize(), 500);
 
+        // Attach Universal Search Bar
+        attachGeocoder(forecastMap);
+
         const circleMarkers = {};
         regions.forEach(region => {
             const circle = L.circleMarker([region.lat, region.lng], { color: '#06b6d4', fillColor: '#06b6d4', fillOpacity: 0.5, weight: 2 }).addTo(forecastMap);
@@ -313,6 +339,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.mapTileLayers.push({layer: baseLayer, type: 'base'});
         setTimeout(() => deficitMap.invalidateSize(), 500);
 
+        // Attach Universal Search Bar
+        attachGeocoder(deficitMap);
+
         gridData.forEach(grid => {
             const deficit = grid.demand - grid.capacity; const markerColor = deficit > 0 ? '#ef4444' : '#10b981';
             const pulseIcon = L.divIcon({ className: 'custom-pulse-icon', html: `<div style="width: 20px; height: 20px; background: ${markerColor}; border-radius: 50%; box-shadow: 0 0 15px ${markerColor}; border: 2px solid var(--bg-surface);"></div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
@@ -331,6 +360,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
         window.mapTileLayers.push({layer: baseLayer, type: 'all'});
         setTimeout(() => offgridMap.invalidateSize(), 500);
+
+        // Attach Universal Search Bar
+        attachGeocoder(offgridMap);
 
         const zoneLayers = {};
         let geojsonLayer = L.geoJSON(offgridZones, {
