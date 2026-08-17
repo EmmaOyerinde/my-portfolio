@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     const rootHtml = document.documentElement;
     const themeBtn = document.getElementById('theme-toggle');
+    const metaThemeColor = document.getElementById('meta-theme-color');
 
     if (rootHtml.getAttribute('data-theme') === 'light') {
         themeBtn.innerHTML = '🌙'; 
@@ -28,6 +29,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         rootHtml.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
+        
+        // Update iOS Safari browser header to match the website theme
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', newTheme === 'light' ? '#f8fafc' : '#09090b');
+        }
         
         themeBtn.innerHTML = newTheme === 'light' ? '🌙' : '☀️';
         themeBtn.setAttribute('title', newTheme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode');
@@ -99,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // TRUE INTELLISENSE GEOCODER ENGINE
+    // TRUE INTELLISENSE GEOCODER ENGINE (Canada Only)
     // ==========================================
     function attachGeocoder(mapInstance) {
         let geocodeMarker;
