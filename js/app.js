@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         attachLocateControl(mapInstance);
         L.control.layers(baseMaps, null, { position: 'bottomright', collapsed: true }).addTo(mapInstance);
         
-        // Geocoder with True Intellisense goes in the top left
+        // Geocoder with True Intellisense goes in the top right
         attachGeocoder(mapInstance);
     }
 
@@ -106,10 +106,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // 1. Initialize the base Leaflet Geocoder Control
         const geocoderControl = L.Control.geocoder({
-            geocoder: L.Control.Geocoder.photon(), 
+            geocoder: L.Control.Geocoder.photon({
+                geocodingQueryParams: {
+                    bbox: '-142,41,-52,84' // Strict Canada bounding box restriction
+                }
+            }), 
             defaultMarkGeocode: false,
-            position: 'topleft',
-            placeholder: 'Search address or region...'
+            position: 'topright',
+            placeholder: 'Search Canadian address...'
         }).addTo(mapInstance);
 
         // 2. Build the Custom Intellisense Dropdown UI
@@ -133,9 +137,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             
-            // 300ms Debounce to prevent spamming the API
+            // 300ms Debounce to prevent spamming the API with strict bounding box for Canada
             timeout = setTimeout(() => {
-                fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`)
+                fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&bbox=-142,41,-52,84`)
                 .then(res => res.json())
                 .then(data => {
                     resultsContainer.innerHTML = '';
