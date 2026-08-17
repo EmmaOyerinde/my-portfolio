@@ -50,8 +50,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const defaultBasemap = isLight ? baseMaps["Light Mode"] : baseMaps["Dark Mode"];
         
         defaultBasemap.addTo(mapInstance);
-        L.control.layers(baseMaps, null, { position: 'topleft', collapsed: true }).addTo(mapInstance);
+        
+        // Add tools in order so they stack bottom-to-top in the bottom right corner
         attachLocateControl(mapInstance);
+        L.control.layers(baseMaps, null, { position: 'bottomright', collapsed: true }).addTo(mapInstance);
+        
+        // Geocoder with Intellisense commands the top left
         attachGeocoder(mapInstance);
     }
 
@@ -60,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let userLocationMarker;
 
         const LocateControl = L.Control.extend({
-            options: { position: 'topleft' },
+            options: { position: 'bottomright' },
             onAdd: function() {
                 const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
                 const button = L.DomUtil.create('a', 'leaflet-control-locate-btn', container);
@@ -98,12 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Helper: Attach Universal Address Geocoder Search Bar
+    // Helper: Attach Universal Address Geocoder Search Bar (Now with Intellisense)
     function attachGeocoder(mapInstance) {
         let geocodeMarker;
         L.Control.geocoder({
+            geocoder: L.Control.Geocoder.photon(), // Photon Engine enables instant Autocomplete
             defaultMarkGeocode: false,
-            position: 'topright',
+            position: 'topleft',
             placeholder: 'Search address or region...'
         }).on('markgeocode', function(e) {
             const bbox = e.geocode.bbox;
@@ -212,6 +217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const db = await fetchEnterpriseData();
         
         let checkLeaflet = setInterval(() => {
+            // Check that Leaflet AND the Geocoder plugin have loaded
             if (window.L && L.Control.Geocoder) {
                 clearInterval(checkLeaflet);
                 const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
@@ -235,8 +241,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!mapEl) return;
 
         const map = L.map('leaflet-map', { 
-            scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 
+            zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 
         }).setView([50.0, -95.0], 3); 
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
         setTimeout(() => map.invalidateSize(), 500);
 
         map.createPane('provincialPane'); map.getPane('provincialPane').style.zIndex = 400;
@@ -326,8 +333,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     function initForecastMap(regions, naBounds) {
         const mapEl = document.getElementById('forecast-map-premium'); if (!mapEl) return;
-        const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
-        L.control.zoom({ position: 'topright' }).addTo(forecastMap);
+        const forecastMap = L.map('forecast-map-premium', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
+        L.control.zoom({ position: 'bottomright' }).addTo(forecastMap);
         
         setupMapControls(forecastMap);
         setTimeout(() => forecastMap.invalidateSize(), 500);
@@ -368,7 +375,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     function initDeficitMap(gridData, naBounds) {
         const mapEl = document.getElementById('deficit-leaflet-map'); if (!mapEl) return;
-        const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
+        const deficitMap = L.map('deficit-leaflet-map', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
+        L.control.zoom({ position: 'bottomright' }).addTo(deficitMap);
         
         setupMapControls(deficitMap);
         setTimeout(() => deficitMap.invalidateSize(), 500);
@@ -385,7 +393,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     function initOffGridMap(offgridZones, directoryData, naBounds) {
         const mapEl = document.getElementById('offgrid-leaflet-map'); if (!mapEl) return;
-        const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([58.0, -90.0], 4);
+        const offgridMap = L.map('offgrid-leaflet-map', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([58.0, -90.0], 4);
+        L.control.zoom({ position: 'bottomright' }).addTo(offgridMap);
         
         setupMapControls(offgridMap);
         setTimeout(() => offgridMap.invalidateSize(), 500);
