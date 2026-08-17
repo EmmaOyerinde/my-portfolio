@@ -3,7 +3,7 @@
 **Executive Portfolio & Geospatial Analytics Platform**  
 *London, Ontario, Canada | v.2026*
 
-> **Live Deployment:** [View the Interactive Dashboard](https://[emmaoyerinde.github.io/my-portfolio])
+> **Live Deployment:** [View the Interactive Dashboard](https://emmaoyerinde.github.io/my-portfolio/)
 
 This repository houses the front-end architecture for an interactive executive briefing platform. Designed to bridge the gap between high-level business strategy and complex technical execution, this platform demonstrates over a decade of leadership in utility infrastructure, GIS integration, and enterprise IT deployments.
 
