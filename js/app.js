@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Dynamic Theme Swapping & Map Analytics Engine
+// Enterprise Logic Layer: Dynamic Theme Swapping, Basemap Controls & Locate Engine
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     const rootHtml = document.documentElement;
     const themeBtn = document.getElementById('theme-toggle');
-    window.mapTileLayers = []; 
 
     if (rootHtml.getAttribute('data-theme') === 'light') {
         themeBtn.innerHTML = '🌙'; 
@@ -32,20 +31,91 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         themeBtn.innerHTML = newTheme === 'light' ? '🌙' : '☀️';
         themeBtn.setAttribute('title', newTheme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode');
-        
-        updateMapTiles(newTheme);
     });
 
-    function updateMapTiles(theme) {
-        const baseTpl = theme === 'light' ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
-        const labelTpl = theme === 'light' ? 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png';
-        const allTpl = theme === 'light' ? 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+    // Helper: Generate 4 Basemap Tile Layers for any map
+    function createBasemaps() {
+        return {
+            "Dark Mode": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }),
+            "Light Mode": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }),
+            "Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: '&copy; Esri' }),
+            "Street Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' })
+        };
+    }
 
-        window.mapTileLayers.forEach(t => {
-            if (t.type === 'base') t.layer.setUrl(baseTpl);
-            else if (t.type === 'label') t.layer.setUrl(labelTpl);
-            else if (t.type === 'all') t.layer.setUrl(allTpl);
+    // Helper: Attach Basemap Switcher and Locate Control to any Map Instance
+    function setupMapControls(mapInstance) {
+        const baseMaps = createBasemaps();
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const defaultBasemap = isLight ? baseMaps["Light Mode"] : baseMaps["Dark Mode"];
+        
+        defaultBasemap.addTo(mapInstance);
+        L.control.layers(baseMaps, null, { position: 'topleft' }).addTo(mapInstance);
+        attachLocateControl(mapInstance);
+        attachGeocoder(mapInstance);
+    }
+
+    // Helper: Attach GPS "Locate Me" Button to Map
+    function attachLocateControl(mapInstance) {
+        let userLocationMarker;
+
+        const LocateControl = L.Control.extend({
+            options: { position: 'topleft' },
+            onAdd: function() {
+                const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                const button = L.DomUtil.create('a', 'leaflet-control-locate-btn', container);
+                button.href = '#';
+                button.title = 'Show My Location';
+                button.role = 'button';
+                button.innerHTML = `🎯`;
+
+                L.DomEvent.disableClickPropagation(button);
+                L.DomEvent.on(button, 'click', function(e) {
+                    L.DomEvent.stop(e);
+                    mapInstance.locate({ setView: true, maxZoom: 12, enableHighAccuracy: true });
+                });
+
+                return container;
+            }
         });
+
+        mapInstance.addControl(new LocateControl());
+
+        mapInstance.on('locationfound', function(e) {
+            if (userLocationMarker) { mapInstance.removeLayer(userLocationMarker); }
+            const userIcon = L.divIcon({
+                className: 'custom-pulse-icon',
+                html: `<div style="width: 18px; height: 18px; background: #2563eb; border-radius: 50%; box-shadow: 0 0 15px #2563eb; border: 2px solid #ffffff;"></div>`,
+                iconSize: [18, 18],
+                iconAnchor: [9, 9]
+            });
+            userLocationMarker = L.marker(e.latlng, { icon: userIcon }).addTo(mapInstance);
+            userLocationMarker.bindTooltip("<b>Your Location</b>", { className: 'dark-tooltip', direction: 'top' }).openTooltip();
+        });
+
+        mapInstance.on('locationerror', function() {
+            alert("Location access was denied or is unavailable on your device.");
+        });
+    }
+
+    // Helper: Attach Universal Address Geocoder Search Bar
+    function attachGeocoder(mapInstance) {
+        let geocodeMarker;
+        L.Control.geocoder({
+            defaultMarkGeocode: false,
+            position: 'topright',
+            placeholder: 'Search address or region...'
+        }).on('markgeocode', function(e) {
+            const bbox = e.geocode.bbox;
+            const center = e.geocode.center;
+            mapInstance.fitBounds(bbox);
+            if (geocodeMarker) { mapInstance.removeLayer(geocodeMarker); }
+            
+            geocodeMarker = L.circleMarker(center, { color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.8, radius: 10, weight: 3 })
+                .addTo(mapInstance)
+                .bindTooltip(`<b>${e.geocode.name}</b>`, { className: 'dark-tooltip', direction: 'top' })
+                .openTooltip();
+        }).addTo(mapInstance);
     }
 
     // ==========================================
@@ -142,7 +212,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const db = await fetchEnterpriseData();
         
         let checkLeaflet = setInterval(() => {
-            // Check that Leaflet AND the Geocoder plugin have loaded
             if (window.L && L.Control.Geocoder) {
                 clearInterval(checkLeaflet);
                 const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
@@ -156,28 +225,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 100);
     } catch (err) {
         console.error("Failed to load Enterprise Data Layer", err);
-    }
-
-    // ==========================================
-    // GLOBAL GEOCODER ENGINE
-    // ==========================================
-    function attachGeocoder(mapInstance) {
-        let geocodeMarker;
-        L.Control.geocoder({
-            defaultMarkGeocode: false,
-            position: 'topright',
-            placeholder: 'Search address or region...'
-        }).on('markgeocode', function(e) {
-            const bbox = e.geocode.bbox;
-            const center = e.geocode.center;
-            mapInstance.fitBounds(bbox);
-            if (geocodeMarker) { mapInstance.removeLayer(geocodeMarker); }
-            
-            geocodeMarker = L.circleMarker(center, { color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.8, radius: 10, weight: 3 })
-                .addTo(mapInstance)
-                .bindTooltip(`<b>${e.geocode.name}</b>`, { className: 'dark-tooltip', direction: 'top' })
-                .openTooltip();
-        }).addTo(mapInstance);
     }
 
     // ==========================================
@@ -196,13 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         map.createPane('municipalPane'); map.getPane('municipalPane').style.zIndex = 500;
         map.createPane('labels'); map.getPane('labels').style.zIndex = 650; map.getPane('labels').style.pointerEvents = 'none';
 
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }).addTo(map);
-        const labelLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', { maxZoom: 18, pane: 'labels', attribution: '&copy; CARTO' }).addTo(map);
-        window.mapTileLayers.push({layer: baseLayer, type: 'base'}, {layer: labelLayer, type: 'label'});
-
-        // Attach Universal Search Bar
-        attachGeocoder(map);
+        setupMapControls(map);
 
         const layerMap = {};
         function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
@@ -288,13 +329,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const forecastMap = L.map('forecast-map-premium', { scrollWheelZoom: false, zoomControl: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
         L.control.zoom({ position: 'topright' }).addTo(forecastMap);
         
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 19 }).addTo(forecastMap);
-        window.mapTileLayers.push({layer: baseLayer, type: 'base'});
+        setupMapControls(forecastMap);
         setTimeout(() => forecastMap.invalidateSize(), 500);
-
-        // Attach Universal Search Bar
-        attachGeocoder(forecastMap);
 
         const circleMarkers = {};
         regions.forEach(region => {
@@ -334,13 +370,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const mapEl = document.getElementById('deficit-leaflet-map'); if (!mapEl) return;
         const deficitMap = L.map('deficit-leaflet-map', { scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
         
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 19 }).addTo(deficitMap);
-        window.mapTileLayers.push({layer: baseLayer, type: 'base'});
+        setupMapControls(deficitMap);
         setTimeout(() => deficitMap.invalidateSize(), 500);
-
-        // Attach Universal Search Bar
-        attachGeocoder(deficitMap);
 
         gridData.forEach(grid => {
             const deficit = grid.demand - grid.capacity; const markerColor = deficit > 0 ? '#ef4444' : '#10b981';
@@ -356,13 +387,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const mapEl = document.getElementById('offgrid-leaflet-map'); if (!mapEl) return;
         const offgridMap = L.map('offgrid-leaflet-map', { scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([58.0, -90.0], 4);
         
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        const baseLayer = L.tileLayer(isLight ? 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CARTO', maxZoom: 18 }).addTo(offgridMap);
-        window.mapTileLayers.push({layer: baseLayer, type: 'all'});
+        setupMapControls(offgridMap);
         setTimeout(() => offgridMap.invalidateSize(), 500);
-
-        // Attach Universal Search Bar
-        attachGeocoder(offgridMap);
 
         const zoneLayers = {};
         let geojsonLayer = L.geoJSON(offgridZones, {
