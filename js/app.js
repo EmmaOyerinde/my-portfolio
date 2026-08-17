@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Dynamic Theme Swapping, Basemap Controls & Locate Engine
+// Enterprise Logic Layer: Dynamic Theme Swapping, Basemap Controls & True Intellisense
 
 import { fetchEnterpriseData } from './api.js';
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // Helper: Attach Basemap Switcher and Locate Control to any Map Instance
+    // Helper: Attach Basemap Switcher and Locate Control to bottom right
     function setupMapControls(mapInstance) {
         const baseMaps = createBasemaps();
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
@@ -51,11 +51,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         defaultBasemap.addTo(mapInstance);
         
-        // Add tools in order so they stack bottom-to-top in the bottom right corner
+        // Stack controls neatly in the bottom right
         attachLocateControl(mapInstance);
         L.control.layers(baseMaps, null, { position: 'bottomright', collapsed: true }).addTo(mapInstance);
         
-        // Geocoder with Intellisense commands the top left
+        // Geocoder with True Intellisense goes in the top left
         attachGeocoder(mapInstance);
     }
 
@@ -96,31 +96,108 @@ document.addEventListener('DOMContentLoaded', async () => {
             userLocationMarker = L.marker(e.latlng, { icon: userIcon }).addTo(mapInstance);
             userLocationMarker.bindTooltip("<b>Your Location</b>", { className: 'dark-tooltip', direction: 'top' }).openTooltip();
         });
-
-        mapInstance.on('locationerror', function() {
-            alert("Location access was denied or is unavailable on your device.");
-        });
     }
 
-    // Helper: Attach Universal Address Geocoder Search Bar (Now with Intellisense)
+    // ==========================================
+    // TRUE INTELLISENSE GEOCODER ENGINE
+    // ==========================================
     function attachGeocoder(mapInstance) {
         let geocodeMarker;
-        L.Control.geocoder({
-            geocoder: L.Control.Geocoder.photon(), // Photon Engine enables instant Autocomplete
+        
+        // 1. Initialize the base Leaflet Geocoder Control
+        const geocoderControl = L.Control.geocoder({
+            geocoder: L.Control.Geocoder.photon(), 
             defaultMarkGeocode: false,
             position: 'topleft',
             placeholder: 'Search address or region...'
-        }).on('markgeocode', function(e) {
-            const bbox = e.geocode.bbox;
-            const center = e.geocode.center;
-            mapInstance.fitBounds(bbox);
-            if (geocodeMarker) { mapInstance.removeLayer(geocodeMarker); }
-            
-            geocodeMarker = L.circleMarker(center, { color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.8, radius: 10, weight: 3 })
-                .addTo(mapInstance)
-                .bindTooltip(`<b>${e.geocode.name}</b>`, { className: 'dark-tooltip', direction: 'top' })
-                .openTooltip();
         }).addTo(mapInstance);
+
+        // 2. Build the Custom Intellisense Dropdown UI
+        const inputField = geocoderControl.getContainer().querySelector('input');
+        inputField.setAttribute('autocomplete', 'off'); 
+        
+        const resultsContainer = document.createElement('div');
+        resultsContainer.className = 'custom-intellisense-dropdown';
+        geocoderControl.getContainer().appendChild(resultsContainer);
+
+        let timeout = null;
+
+        // 3. Listen for typing and fetch live predictions
+        inputField.addEventListener('input', (e) => {
+            clearTimeout(timeout);
+            const query = e.target.value;
+            
+            if(query.length < 3) {
+                resultsContainer.innerHTML = '';
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            // 300ms Debounce to prevent spamming the API
+            timeout = setTimeout(() => {
+                fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`)
+                .then(res => res.json())
+                .then(data => {
+                    resultsContainer.innerHTML = '';
+                    if(data.features && data.features.length > 0) {
+                        resultsContainer.style.display = 'block';
+                        
+                        data.features.forEach(f => {
+                            const name = f.properties.name || '';
+                            const city = f.properties.city || f.properties.county || '';
+                            const state = f.properties.state || '';
+                            const country = f.properties.country || '';
+                            
+                            // Clean up the label format
+                            const labelArr = [name, city, state, country].filter(Boolean);
+                            const uniqueLabel = [...new Set(labelArr)].join(', ');
+                            
+                            const item = document.createElement('div');
+                            item.className = 'intellisense-item';
+                            item.innerHTML = `<span style="opacity:0.7; margin-right:5px;">📍</span> ${uniqueLabel}`;
+                            
+                            // On Click: Fly to location and drop pin
+                            item.addEventListener('click', () => {
+                                inputField.value = name;
+                                resultsContainer.style.display = 'none';
+                                
+                                const lng = f.geometry.coordinates[0];
+                                const lat = f.geometry.coordinates[1];
+                                
+                                // Smooth fly animation
+                                mapInstance.flyTo([lat, lng], 13, { duration: 1.5 });
+                                
+                                if (geocodeMarker) mapInstance.removeLayer(geocodeMarker);
+                                
+                                // Sleek pulsing marker
+                                const targetIcon = L.divIcon({
+                                    className: 'custom-pulse-icon',
+                                    html: `<div style="width: 16px; height: 16px; background: #06b6d4; border-radius: 50%; box-shadow: 0 0 15px #06b6d4; border: 2px solid #ffffff;"></div>`,
+                                    iconSize: [16, 16],
+                                    iconAnchor: [8, 8]
+                                });
+
+                                geocodeMarker = L.marker([lat, lng], { icon: targetIcon })
+                                    .addTo(mapInstance)
+                                    .bindTooltip(`<b>${uniqueLabel}</b>`, { className: 'dark-tooltip', direction: 'top' })
+                                    .openTooltip();
+                            });
+                            
+                            resultsContainer.appendChild(item);
+                        });
+                    } else {
+                        resultsContainer.style.display = 'none';
+                    }
+                }).catch(err => console.log("Intellisense error:", err));
+            }, 300); 
+        });
+
+        // 4. Hide dropdown when clicking anywhere else on the page
+        document.addEventListener('click', (e) => {
+            if(!geocoderControl.getContainer().contains(e.target)) {
+                resultsContainer.style.display = 'none';
+            }
+        });
     }
 
     // ==========================================
@@ -217,7 +294,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const db = await fetchEnterpriseData();
         
         let checkLeaflet = setInterval(() => {
-            // Check that Leaflet AND the Geocoder plugin have loaded
             if (window.L && L.Control.Geocoder) {
                 clearInterval(checkLeaflet);
                 const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
