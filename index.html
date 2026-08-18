@@ -2,13 +2,12 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport-fit=cover ensures the site respects the iPhone Notch/Dynamic Island -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="theme-color" content="#09090b" id="meta-theme-color">
     <meta name="description" content="Emmanuel Oyerinde - Enterprise Project Manager specializing in utility infrastructure, GIS, and digital transformation.">
     <title>Emmanuel Oyerinde | Enterprise Project Manager</title>
     
-    <!-- Instant Theme Engine (Prevents flashing) -->
+    <!-- Instant Theme Engine -->
     <script>
         const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -21,7 +20,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-210WJQ07MT');
     </script>
 
@@ -117,7 +115,6 @@
             </div>
             
             <div class="portfolio-grid">
-                
                 <!-- Tile 1: Geographic Network Monitoring System -->
                 <div class="project-card">
                     <div class="project-image-wrapper">
@@ -156,7 +153,6 @@
                         <a href="https://spatialnode.net/projects/undp-ukraine-transition-of-coal-cities-c9394a" class="project-link" target="_blank" rel="noopener noreferrer">View Full Assessment &rarr;</a>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -305,12 +301,13 @@
         <p>&copy; 2026 Emmanuel Oyerinde, MBA, PMP&reg;. All rights reserved.</p>
     </footer>
 
-    <!-- Back to Top Button -->
     <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
     <!-- Map & Geocoder Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js" defer></script>
+    
+    <!-- ES6 Modules -> Local server required to fetch API -->
     <script type="module" src="js/app.js" defer></script>
 
 </body>
