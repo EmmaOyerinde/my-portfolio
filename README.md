@@ -1,49 +1,50 @@
-# [ E . O . ] — Strategic Infrastructure & Enterprise Systems
+# 🌍 Enterprise Utility & Grid Analytics Portfolio
+**Emmanuel Oyerinde, MBA, PMP®**
 
-**Executive Portfolio & Geospatial Analytics Platform**  
-*London, Ontario, Canada | v.2026*
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
 
-> **Live Deployment:** [View the Interactive Dashboard](https://emmaoyerinde.github.io/my-portfolio/)
-
-This repository houses the front-end architecture for an interactive executive briefing platform. Designed to bridge the gap between high-level business strategy and complex technical execution, this platform demonstrates over a decade of leadership in utility infrastructure, GIS integration, and enterprise IT deployments.
-
----
-
-## 🏗️ System Architecture & Engineering Philosophy
-
-This application was engineered with a strict **zero-dependency frontend philosophy** (excluding the Leaflet mapping engine). By avoiding heavy frameworks like React or Angular, the platform achieves near-instantaneous load times, seamless DOM manipulation, and pure Vanilla JavaScript performance.
-
-| Component | Technology | Implementation Detail |
-| :--- | :--- | :--- |
-| **Presentation** | HTML5 / CSS3 | Glassmorphic UI, CSS Grid/Flexbox, `100dvh` iOS Safe-Area routing. |
-| **Logic Layer** | Vanilla ES6+ JS | Asynchronous data fetching, Intersection Observers, Module imports. |
-| **Geospatial** | Leaflet.js | Multi-pane rendering, custom bounding boxes, dynamic basemap swapping. |
-| **Telemetry** | Photon API | Custom-built True Intellisense geocoding restricted to Canadian bounds. |
-| **Analytics** | GA4 | Event tracking, real-time geographic user monitoring. |
+> An interactive, enterprise-grade geospatial dashboard bridging complex operational technology, utility infrastructure data, and high-level business strategy. 
 
 ---
 
-## 🌐 Core Intelligence Modules
+## 📋 Executive Summary
 
-Rather than a static resume, this platform acts as a live analytics engine containing four bespoke GIS modules:
+This repository houses my professional project management portfolio. Rather than a static resume, I built a high-performance web application to demonstrate my expertise in **Enterprise Systems, GIS Platform Integrations, and Strategic Delivery**. 
 
-### I. Reliability & Asset Telemetry
-An interactive spatial database tracking SAIDI (duration) and SAIFI (frequency) outage metrics across Canadian utility operators. Features include real-time tabular sorting, dynamically rendered GeoJSON polygons, and custom tooltip states.
+The dashboard processes and visualizes survey-grade service territories for **90+ Canadian utility operators**, providing interactive insights into grid reliability, capacity deficits, and long-term load forecasting.
 
-### II. Predictive Load Forecasting (2025–2075)
-A mathematical modeling dashboard allowing users to manipulate macroeconomic variables (EV adoption, AI data centers, industrial electrification) to project 50-year grid demand constraints across major North American regions.
+## ✨ Key Features & Capabilities
 
-### III. Capacity Deficit Visualization
-Geospatial visualization contrasting 2050 localized demand against committed generation capacity, highlighting infrastructural choke points and unserved energy deficits using dynamic CSS-animated pulse markers.
-
-### IV. Off-Grid Directory
-A searchable, interactive directory mapping over 100 coastal and northern Canadian settlements that operate entirely independent of the North American power grid.
+* **🗺️ National Reliability Benchmark:** A high-fidelity, Canvas-rendered Leaflet map plotting exact municipal boundaries and provincial service territories. Features interactive data tables tracking OEB SAIDI and SAIFI metrics.
+* **📈 50-Year Load Horizon:** An interactive forecasting engine simulating infrastructural choke points up to 2075. Users can toggle macroeconomic variables like EV adoption, Hyper-Scale AI computing, and green hydrogen scaling.
+* **⚡ Capacity Deficit Analytics:** Geospatial visualization of projected 2050 unserved energy deficits across major North American balancing authorities.
+* **🏔️ Off-Grid Infrastructure Directory:** Mapping 100+ isolated Canadian communities and coastal settlements that operate independently of the primary power grid.
+* **📰 Live Intelligence Wire:** A fail-safe, automated REST feed (via RSS2JSON) pulling real-time regulatory and infrastructural utility news across Canada.
+* **🔍 Enterprise UI/UX:** Features a custom-built, strict-bound Canadian Intellisense Geocoder, seamless Light/Dark mode state management, and optimized mobile-responsive safe areas.
 
 ---
 
-## ⚡ Technical Highlights & Custom Solutions
+## 🛠️ Technical Architecture
 
-* **True Intellisense Geocoding:** Bypassed standard "press enter to search" limitations by writing a custom debounce engine that intercepts keystrokes, queries the open-source Photon API, and renders a live, autocomplete dropdown menu (locked strictly to Canadian coordinates).
-* **Asynchronous Enterprise Wire:** A live Google News RSS integration fetching strategic utility developments over a 7-day rolling window. It utilizes an automated proxy to bypass enterprise CORS restrictions, complete with a hardcoded fallback UI to prevent failures behind corporate firewalls.
-* **Instantaneous Theme Orchestration:** A JavaScript-driven Light/Dark mode engine that not only alters CSS variables but dynamically repaints the Leaflet base-tiles (CARTO Dark Matter vs. Positron) and updates the iOS Safari browser chrome (`theme-color`) in real-time.
+This application is engineered for maximum performance without the bloat of heavy front-end frameworks.
 
+* **Frontend:** Vanilla HTML5, CSS3 (CSS Variables for Instant Theme Swapping).
+* **Logic Layer:** Vanilla ES6+ JavaScript (Modular Architecture).
+* **Geospatial Engine:** [Leaflet.js](https://leafletjs.com/) utilizing `preferCanvas: true` to handle tens of thousands of geographic vertices seamlessly on mobile GPUs.
+* **APIs:** 
+  * [Photon Geocoder](https://photon.komoot.io/) (Locked to `countrycode=ca` bounds).
+  * [RSS2JSON](https://rss2json.com/) (Bypassing CORS for live XML parsing).
+
+---
+
+## 💻 Local Development Setup
+
+Because this project utilizes modern ES6 JavaScript Modules (`import`/`export`), it must be run through a local web server to bypass browser CORS security policies.
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/EmmaOyerinde/my-portfolio.git](https://github.com/EmmaOyerinde/my-portfolio.git)
