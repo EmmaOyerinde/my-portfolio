@@ -320,19 +320,101 @@ input:checked + .slider-toggle:before { transform: translateX(20px); }
 .leaflet-control-locate-btn:hover { background-color: var(--border-main) !important; color: var(--accent) !important; }
 
 /* ==========================================
-   13. GEOCODER OVERRIDES
+   13. ENTERPRISE GEOCODER & INTELLISENSE
    ========================================== */
-.leaflet-control-geocoder { background: var(--bg-panel) !important; border: 1px solid var(--border-main) !important; border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-md) !important; backdrop-filter: blur(8px); transition: var(--transition); }
-.leaflet-control-geocoder-form input { background: transparent !important; color: var(--text-main) !important; border: none !important; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem !important; }
-.leaflet-control-geocoder-form input:focus { outline: none !important; }
-.leaflet-control-geocoder-icon { border-radius: var(--radius-sm) !important; }
-html[data-theme="dark"] .leaflet-control-geocoder-icon { filter: invert(1); opacity: 0.7; }
-html[data-theme="light"] .leaflet-control-geocoder-icon { filter: invert(0); opacity: 0.7; }
-.leaflet-control-geocoder-alternatives { background: var(--bg-panel) !important; border: 1px solid var(--border-main) !important; border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-lg) !important; margin-top: 5px !important; overflow: hidden; }
-.leaflet-control-geocoder-alternatives li { border-bottom: 1px solid var(--border-light) !important; }
-.leaflet-control-geocoder-alternatives li a { color: var(--text-main) !important; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem !important; transition: var(--transition); padding: 8px 12px !important; }
-.leaflet-control-geocoder-alternatives li a:hover { background: var(--hover-active) !important; color: var(--accent) !important; }
-.leaflet-control-geocoder-throbber .leaflet-control-geocoder-icon { background-image: none !important; }
+.enterprise-search-container {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-main) !important;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md) !important;
+    backdrop-filter: blur(12px);
+    width: 280px;
+    position: relative;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px !important;
+    margin-right: 15px !important;
+}
+.enterprise-search-container:focus-within {
+    border-color: var(--brand-cyan) !important;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15) !important;
+}
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+}
+.search-icon {
+    color: var(--text-muted);
+    margin-right: 8px;
+    min-width: 18px;
+}
+.enterprise-geocoder-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    outline: none;
+    width: 100%;
+}
+.enterprise-geocoder-input::placeholder {
+    color: var(--text-muted);
+}
+.clear-search {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0 4px;
+    outline: none;
+    line-height: 1;
+}
+.clear-search:hover { color: var(--text-main); }
+
+.custom-intellisense-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    width: 100%;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-main);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+}
+.intellisense-item {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+.intellisense-item:last-child { border-bottom: none; }
+.intellisense-item:hover { background: var(--hover-active); color: var(--brand-cyan); }
+.item-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+.intellisense-empty {
+    padding: 12px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+}
 
 /* ==========================================
    14. FOOTER & DATA GOVERNANCE
@@ -374,12 +456,5 @@ footer { background: var(--bg-base); color: var(--text-muted); text-align: cente
 }
 @media (max-width: 768px) {
     .hero h1 { font-size: clamp(2.2rem, 8vw, 3rem) !important; }
+    .enterprise-search-container { width: calc(100vw - 30px); margin: 15px auto !important; }
 }
-
-/* ==========================================
-   16. TRUE INTELLISENSE DROPDOWN
-   ========================================== */
-.custom-intellisense-dropdown { position: absolute; top: 110%; right: 0; width: 280px; background: var(--bg-panel); border: 1px solid var(--border-main); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); backdrop-filter: blur(12px); z-index: 1000; display: none; overflow: hidden; }
-.intellisense-item { padding: 12px 16px; font-size: 0.85rem; color: var(--text-main); cursor: pointer; border-bottom: 1px solid var(--border-light); transition: var(--transition); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Plus Jakarta Sans', sans-serif; }
-.intellisense-item:last-child { border-bottom: none; }
-.intellisense-item:hover { background: var(--hover-active); color: var(--accent); padding-left: 20px; }
