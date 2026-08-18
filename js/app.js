@@ -1,6 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Dynamic Theme Swapping, Basemap Controls & True Intellisense
-
+// Enterprise Logic Layer: Map Initialization & Controls
 import { fetchEnterpriseData } from './api.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -30,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         rootHtml.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         
-        // Update iOS Safari browser header to match the website theme
         if (metaThemeColor) {
             metaThemeColor.setAttribute('content', newTheme === 'light' ? '#f8fafc' : '#09090b');
         }
@@ -39,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         themeBtn.setAttribute('title', newTheme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode');
     });
 
-    // Helper: Generate 4 Basemap Tile Layers for any map
     function createBasemaps() {
         return {
             "Dark Mode": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; CARTO' }),
@@ -49,101 +46,62 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // Helper: Attach Basemap Switcher and Locate Control to bottom right
     function setupMapControls(mapInstance) {
         const baseMaps = createBasemaps();
         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         const defaultBasemap = isLight ? baseMaps["Light Mode"] : baseMaps["Dark Mode"];
         
         defaultBasemap.addTo(mapInstance);
-        
-        // Stack controls neatly in the bottom right
         attachLocateControl(mapInstance);
         L.control.layers(baseMaps, null, { position: 'bottomright', collapsed: true }).addTo(mapInstance);
-        
-        // Geocoder with True Intellisense goes in the top right
         attachGeocoder(mapInstance);
     }
 
-    // Helper: Attach GPS "Locate Me" Button to Map
     function attachLocateControl(mapInstance) {
         let userLocationMarker;
-
         const LocateControl = L.Control.extend({
             options: { position: 'bottomright' },
             onAdd: function() {
                 const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
                 const button = L.DomUtil.create('a', 'leaflet-control-locate-btn', container);
-                button.href = '#';
-                button.title = 'Show My Location';
-                button.role = 'button';
-                button.innerHTML = `🎯`;
-
+                button.href = '#'; button.title = 'Show My Location'; button.role = 'button'; button.innerHTML = `🎯`;
                 L.DomEvent.disableClickPropagation(button);
                 L.DomEvent.on(button, 'click', function(e) {
                     L.DomEvent.stop(e);
                     mapInstance.locate({ setView: true, maxZoom: 12, enableHighAccuracy: true });
                 });
-
                 return container;
             }
         });
-
         mapInstance.addControl(new LocateControl());
 
         mapInstance.on('locationfound', function(e) {
             if (userLocationMarker) { mapInstance.removeLayer(userLocationMarker); }
-            const userIcon = L.divIcon({
-                className: 'custom-pulse-icon',
-                html: `<div style="width: 18px; height: 18px; background: #2563eb; border-radius: 50%; box-shadow: 0 0 15px #2563eb; border: 2px solid #ffffff;"></div>`,
-                iconSize: [18, 18],
-                iconAnchor: [9, 9]
-            });
+            const userIcon = L.divIcon({ className: 'custom-pulse-icon', html: `<div style="width: 18px; height: 18px; background: #2563eb; border-radius: 50%; box-shadow: 0 0 15px #2563eb; border: 2px solid #ffffff;"></div>`, iconSize: [18, 18], iconAnchor: [9, 9] });
             userLocationMarker = L.marker(e.latlng, { icon: userIcon }).addTo(mapInstance);
             userLocationMarker.bindTooltip("<b>Your Location</b>", { className: 'dark-tooltip', direction: 'top' }).openTooltip();
         });
     }
 
-    // ==========================================
-    // TRUE INTELLISENSE GEOCODER ENGINE (Canada Only)
-    // ==========================================
     function attachGeocoder(mapInstance) {
         let geocodeMarker;
-        
-        // 1. Initialize the base Leaflet Geocoder Control
         const geocoderControl = L.Control.geocoder({
-            geocoder: L.Control.Geocoder.photon({
-                geocodingQueryParams: {
-                    bbox: '-142,41,-52,84' // Strict Canada bounding box restriction
-                }
-            }), 
-            defaultMarkGeocode: false,
-            position: 'topright',
-            placeholder: 'Search Canadian address...'
+            geocoder: L.Control.Geocoder.photon({ geocodingQueryParams: { bbox: '-142,41,-52,84' } }), 
+            defaultMarkGeocode: false, position: 'topright', placeholder: 'Search Canadian address...'
         }).addTo(mapInstance);
 
-        // 2. Build the Custom Intellisense Dropdown UI
         const inputField = geocoderControl.getContainer().querySelector('input');
         inputField.setAttribute('autocomplete', 'off'); 
         
         const resultsContainer = document.createElement('div');
         resultsContainer.className = 'custom-intellisense-dropdown';
         geocoderControl.getContainer().appendChild(resultsContainer);
-
         let timeout = null;
 
-        // 3. Listen for typing and fetch live predictions
         inputField.addEventListener('input', (e) => {
             clearTimeout(timeout);
             const query = e.target.value;
-            
-            if(query.length < 3) {
-                resultsContainer.innerHTML = '';
-                resultsContainer.style.display = 'none';
-                return;
-            }
-            
-            // 300ms Debounce to prevent spamming the API with strict bounding box for Canada
+            if(query.length < 3) { resultsContainer.innerHTML = ''; resultsContainer.style.display = 'none'; return; }
             timeout = setTimeout(() => {
                 fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&bbox=-142,41,-52,84`)
                 .then(res => res.json())
@@ -151,62 +109,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                     resultsContainer.innerHTML = '';
                     if(data.features && data.features.length > 0) {
                         resultsContainer.style.display = 'block';
-                        
                         data.features.forEach(f => {
-                            const name = f.properties.name || '';
-                            const city = f.properties.city || f.properties.county || '';
-                            const state = f.properties.state || '';
-                            const country = f.properties.country || '';
-                            
-                            // Clean up the label format
-                            const labelArr = [name, city, state, country].filter(Boolean);
-                            const uniqueLabel = [...new Set(labelArr)].join(', ');
-                            
+                            const name = f.properties.name || ''; const city = f.properties.city || f.properties.county || '';
+                            const state = f.properties.state || ''; const country = f.properties.country || '';
+                            const uniqueLabel = [...new Set([name, city, state, country].filter(Boolean))].join(', ');
                             const item = document.createElement('div');
-                            item.className = 'intellisense-item';
-                            item.innerHTML = `<span style="opacity:0.7; margin-right:5px;">📍</span> ${uniqueLabel}`;
-                            
-                            // On Click: Fly to location and drop pin
+                            item.className = 'intellisense-item'; item.innerHTML = `<span style="opacity:0.7; margin-right:5px;">📍</span> ${uniqueLabel}`;
                             item.addEventListener('click', () => {
-                                inputField.value = name;
-                                resultsContainer.style.display = 'none';
-                                
-                                const lng = f.geometry.coordinates[0];
-                                const lat = f.geometry.coordinates[1];
-                                
-                                // Smooth fly animation
+                                inputField.value = name; resultsContainer.style.display = 'none';
+                                const lng = f.geometry.coordinates[0]; const lat = f.geometry.coordinates[1];
                                 mapInstance.flyTo([lat, lng], 13, { duration: 1.5 });
-                                
                                 if (geocodeMarker) mapInstance.removeLayer(geocodeMarker);
-                                
-                                // Sleek pulsing marker
-                                const targetIcon = L.divIcon({
-                                    className: 'custom-pulse-icon',
-                                    html: `<div style="width: 16px; height: 16px; background: #06b6d4; border-radius: 50%; box-shadow: 0 0 15px #06b6d4; border: 2px solid #ffffff;"></div>`,
-                                    iconSize: [16, 16],
-                                    iconAnchor: [8, 8]
-                                });
-
-                                geocodeMarker = L.marker([lat, lng], { icon: targetIcon })
-                                    .addTo(mapInstance)
-                                    .bindTooltip(`<b>${uniqueLabel}</b>`, { className: 'dark-tooltip', direction: 'top' })
-                                    .openTooltip();
+                                const targetIcon = L.divIcon({ className: 'custom-pulse-icon', html: `<div style="width: 16px; height: 16px; background: #06b6d4; border-radius: 50%; box-shadow: 0 0 15px #06b6d4; border: 2px solid #ffffff;"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
+                                geocodeMarker = L.marker([lat, lng], { icon: targetIcon }).addTo(mapInstance).bindTooltip(`<b>${uniqueLabel}</b>`, { className: 'dark-tooltip', direction: 'top' }).openTooltip();
                             });
-                            
                             resultsContainer.appendChild(item);
                         });
-                    } else {
-                        resultsContainer.style.display = 'none';
-                    }
+                    } else { resultsContainer.style.display = 'none'; }
                 }).catch(err => console.log("Intellisense error:", err));
             }, 300); 
         });
 
-        // 4. Hide dropdown when clicking anywhere else on the page
         document.addEventListener('click', (e) => {
-            if(!geocoderControl.getContainer().contains(e.target)) {
-                resultsContainer.style.display = 'none';
-            }
+            if(!geocoderControl.getContainer().contains(e.target)) resultsContainer.style.display = 'none';
         });
     }
 
@@ -217,33 +142,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const backToTop = document.getElementById('back-to-top');
     
     window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.body.scrollHeight - window.innerHeight;
-        const scrollPercent = (scrollTop / docHeight) * 100;
-        if(scrollProgress) scrollProgress.style.width = scrollPercent + '%';
-
-        if(scrollTop > 500) backToTop.classList.add('visible');
-        else backToTop.classList.remove('visible');
+        const scrollTop = window.scrollY; const docHeight = document.body.scrollHeight - window.innerHeight;
+        if(scrollProgress) scrollProgress.style.width = ((scrollTop / docHeight) * 100) + '%';
+        if(scrollTop > 500) backToTop.classList.add('visible'); else backToTop.classList.remove('visible');
     });
 
     if(backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     const sections = document.querySelectorAll('section[id]');
     const navItems = document.querySelectorAll('.nav-links a');
-    const observerOptions = { root: null, rootMargin: '-20% 0px -70% 0px', threshold: 0 };
-    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 navItems.forEach(link => {
                     link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${entry.target.id}`) {
-                        link.classList.add('active');
-                    }
+                    if (link.getAttribute('href') === `#${entry.target.id}`) link.classList.add('active');
                 });
             }
         });
-    }, observerOptions);
+    }, { root: null, rootMargin: '-20% 0px -70% 0px', threshold: 0 });
     sections.forEach(sec => observer.observe(sec));
 
     const contactForm = document.getElementById('contact-form');
@@ -251,25 +168,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         contactForm.addEventListener('submit', () => {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerText;
-            submitBtn.innerText = 'Opening Mail Client...';
-            submitBtn.style.opacity = '0.7';
-            setTimeout(() => { 
-                submitBtn.innerText = originalText; 
-                submitBtn.style.opacity = '1'; 
-            }, 3000);
+            submitBtn.innerText = 'Opening Mail Client...'; submitBtn.style.opacity = '0.7';
+            setTimeout(() => { submitBtn.innerText = originalText; submitBtn.style.opacity = '1'; }, 3000);
         });
     }
 
-    // ==========================================
-    // 3. UI Interactions (Reveal & Menu)
-    // ==========================================
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target); 
-            }
+            if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); }
         });
     }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
     revealElements.forEach(el => revealObserver.observe(el));
@@ -283,10 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinksList.classList.remove('active');
-            if (menuBtn) menuBtn.innerHTML = '☰';
-        });
+        link.addEventListener('click', () => { navLinksList.classList.remove('active'); if (menuBtn) menuBtn.innerHTML = '☰'; });
     });
 
     function parseCustomers(custStr) {
@@ -298,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // 4. Fetch Data & Initialize Maps
+    // 4. Initialize Maps with API Data
     // ==========================================
     try {
         const db = await fetchEnterpriseData();
@@ -306,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let checkLeaflet = setInterval(() => {
             if (window.L && L.Control.Geocoder) {
                 clearInterval(checkLeaflet);
-                const naBounds = L.latLngBounds(L.latLng(15.0, -170.0), L.latLng(83.0, -50.0));
+                const naBounds = L.latLngBounds(L.latLng(40.0, -145.0), L.latLng(84.0, -50.0));
                 
                 initReliabilityMap(db.utilitiesGeoJSON, naBounds); 
                 initForecastMap(db.forecastRegions, naBounds);
@@ -327,8 +231,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!mapEl) return;
 
         const map = L.map('leaflet-map', { 
-            zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 
-        }).setView([50.0, -95.0], 3); 
+            zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 4 
+        }).setView([46.0, -82.0], 5); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         setTimeout(() => map.invalidateSize(), 500);
 
@@ -345,18 +249,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             smoothFactor: 1.5, 
             style: function(f) { 
                 const isProv = f.properties.type_org === 'provincial';
-                return { fillColor: getColor(f.properties.saidi), weight: isProv ? 1 : 2, opacity: isProv ? 0.25 : 0.85, color: getColor(f.properties.saidi), fillOpacity: isProv ? 0.03 : 0.30, lineJoin: 'round', lineCap: 'round' }; 
+                return { fillColor: getColor(f.properties.saidi), weight: isProv ? 1.5 : 2, opacity: isProv ? 0.4 : 1, color: getColor(f.properties.saidi), fillOpacity: isProv ? 0.05 : 0.45, lineJoin: 'round', lineCap: 'round' }; 
             }, 
             onEachFeature: function(f, layer) {
                 layerMap[f.properties.id] = layer;
                 layer.options.pane = f.properties.type_org === 'provincial' ? 'provincialPane' : 'municipalPane';
                 
                 layer.bindTooltip(`<div style="padding: 2px 4px;"><strong style="font-size: 0.85rem; display:block; color: var(--text-main);">${f.properties.utility}</strong><span style="color: var(--text-muted); font-size: 0.75rem;">${f.properties.region} &bull; ${f.properties.customers} Cust.</span></div>`, { className: 'dark-tooltip', sticky: true, direction: 'auto' });
-                
                 layer.bindPopup(`<div style="min-width: 260px; padding: 4px;"><div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 800; margin-bottom: 4px;">${f.properties.region}</div><strong style="font-size: 1.15rem; color: var(--text-main); display: block; margin-bottom: 10px; border-bottom: 1px solid var(--border-main); padding-bottom: 6px;">${f.properties.utility}</strong><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;"><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Customer Pop.</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.customers}</strong></div><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Route Length</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.line_km} km</strong></div></div><div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.8rem;"><span style="color: var(--text-muted);">Grid Density:</span><strong style="color: #10b981;">${f.properties.density} /km</strong></div><div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.8rem; border-bottom: 1px solid var(--border-main); padding-bottom: 8px;"><span style="color: var(--text-muted);">Generation Mix:</span><strong style="text-align: right; color: var(--text-main);">${f.properties.mix}</strong></div><div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIDI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saidi} hrs</strong></div><div style="text-align: right;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIFI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saifi}</strong></div></div></div>`);
                 
                 layer.on({ 
-                    mouseover: (e) => { e.target.setStyle({ weight: 3, fillOpacity: 0.50 }); document.getElementById(`row-${f.properties.id}`)?.classList.add('active'); }, 
+                    mouseover: (e) => { e.target.setStyle({ weight: 3, fillOpacity: 0.60 }); document.getElementById(`row-${f.properties.id}`)?.classList.add('active'); }, 
                     mouseout: (e) => { geojsonLayer.resetStyle(e.target); document.getElementById(`row-${f.properties.id}`)?.classList.remove('active'); }, 
                     click: () => selectUtility(f.properties.id) 
                 });
@@ -396,7 +299,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         function selectUtility(id) {
             const layer = layerMap[id]; if (!layer) return;
-            map.fitBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 9 }); layer.openPopup();
+            map.fitBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 10 }); layer.openPopup();
             document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
             document.getElementById(`row-${id}`)?.classList.add('active');
             document.getElementById(`row-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
