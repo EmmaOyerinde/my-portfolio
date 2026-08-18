@@ -1,5 +1,5 @@
 // js/app.js
-// Enterprise Logic Layer: Map Initialization & Controls
+// Enterprise Logic Layer: Map Initialization & Custom Intellisense Controls
 import { fetchEnterpriseData } from './api.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         defaultBasemap.addTo(mapInstance);
         attachLocateControl(mapInstance);
         L.control.layers(baseMaps, null, { position: 'bottomright', collapsed: true }).addTo(mapInstance);
-        attachGeocoder(mapInstance);
+        attachCustomGeocoder(mapInstance);
     }
 
     function attachLocateControl(mapInstance) {
@@ -83,56 +83,124 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function attachGeocoder(mapInstance) {
+    // ==========================================
+    // CUSTOM CANADIAN INTELLISENSE SEARCH BAR
+    // ==========================================
+    function attachCustomGeocoder(mapInstance) {
         let geocodeMarker;
-        const geocoderControl = L.Control.geocoder({
-            geocoder: L.Control.Geocoder.photon({ geocodingQueryParams: { bbox: '-142,41,-52,84' } }), 
-            defaultMarkGeocode: false, position: 'topright', placeholder: 'Search Canadian address...'
-        }).addTo(mapInstance);
 
-        const inputField = geocoderControl.getContainer().querySelector('input');
-        inputField.setAttribute('autocomplete', 'off'); 
-        
-        const resultsContainer = document.createElement('div');
-        resultsContainer.className = 'custom-intellisense-dropdown';
-        geocoderControl.getContainer().appendChild(resultsContainer);
-        let timeout = null;
+        const SearchControl = L.Control.extend({
+            options: { position: 'topright' },
+            onAdd: function() {
+                const container = L.DomUtil.create('div', 'enterprise-search-container');
+                container.innerHTML = `
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" class="enterprise-geocoder-input" placeholder="Search Canadian address..." autocomplete="off">
+                        <button class="clear-search" style="display:none;">✕</button>
+                    </div>
+                    <div class="custom-intellisense-dropdown"></div>
+                `;
+                
+                L.DomEvent.disableClickPropagation(container);
+                
+                const inputField = container.querySelector('.enterprise-geocoder-input');
+                const resultsContainer = container.querySelector('.custom-intellisense-dropdown');
+                const clearBtn = container.querySelector('.clear-search');
 
-        inputField.addEventListener('input', (e) => {
-            clearTimeout(timeout);
-            const query = e.target.value;
-            if(query.length < 3) { resultsContainer.innerHTML = ''; resultsContainer.style.display = 'none'; return; }
-            timeout = setTimeout(() => {
-                fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&bbox=-142,41,-52,84`)
-                .then(res => res.json())
-                .then(data => {
-                    resultsContainer.innerHTML = '';
-                    if(data.features && data.features.length > 0) {
-                        resultsContainer.style.display = 'block';
-                        data.features.forEach(f => {
-                            const name = f.properties.name || ''; const city = f.properties.city || f.properties.county || '';
-                            const state = f.properties.state || ''; const country = f.properties.country || '';
-                            const uniqueLabel = [...new Set([name, city, state, country].filter(Boolean))].join(', ');
-                            const item = document.createElement('div');
-                            item.className = 'intellisense-item'; item.innerHTML = `<span style="opacity:0.7; margin-right:5px;">📍</span> ${uniqueLabel}`;
-                            item.addEventListener('click', () => {
-                                inputField.value = name; resultsContainer.style.display = 'none';
-                                const lng = f.geometry.coordinates[0]; const lat = f.geometry.coordinates[1];
-                                mapInstance.flyTo([lat, lng], 13, { duration: 1.5 });
-                                if (geocodeMarker) mapInstance.removeLayer(geocodeMarker);
-                                const targetIcon = L.divIcon({ className: 'custom-pulse-icon', html: `<div style="width: 16px; height: 16px; background: #06b6d4; border-radius: 50%; box-shadow: 0 0 15px #06b6d4; border: 2px solid #ffffff;"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
-                                geocodeMarker = L.marker([lat, lng], { icon: targetIcon }).addTo(mapInstance).bindTooltip(`<b>${uniqueLabel}</b>`, { className: 'dark-tooltip', direction: 'top' }).openTooltip();
-                            });
-                            resultsContainer.appendChild(item);
-                        });
-                    } else { resultsContainer.style.display = 'none'; }
-                }).catch(err => console.log("Intellisense error:", err));
-            }, 300); 
+                let timeout = null;
+
+                inputField.addEventListener('input', (e) => {
+                    clearTimeout(timeout);
+                    const query = e.target.value;
+                    clearBtn.style.display = query.length > 0 ? 'block' : 'none';
+
+                    if(query.length < 3) {
+                        resultsContainer.innerHTML = '';
+                        resultsContainer.style.display = 'none';
+                        return;
+                    }
+                    
+                    timeout = setTimeout(() => {
+                        // Strict limitation to Canadian addresses using countrycode=ca
+                        fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=6&countrycode=ca`)
+                        .then(res => res.json())
+                        .then(data => {
+                            resultsContainer.innerHTML = '';
+                            if(data.features && data.features.length > 0) {
+                                resultsContainer.style.display = 'block';
+                                
+                                data.features.forEach(f => {
+                                    const name = f.properties.name || ''; 
+                                    const city = f.properties.city || f.properties.county || '';
+                                    const state = f.properties.state || '';
+                                    const postcode = f.properties.postcode || '';
+                                    
+                                    const labelArr = [name, city, state, postcode].filter(Boolean);
+                                    const uniqueLabel = [...new Set(labelArr)].join(', ');
+                                    
+                                    const item = document.createElement('div');
+                                    item.className = 'intellisense-item';
+                                    
+                                    // Assign relevant contextual icons
+                                    let icon = '📍';
+                                    if(f.properties.osm_value === 'city' || f.properties.osm_value === 'town' || f.properties.osm_value === 'village') icon = '🏙️';
+                                    if(f.properties.osm_key === 'highway') icon = '🛣️';
+                                    
+                                    item.innerHTML = `<span class="item-icon">${icon}</span> <span class="item-text">${uniqueLabel}</span>`;
+                                    
+                                    item.addEventListener('click', () => {
+                                        inputField.value = uniqueLabel;
+                                        resultsContainer.style.display = 'none';
+                                        
+                                        const lng = f.geometry.coordinates[0];
+                                        const lat = f.geometry.coordinates[1];
+                                        
+                                        mapInstance.flyTo([lat, lng], 13, { duration: 1.5 });
+                                        
+                                        if (geocodeMarker) mapInstance.removeLayer(geocodeMarker);
+                                        
+                                        const targetIcon = L.divIcon({
+                                            className: 'custom-pulse-icon',
+                                            html: `<div style="width: 16px; height: 16px; background: #06b6d4; border-radius: 50%; box-shadow: 0 0 15px #06b6d4; border: 2px solid #ffffff;"></div>`,
+                                            iconSize: [16, 16],
+                                            iconAnchor: [8, 8]
+                                        });
+
+                                        geocodeMarker = L.marker([lat, lng], { icon: targetIcon })
+                                            .addTo(mapInstance)
+                                            .bindTooltip(`<b>${uniqueLabel}</b>`, { className: 'dark-tooltip', direction: 'top' })
+                                            .openTooltip();
+                                    });
+                                    
+                                    resultsContainer.appendChild(item);
+                                });
+                            } else {
+                                resultsContainer.style.display = 'block';
+                                resultsContainer.innerHTML = `<div class="intellisense-empty">No Canadian addresses found</div>`;
+                            }
+                        }).catch(err => console.log("Intellisense error:", err));
+                    }, 300); 
+                });
+
+                clearBtn.addEventListener('click', () => {
+                    inputField.value = '';
+                    resultsContainer.style.display = 'none';
+                    clearBtn.style.display = 'none';
+                    if(geocodeMarker) mapInstance.removeLayer(geocodeMarker);
+                });
+
+                document.addEventListener('click', (e) => {
+                    if(!container.contains(e.target)) {
+                        resultsContainer.style.display = 'none';
+                    }
+                });
+
+                return container;
+            }
         });
 
-        document.addEventListener('click', (e) => {
-            if(!geocoderControl.getContainer().contains(e.target)) resultsContainer.style.display = 'none';
-        });
+        mapInstance.addControl(new SearchControl());
     }
 
     // ==========================================
@@ -208,14 +276,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const db = await fetchEnterpriseData();
         
         let checkLeaflet = setInterval(() => {
-            if (window.L && L.Control.Geocoder) {
+            if (window.L) {
                 clearInterval(checkLeaflet);
-                const naBounds = L.latLngBounds(L.latLng(40.0, -145.0), L.latLng(84.0, -50.0));
                 
-                initReliabilityMap(db.utilitiesGeoJSON, naBounds); 
-                initForecastMap(db.forecastRegions, naBounds);
-                initDeficitMap(db.deficitGrids, naBounds);
-                initOffGridMap(db.offgridZones, db.directoryData, naBounds);
+                initReliabilityMap(db.utilitiesGeoJSON); 
+                initForecastMap(db.forecastRegions);
+                initDeficitMap(db.deficitGrids);
+                initOffGridMap(db.offgridZones, db.directoryData);
                 initNewsFeed();
             }
         }, 100);
@@ -224,15 +291,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // MAP 1: RELIABILITY MAP
+    // MAP INITIALIZATIONS (ALL UNIFIED TO CANADA EXTENT)
     // ==========================================
-    function initReliabilityMap(utilitiesGeoJSON, naBounds) {
+    function initReliabilityMap(utilitiesGeoJSON) {
         const mapEl = document.getElementById('leaflet-map');
         if (!mapEl) return;
 
         const map = L.map('leaflet-map', { 
-            zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 4 
-        }).setView([46.0, -82.0], 5); 
+            zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, minZoom: 3 
+        }).setView([58.0, -98.0], 3); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         setTimeout(() => map.invalidateSize(), 500);
 
@@ -317,12 +384,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.addEventListener('resize', () => map.invalidateSize());
     }
 
-    // ==========================================
-    // MAP 2: FORECAST MAP
-    // ==========================================
-    function initForecastMap(regions, naBounds) {
+    function initForecastMap(regions) {
         const mapEl = document.getElementById('forecast-map-premium'); if (!mapEl) return;
-        const forecastMap = L.map('forecast-map-premium', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
+        const forecastMap = L.map('forecast-map-premium', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, minZoom: 3 }).setView([58.0, -98.0], 3);
         L.control.zoom({ position: 'bottomright' }).addTo(forecastMap);
         
         setupMapControls(forecastMap);
@@ -359,12 +423,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateForecast(); window.addEventListener('resize', () => forecastMap.invalidateSize());
     }
 
-    // ==========================================
-    // MAP 3: CAPACITY DEFICIT
-    // ==========================================
-    function initDeficitMap(gridData, naBounds) {
+    function initDeficitMap(gridData) {
         const mapEl = document.getElementById('deficit-leaflet-map'); if (!mapEl) return;
-        const deficitMap = L.map('deficit-leaflet-map', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([56.0, -96.0], 4);
+        const deficitMap = L.map('deficit-leaflet-map', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, minZoom: 3 }).setView([58.0, -98.0], 3);
         L.control.zoom({ position: 'bottomright' }).addTo(deficitMap);
         
         setupMapControls(deficitMap);
@@ -377,12 +438,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ==========================================
-    // MAP 4: OFF-GRID
-    // ==========================================
-    function initOffGridMap(offgridZones, directoryData, naBounds) {
+    function initOffGridMap(offgridZones, directoryData) {
         const mapEl = document.getElementById('offgrid-leaflet-map'); if (!mapEl) return;
-        const offgridMap = L.map('offgrid-leaflet-map', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, maxBounds: naBounds, maxBoundsViscosity: 1.0, minZoom: 3 }).setView([58.0, -90.0], 4);
+        const offgridMap = L.map('offgrid-leaflet-map', { zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, minZoom: 3 }).setView([58.0, -98.0], 3);
         L.control.zoom({ position: 'bottomright' }).addTo(offgridMap);
         
         setupMapControls(offgridMap);
