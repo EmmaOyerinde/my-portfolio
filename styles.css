@@ -93,7 +93,6 @@ body {
     line-height: 1.7; 
     overflow-x: hidden; 
     transition: background-color var(--transition), color var(--transition);
-    /* Safe area inset for iPhone home indicator */
     padding-bottom: env(safe-area-inset-bottom);
 }
 a { text-decoration: none; color: inherit; }
@@ -104,7 +103,7 @@ input, textarea, select { font-size: 16px !important; }
 .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform, opacity; }
 .reveal.active { opacity: 1; transform: translateY(0); }
 
-/* UX ELEVATIONS: Scroll Progress & Back to Top */
+/* UX ELEVATIONS */
 .scroll-progress { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--brand-cyan); z-index: 1001; width: 0%; transition: width 0.1s ease-out; }
 .back-to-top { position: fixed; bottom: max(30px, env(safe-area-inset-bottom)); right: 30px; width: 45px; height: 45px; border-radius: 50%; background: var(--bg-panel); border: 1px solid var(--border-main); color: var(--text-main); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); z-index: 999; box-shadow: var(--shadow-md); backdrop-filter: blur(10px); }
 .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
@@ -128,13 +127,9 @@ input, textarea, select { font-size: 16px !important; }
 .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: var(--text-main); padding: 5px; }
 
 /* ==========================================
-   4. HERO SECTION (100dvh for iOS)
+   4. HERO SECTION
    ========================================== */
-.hero { 
-    min-height: 100vh; /* Fallback for older browsers */
-    min-height: 100dvh; /* Modern mobile dynamic viewport height */
-    display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 140px 10% 100px; position: relative; background-color: var(--bg-base); overflow: hidden; transition: background-color var(--transition); 
-}
+.hero { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 140px 10% 100px; position: relative; background-color: var(--bg-base); overflow: hidden; transition: background-color var(--transition); }
 .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 80px 80px; opacity: 0.7; z-index: 1; transition: background-image var(--transition); }
 .hero-glow { position: absolute; top: 20%; left: 30%; width: 60vw; height: 60vw; background: radial-gradient(circle, var(--glow-primary) 0%, transparent 70%); border-radius: 50%; z-index: 1; pointer-events: none; filter: blur(70px); animation: float 10s ease-in-out infinite alternate; transition: background var(--transition); }
 @keyframes float { 0% { transform: translate(0, 0); } 50% { transform: translate(5%, 5%); } 100% { transform: translate(0, 0); } }
@@ -314,51 +309,15 @@ input:checked + .slider-toggle:before { transform: translateX(20px); }
 .leaflet-control-zoom a:hover { background-color: var(--border-main) !important; }
 
 /* BASEMAP LAYERS & LOCATE CONTROL STYLES */
-.leaflet-control-layers {
-    background: var(--bg-panel) !important;
-    border: 1px solid var(--border-main) !important;
-    border-radius: var(--radius-sm) !important;
-    color: var(--text-main) !important;
-    box-shadow: var(--shadow-md) !important;
-    backdrop-filter: blur(8px);
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-size: 0.85rem !important;
-    padding: 6px 10px !important;
-    transition: var(--transition);
-}
-.leaflet-control-layers-toggle {
-    background-image: none !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    width: 34px !important;
-    height: 34px !important;
-    background-color: var(--bg-surface) !important;
-    border-radius: var(--radius-sm) !important;
-    text-decoration: none !important;
-}
-.leaflet-control-layers-toggle::after {
-    content: '🗺️';
-}
+.leaflet-control-layers { background: var(--bg-panel) !important; border: 1px solid var(--border-main) !important; border-radius: var(--radius-sm) !important; color: var(--text-main) !important; box-shadow: var(--shadow-md) !important; backdrop-filter: blur(8px); font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.85rem !important; padding: 6px 10px !important; transition: var(--transition); }
+.leaflet-control-layers-toggle { background-image: none !important; display: flex !important; align-items: center; justify-content: center; font-size: 1.1rem; width: 34px !important; height: 34px !important; background-color: var(--bg-surface) !important; border-radius: var(--radius-sm) !important; text-decoration: none !important; }
+.leaflet-control-layers-toggle::after { content: '🗺️'; }
 .leaflet-control-layers-expanded { padding: 10px 14px !important; }
 .leaflet-control-layers-base label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; cursor: pointer; }
 .leaflet-control-layers-base label:hover { color: var(--accent); }
 
-.leaflet-control-locate-btn {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--bg-surface) !important;
-    color: var(--text-main) !important;
-    border-bottom: none !important;
-    font-size: 1.1rem !important;
-    transition: var(--transition);
-}
-.leaflet-control-locate-btn:hover {
-    background-color: var(--border-main) !important;
-    color: var(--accent) !important;
-}
+.leaflet-control-locate-btn { display: flex !important; align-items: center; justify-content: center; background-color: var(--bg-surface) !important; color: var(--text-main) !important; border-bottom: none !important; font-size: 1.1rem !important; transition: var(--transition); }
+.leaflet-control-locate-btn:hover { background-color: var(--border-main) !important; color: var(--accent) !important; }
 
 /* ==========================================
    13. GEOCODER OVERRIDES
@@ -420,31 +379,7 @@ footer { background: var(--bg-base); color: var(--text-muted); text-align: cente
 /* ==========================================
    16. TRUE INTELLISENSE DROPDOWN
    ========================================== */
-.custom-intellisense-dropdown {
-    position: absolute;
-    top: 110%;
-    right: 0;
-    width: 280px;
-    background: var(--bg-panel);
-    border: 1px solid var(--border-main);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(12px);
-    z-index: 1000;
-    display: none;
-    overflow: hidden;
-}
-.intellisense-item {
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    color: var(--text-main);
-    cursor: pointer;
-    border-bottom: 1px solid var(--border-light);
-    transition: var(--transition);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
+.custom-intellisense-dropdown { position: absolute; top: 110%; right: 0; width: 280px; background: var(--bg-panel); border: 1px solid var(--border-main); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); backdrop-filter: blur(12px); z-index: 1000; display: none; overflow: hidden; }
+.intellisense-item { padding: 12px 16px; font-size: 0.85rem; color: var(--text-main); cursor: pointer; border-bottom: 1px solid var(--border-light); transition: var(--transition); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Plus Jakarta Sans', sans-serif; }
 .intellisense-item:last-child { border-bottom: none; }
 .intellisense-item:hover { background: var(--hover-active); color: var(--accent); padding-left: 20px; }
