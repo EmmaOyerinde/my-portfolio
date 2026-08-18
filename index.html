@@ -32,7 +32,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Leaflet Geospatial CSS (Geocoder plugin removed) -->
+    <!-- Leaflet Geospatial CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     
     <!-- Enterprise Stylesheet -->
@@ -42,15 +42,11 @@
 
     <!-- EXECUTIVE NAVIGATION -->
     <nav class="enterprise-nav">
-        <!-- Reading Progress Bar -->
         <div class="scroll-progress" id="scroll-progress"></div>
-        
-        <!-- E.O. Integrated Logo -->
         <div class="logo" style="display: flex; align-items: center; gap: 10px;">
             <img src="logo-icon.svg" alt="E.O. Logo" style="width: 32px; height: 32px;">
             <span>Emmanuel <span>Oyerinde</span></span>
         </div>
-        
         <ul class="nav-links" id="nav-links">
             <li><a href="#home" class="active">Home</a></li>
             <li><a href="#about">Profile</a></li>
@@ -112,13 +108,9 @@
                 <h2>Featured Projects & Publications</h2>
                 <p>A selection of my recent enterprise deployments, GIS architecture designs, and global infrastructure initiatives.</p>
             </div>
-            
             <div class="portfolio-grid">
-                <!-- Tile 1: Geographic Network Monitoring System -->
                 <div class="project-card">
-                    <div class="project-image-wrapper">
-                        <img src="UT (1).PNG" alt="Geographic Network Monitoring System" style="width: 100%; height: 100%; object-fit: cover; border: none; display: block;" loading="lazy">
-                    </div>
+                    <div class="project-image-wrapper"><img src="UT (1).PNG" alt="Geographic Network Monitoring System" style="width: 100%; height: 100%; object-fit: cover; border: none; display: block;" loading="lazy"></div>
                     <div class="project-content">
                         <div class="project-category">GIS & Enterprise IT</div>
                         <h3 class="project-title">Geographic Network Monitoring</h3>
@@ -126,12 +118,8 @@
                         <a href="https://www.spatialnode.net/projects/geographic-network-monitoring-system-4228ae" class="project-link" target="_blank" rel="noopener noreferrer">View on SpatialNode &rarr;</a>
                     </div>
                 </div>
-
-                <!-- Tile 2: Ikeja Electric Power Availability -->
                 <div class="project-card">
-                    <div class="project-image-wrapper">
-                        <img src="Magodo Bilateral 2022.PNG" alt="Ikeja Electric Power Availability Case Study" style="width: 100%; height: 100%; object-fit: cover; border: none; display: block;" loading="lazy">
-                    </div>
+                    <div class="project-image-wrapper"><img src="Magodo Bilateral 2022.PNG" alt="Ikeja Electric Power Availability Case Study" style="width: 100%; height: 100%; object-fit: cover; border: none; display: block;" loading="lazy"></div>
                     <div class="project-content">
                         <div class="project-category">Global Publication</div>
                         <h3 class="project-title">Ikeja Electric Power Availability</h3>
@@ -139,12 +127,8 @@
                         <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" class="project-link" target="_blank" rel="noopener noreferrer">Read Case Study on Esri &rarr;</a>
                     </div>
                 </div>
-
-                <!-- Tile 3: UNDP Ukraine Coal Cities -->
                 <div class="project-card">
-                    <div class="project-image-wrapper">
-                        <iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy" style="width: 100%; height: 100%; border: none; pointer-events: auto;"></iframe>
-                    </div>
+                    <div class="project-image-wrapper"><iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy" style="width: 100%; height: 100%; border: none; pointer-events: auto;"></iframe></div>
                     <div class="project-content">
                         <div class="project-category">International Analysis</div>
                         <h3 class="project-title">UNDP Ukraine: Coal Cities</h3>
@@ -254,9 +238,7 @@
                     <h2>Canada Utility Intelligence Wire</h2>
                     <p>Real-time live news feed tracking strategic developments, regulatory shifts, and grid announcements.</p>
                 </div>
-                <div class="live-indicator">
-                    <span class="pulse-dot"></span> Live
-                </div>
+                <div class="live-indicator"><span class="pulse-dot"></span> Live</div>
             </div>
             <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;">
                 <div id="news-feed-container" class="news-feed-grid"><div class="news-loading">Fetching live Canadian utility feed...</div></div>
@@ -302,10 +284,9 @@
 
     <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
-    <!-- Map Scripts -->
+    <!-- Map Scripts (Native Vanilla JS Implementation) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-    <!-- ES6 Modules -> Local server required to fetch API -->
-    <script type="module" src="js/app.js" defer></script>
+    <script src="js/app.js" defer></script>
 
 </body>
 </html>
