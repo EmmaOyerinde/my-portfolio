@@ -648,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-// ==========================================
+    // ==========================================
     // LIVE NEWS FEED (Dual-Proxy Architecture for 99.9% Uptime)
     // ==========================================
     function initNewsFeed() {
@@ -738,3 +738,5 @@ document.addEventListener('DOMContentLoaded', () => {
             c.appendChild(card);
         });
     }
+
+});
