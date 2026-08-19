@@ -648,60 +648,84 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
-    // LIVE NEWS FEED (Optimized via RSS2JSON for reliable CORS bypass)
+// ==========================================
+    // LIVE NEWS FEED (Dual-Proxy Architecture for 99.9% Uptime)
     // ==========================================
     function initNewsFeed() {
-        const container = document.getElementById('news-feed-container'); if (!container) return;
+        const container = document.getElementById('news-feed-container'); 
+        if (!container) return;
         
-        // Clean, targeted query for Canadian utility intelligence
-        const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=Canada+electric+utility+grid+energy+when:7d&hl=en-CA&gl=CA&ceid=CA:en');
+        // 1. Dynamic query with a cache-buster so we always get fresh news
+        const targetUrl = `https://news.google.com/rss/search?q=Canada+electric+utility+OR+grid+OR+hydro+when:7d&hl=en-CA&gl=CA&ceid=CA:en&cb=${Date.now()}`;
         
-        // Using rss2json API for rock-solid, DOMParser-free JSON translation
-        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'ok' && data.items && data.items.length > 0) {
-                    container.innerHTML = '';
-                    data.items.slice(0, 6).forEach(item => {
-                        let t = item.title || ''; 
-                        let src = 'Utility Intelligence';
-                        
-                        // Google News appends the source after a hyphen (e.g., "News Article - CBC")
-                        if (t.includes(' - ')) { 
-                            const parts = t.split(' - '); 
-                            src = parts.pop().trim(); 
-                            t = parts.join(' - ').trim(); 
-                        }
-                        
-                        // Parse date safely across browsers
-                        let formattedDate = 'Today';
-                        if (item.pubDate) {
-                            const d = new Date(item.pubDate.replace(/-/g, '/'));
-                            if (!isNaN(d)) {
-                                formattedDate = d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
-                            }
-                        }
-                        
-                        const card = document.createElement('article'); 
-                        card.className = 'news-card';
-                        card.innerHTML = `
-                            <div>
-                                <div class="news-card-header">
-                                    <span class="news-source-badge">${src}</span>
-                                    <span class="news-date">${formattedDate}</span>
-                                </div>
-                                <h3 class="news-title">${t}</h3>
-                            </div>
-                            <a href="${item.link || '#'}" target="_blank" rel="noopener noreferrer" class="news-link">Read Coverage &rarr;</a>
-                        `;
-                        container.appendChild(card);
-                    });
-                } else {
-                    renderFallbackNews(container);
-                }
+        // 2. Define two separate proxies. If one gets rate-limited, the other saves the feed.
+        const primaryProxy = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+        const secondaryProxy = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&disableCache=true`;
+
+        // Attempt 1: Fetch raw XML via Primary Proxy
+        fetch(primaryProxy)
+            .then(res => {
+                if (!res.ok) throw new Error('Primary Proxy Failed');
+                return res.text();
             })
-            .catch(() => renderFallbackNews(container));
+            .then(str => new DOMParser().parseFromString(str, "text/xml"))
+            .then(data => processFeed(data, container))
+            .catch(() => {
+                // Attempt 2: Fallback to Secondary JSON-wrapped proxy
+                fetch(secondaryProxy)
+                    .then(res => {
+                        if (!res.ok) throw new Error('Secondary Proxy Failed');
+                        return res.json();
+                    })
+                    .then(data => new DOMParser().parseFromString(data.contents, "text/xml"))
+                    .then(data => processFeed(data, container))
+                    .catch(() => renderFallbackNews(container)); // Ultimate Fail-safe
+            });
+    }
+
+    function processFeed(data, container) {
+        const items = data.querySelectorAll("item");
+        if (items.length === 0) {
+            renderFallbackNews(container);
+            return;
+        }
+        
+        container.innerHTML = '';
+        Array.from(items).slice(0, 6).forEach(item => {
+            let title = item.querySelector("title")?.textContent || ''; 
+            let src = 'Utility Intelligence';
+            
+            // Clean up Google News title formatting (Source is usually after the last '-')
+            const lastHyphenIndex = title.lastIndexOf(' - ');
+            if (lastHyphenIndex !== -1) {
+                src = title.substring(lastHyphenIndex + 3).trim();
+                title = title.substring(0, lastHyphenIndex).trim();
+            }
+            
+            // Safe Date Parsing for all browsers (including iOS Safari)
+            let pubDate = item.querySelector("pubDate")?.textContent;
+            let formattedDate = 'Today';
+            if (pubDate) {
+                const d = new Date(pubDate);
+                if (!isNaN(d)) formattedDate = d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+            
+            const link = item.querySelector("link")?.textContent || '#';
+            
+            const card = document.createElement('article'); 
+            card.className = 'news-card';
+            card.innerHTML = `
+                <div>
+                    <div class="news-card-header">
+                        <span class="news-source-badge">${src}</span>
+                        <span class="news-date">${formattedDate}</span>
+                    </div>
+                    <h3 class="news-title">${title}</h3>
+                </div>
+                <a href="${link}" target="_blank" rel="noopener noreferrer" class="news-link">Read Coverage &rarr;</a>
+            `;
+            container.appendChild(card);
+        });
     }
 
     function renderFallbackNews(c) {
@@ -714,4 +738,3 @@ document.addEventListener('DOMContentLoaded', () => {
             c.appendChild(card);
         });
     }
-});
