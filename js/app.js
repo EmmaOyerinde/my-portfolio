@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "northland", "type_org": "provincial", "utility": "Northland Utilities", "region": "NWT", "customers": "11K", "line_km": "350", "density": "31", "mix": "Hydro/Diesel", "saidi": 2.10, "saifi": 2.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.40, 62.42], [-114.45, 62.45], [-114.40, 62.48], [-114.35, 62.50], [-114.30, 62.48], [-114.25, 62.45], [-114.30, 62.42], [-114.35, 62.40], [-114.40, 62.42]]] } },
                 { "type": "Feature", "properties": { "id": "atco-yukon", "type_org": "provincial", "utility": "ATCO Electric Yukon", "region": "Yukon", "customers": "19K", "line_km": "450", "density": "42", "mix": "Hydro/Diesel", "saidi": 1.95, "saifi": 2.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-135.10, 60.70], [-135.15, 60.72], [-135.10, 60.75], [-135.05, 60.77], [-135.00, 60.75], [-134.95, 60.72], [-135.00, 60.70], [-135.05, 60.68], [-135.10, 60.70]]] } },
 
-                /* --- 3. ONTARIO LDCs (HIGH-PRECISION BOUNDARIES FALLBACKS) --- */
+                /* --- 3. ONTARIO LDCs (HIGH-PRECISION BOUNDARIES WITH MULTI-MUNI SUPPORT) --- */
                 { "type": "Feature", "properties": { "id": "alectra", "type_org": "municipal", "utility": "Alectra Utilities", "region": "GTA/Hamilton/Guelph", "customers": "1.1M", "line_km": "18,500", "density": "60", "mix": "Grid", "saidi": 0.85, "saifi": 1.05 }, "geometry": { "type": "MultiPolygon", "coordinates": [[[[ -79.90, 43.20 ], [ -80.00, 43.30 ], [ -79.80, 43.40 ], [ -79.70, 43.30 ], [ -79.90, 43.20 ]]], [[[ -79.60, 43.50 ], [ -79.70, 43.70 ], [ -79.40, 43.90 ], [ -79.20, 43.90 ], [ -79.30, 43.70 ], [ -79.60, 43.50 ]]]] } },
                 { "type": "Feature", "properties": { "id": "toronto-hydro", "type_org": "municipal", "utility": "Toronto Hydro", "region": "Toronto", "customers": "786K", "line_km": "16,000", "density": "49", "mix": "Grid", "saidi": 0.75, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.56, 43.62], [-79.60, 43.70], [-79.58, 43.75], [-79.40, 43.80], [-79.16, 43.82], [-79.12, 43.78], [-79.20, 43.70], [-79.30, 43.66], [-79.38, 43.62], [-79.54, 43.58]]] } },
                 { "type": "Feature", "properties": { "id": "hydro-ottawa", "type_org": "municipal", "utility": "Hydro Ottawa", "region": "Ottawa", "customers": "350K", "line_km": "5,800", "density": "60", "mix": "Grid", "saidi": 1.10, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.05, 45.30], [-76.00, 45.40], [-75.80, 45.50], [-75.60, 45.52], [-75.40, 45.55], [-75.25, 45.40], [-75.40, 45.10], [-75.70, 45.10], [-75.90, 45.20], [-76.05, 45.30]]] } },
@@ -491,11 +491,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const layerMap = {};
         function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
+        // ==========================================
+        // STYLING TWEAK: Make Hydro One seamless
+        // ==========================================
         let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
             smoothFactor: 1.5, 
             style: function(f) { 
+                const isHydroOne = f.properties.id === 'ho';
                 const isProv = f.properties.type_org === 'provincial';
-                return { fillColor: getColor(f.properties.saidi), weight: isProv ? 1.5 : 2, opacity: isProv ? 0.4 : 1, color: getColor(f.properties.saidi), fillOpacity: isProv ? 0.05 : 0.45, lineJoin: 'round', lineCap: 'round' }; 
+                return { 
+                    fillColor: getColor(f.properties.saidi), 
+                    weight: isHydroOne ? 0.2 : (isProv ? 1.5 : 2), 
+                    opacity: isHydroOne ? 0.2 : (isProv ? 0.4 : 1), 
+                    color: getColor(f.properties.saidi), 
+                    fillOpacity: isHydroOne ? 0.25 : (isProv ? 0.05 : 0.45), 
+                    lineJoin: 'round', 
+                    lineCap: 'round' 
+                }; 
             }, 
             onEachFeature: function(f, layer) {
                 layerMap[f.properties.id] = layer;
