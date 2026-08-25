@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "northland", "type_org": "provincial", "utility": "Northland Utilities", "region": "NWT", "customers": "11K", "line_km": "350", "density": "31", "mix": "Hydro/Diesel", "saidi": 2.10, "saifi": 2.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.40, 62.42], [-114.45, 62.45], [-114.40, 62.48], [-114.35, 62.50], [-114.30, 62.48], [-114.25, 62.45], [-114.30, 62.42], [-114.35, 62.40], [-114.40, 62.42]]] } },
                 { "type": "Feature", "properties": { "id": "atco-yukon", "type_org": "provincial", "utility": "ATCO Electric Yukon", "region": "Yukon", "customers": "19K", "line_km": "450", "density": "42", "mix": "Hydro/Diesel", "saidi": 1.95, "saifi": 2.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-135.10, 60.70], [-135.15, 60.72], [-135.10, 60.75], [-135.05, 60.77], [-135.00, 60.75], [-134.95, 60.72], [-135.00, 60.70], [-135.05, 60.68], [-135.10, 60.70]]] } },
 
-                /* --- 3. ONTARIO LDCs (HIGH-PRECISION SURVEY BOUNDARIES FALLBACKS) --- */
+                /* --- 3. ONTARIO LDCs (HIGH-PRECISION BOUNDARIES WITH MULTI-MUNI SUPPORT) --- */
                 { "type": "Feature", "properties": { "id": "alectra", "type_org": "municipal", "utility": "Alectra Utilities", "region": "GTA/Hamilton/Guelph", "customers": "1.1M", "line_km": "18,500", "density": "60", "mix": "Grid", "saidi": 0.85, "saifi": 1.05 }, "geometry": { "type": "MultiPolygon", "coordinates": [[[[ -79.90, 43.20 ], [ -80.00, 43.30 ], [ -79.80, 43.40 ], [ -79.70, 43.30 ], [ -79.90, 43.20 ]]], [[[ -79.60, 43.50 ], [ -79.70, 43.70 ], [ -79.40, 43.90 ], [ -79.20, 43.90 ], [ -79.30, 43.70 ], [ -79.60, 43.50 ]]]] } },
                 { "type": "Feature", "properties": { "id": "toronto-hydro", "type_org": "municipal", "utility": "Toronto Hydro", "region": "Toronto", "customers": "786K", "line_km": "16,000", "density": "49", "mix": "Grid", "saidi": 0.75, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.56, 43.62], [-79.60, 43.70], [-79.58, 43.75], [-79.40, 43.80], [-79.16, 43.82], [-79.12, 43.78], [-79.20, 43.70], [-79.30, 43.66], [-79.38, 43.62], [-79.54, 43.58]]] } },
                 { "type": "Feature", "properties": { "id": "hydro-ottawa", "type_org": "municipal", "utility": "Hydro Ottawa", "region": "Ottawa", "customers": "350K", "line_km": "5,800", "density": "60", "mix": "Grid", "saidi": 1.10, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.05, 45.30], [-76.00, 45.40], [-75.80, 45.50], [-75.60, 45.52], [-75.40, 45.55], [-75.25, 45.40], [-75.40, 45.10], [-75.70, 45.10], [-75.90, 45.20], [-76.05, 45.30]]] } },
@@ -515,23 +515,105 @@ document.addEventListener('DOMContentLoaded', () => {
         // ==========================================
         // ENTERPRISE UPGRADE: HIGH-PRECISION POLYGON FETCH
         // Overwrites the generic bounding boxes with precise survey geometries
+        // Aggregates multiple municipalities into a single LDC operator where applicable
         // ==========================================
         const boundaryLookup = {
             "CITY OF OTTAWA": "hydro-ottawa",
-            "TOWN OF OAKVILLE": "oakville",
-            "TOWN OF HUNTSVILLE": "lakeland",
-            "TOWN OF THE BLUE MOUNTAINS": "epcor-on",
-            "TOWNSHIP OF ST. CLAIR": "bluewater",
+            "CITY OF LONDON": "london-hydro",
+            "CITY OF TORONTO": "toronto-hydro",
+            "CITY OF MISSISSAUGA": "alectra",
+            "CITY OF BRAMPTON": "alectra",
+            "CITY OF HAMILTON": "alectra",
+            "CITY OF GUELPH": "alectra",
+            "CITY OF MARKHAM": "alectra",
+            "CITY OF VAUGHAN": "alectra",
+            "CITY OF BARRIE": "alectra",
+            "CITY OF ST. CATHARINES": "alectra",
+            "TOWN OF AURORA": "alectra",
+            "CITY OF KITCHENER": "enova",
+            "CITY OF WATERLOO": "enova",
+            "TOWNSHIP OF WELLESLEY": "enova",
+            "TOWNSHIP OF WOOLWICH": "enova",
+            "TOWNSHIP OF WILMOT": "enova",
+            "CITY OF BRANTFORD": "grandbridge",
+            "CITY OF CAMBRIDGE": "grandbridge",
+            "COUNTY OF BRANT": "grandbridge",
+            "CITY OF WINDSOR": "enwin",
+            "CITY OF NIAGARA FALLS": "niagara-pen",
+            "TOWN OF PELHAM": "niagara-pen",
+            "TOWN OF LINCOLN": "niagara-pen",
             "TOWN OF GRIMSBY": "niagara-pen",
-            "MUNICIPALITY OF THAMES CENTRE": "london-hydro",
-            "TOWN OF DEEP RIVER": "ottawa-river",
+            "TOWN OF OAKVILLE": "oakville",
+            "CITY OF BURLINGTON": "burlington",
+            "MUNICIPALITY OF CHATHAM-KENT": "entegrus",
+            "MUNICIPALITY OF STRATHROY-CARADOC": "entegrus",
+            "MUNICIPALITY OF DUTTON/DUNWICH": "entegrus",
+            "CITY OF OSHAWA": "oshawa",
+            "CITY OF THUNDER BAY": "synergy",
+            "CITY OF KENORA": "synergy",
+            "TOWN OF NEWMARKET": "newmarket-tay",
+            "TOWNSHIP OF TAY": "newmarket-tay",
+            "CITY OF GREATER SUDBURY": "greater-sudbury",
+            "TOWN OF MILTON": "milton",
+            "CITY OF BELLEVILLE": "elexicon-belleville",
+            "TOWN OF WHITBY": "elexicon",
+            "TOWN OF AJAX": "elexicon",
+            "CITY OF PICKERING": "elexicon",
+            "CITY OF SARNIA": "bluewater",
+            "TOWN OF PETROLIA": "bluewater",
+            "TOWNSHIP OF ST. CLAIR": "bluewater",
+            "CITY OF SAULT STE. MARIE": "puc-ssm",
+            "TOWN OF ESSEX": "essex",
+            "TOWN OF AMHERSTBURG": "essex",
+            "TOWN OF LASALLE": "essex",
+            "CITY OF KINGSTON": "kingston",
+            "TOWN OF FORT ERIE": "cn-power",
+            "CITY OF PORT COLBORNE": "cn-power",
+            "CITY OF CORNWALL": "cornwall",
+            "CITY OF WELLAND": "welland",
+            "TOWN OF INGERSOLL": "erth",
+            "TOWN OF AYLMER": "erth",
+            "CITY OF NORTH BAY": "north-bay",
+            "TOWN OF HALTON HILLS": "halton-hills",
+            "TOWN OF COLLINGWOOD": "epcor-on",
+            "TOWN OF THE BLUE MOUNTAINS": "epcor-on",
+            "CITY OF STRATFORD": "festival",
+            "TOWN OF ST. MARYS": "festival",
+            "TOWN OF INNISFIL": "innpower",
+            "TOWNSHIP OF ESSA": "innpower",
+            "TOWN OF HUNTSVILLE": "lakeland",
+            "TOWN OF BRACEBRIDGE": "lakeland",
+            "TOWN OF PARRY SOUND": "lakeland",
+            "TOWN OF WASAGA BEACH": "wasaga",
+            "TOWN OF ORANGEVILLE": "orangeville",
+            "MUNICIPALITY OF HURON SHORES": "algoma",
             "TOWN OF BLIND RIVER": "algoma",
-            "TOWNSHIP OF ARMOUR": "ho"
+            "TOWNSHIP OF THE NORTH SHORE": "algoma",
+            "TOWN OF THESSALON": "algoma",
+            "TOWN OF KINGSVILLE": "elk",
+            "CITY OF PEMBROKE": "ottawa-river",
+            "TOWN OF DEEP RIVER": "ottawa-river",
+            "TOWN OF COBOURG": "lakefront",
+            "TOWN OF NIAGARA-ON-THE-LAKE": "notl",
+            "TOWNSHIP OF CENTRE WELLINGTON": "cw",
+            "TOWN OF TILLSONBURG": "tillsonburg",
+            "TOWN OF PRESCOTT": "rideau",
+            "TOWN OF COCHRANE": "northern-wires",
+            "TOWN OF HAWKESBURY": "hydro-hawk",
+            "TOWN OF RENFREW": "renfrew",
+            "TOWN OF FORT FRANCES": "fort-frances",
+            "MUNICIPALITY OF SIOUX LOOKOUT": "sioux",
+            "TOWN OF HEARST": "hearst",
+            "TOWNSHIP OF RUSSELL": "coop-embrun",
+            "TOWNSHIP OF ATIKOKAN": "atikokan",
+            "TOWNSHIP OF ALFRED AND PLANTAGENET": "hydro-2000"
         };
 
         fetch('data/ontario_cities.geojson')
             .then(res => res.json())
             .then(highResData => {
+                const newFeatures = [];
+
                 highResData.features.forEach(hiResFeature => {
                     const muniName = hiResFeature.properties.MUNICIPAL_NAME || hiResFeature.properties.LDC_NAME || hiResFeature.properties.NAME;
                     if (!muniName) return;
@@ -539,24 +621,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     const mappedLdcId = boundaryLookup[muniName];
                     
                     if (mappedLdcId) {
-                        let ldc = utilitiesGeoJSON.features.find(f => f.properties.id === mappedLdcId);
-                        if (ldc) {
-                            ldc.geometry = hiResFeature.geometry;
+                        let ldcTemplate = utilitiesGeoJSON.features.find(f => f.properties.id === mappedLdcId);
+                        if (ldcTemplate) {
+                            if (!ldcTemplate.properties.upgraded) {
+                                ldcTemplate.geometry = hiResFeature.geometry;
+                                ldcTemplate.properties.upgraded = true;
+                                ldcTemplate.properties.region = muniName.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+                            } else {
+                                // Clone feature if an LDC covers multiple cities (e.g. Enova -> Kitchener + Waterloo)
+                                newFeatures.push({
+                                    type: "Feature",
+                                    properties: { ...ldcTemplate.properties, region: muniName.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) },
+                                    geometry: hiResFeature.geometry
+                                });
+                            }
                         }
                     } else {
+                        // Default any unmapped rural municipality to Hydro One Survey Polygon
                         let hydroOneBase = utilitiesGeoJSON.features.find(f => f.properties.id === 'ho');
                         if (hydroOneBase) {
                             let formattedName = muniName.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
-                            let newHydroOneSector = {
+                            newFeatures.push({
                                 type: "Feature",
                                 properties: { ...hydroOneBase.properties, region: formattedName },
                                 geometry: hiResFeature.geometry
-                            };
-                            utilitiesGeoJSON.features.push(newHydroOneSector);
+                            });
                         }
                     }
                 });
 
+                utilitiesGeoJSON.features.push(...newFeatures);
                 geojsonLayer.clearLayers();
                 geojsonLayer.addData(utilitiesGeoJSON);
                 buildTable(utilitiesGeoJSON.features);
@@ -568,8 +662,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function buildTable(features) {
             if (!tableBody) return;
+            
+            // Filter to ensure only 1 row per unique LDC ID
+            const uniqueLDCs = [];
+            const seen = new Set();
+            for (const f of features) {
+                if (!seen.has(f.properties.id)) {
+                    seen.add(f.properties.id);
+                    uniqueLDCs.push(f);
+                }
+            }
+
             tableBody.innerHTML = '';
-            [...features].sort((a, b) => {
+            [...uniqueLDCs].sort((a, b) => {
                 let vA = a.properties[activeSortKey]; let vB = b.properties[activeSortKey];
                 if (activeSortKey === 'customers') { vA = parseCustomers(vA); vB = parseCustomers(vB); }
                 if (typeof vA === 'number' && typeof vB === 'number') return isAscending ? vA - vB : vB - vA;
@@ -579,8 +684,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const row = document.createElement('tr'); row.className = 'utility-row'; row.id = `row-${p.id}`;
                 row.innerHTML = `<td style="padding: 12px 16px;"><div style="display:flex; align-items:center; gap: 10px;"><span class="status-badge" style="background: ${getColor(p.saidi)}; width: 8px; height: 8px; border-radius: 50%;"></span><strong style="color: var(--text-main); font-size: 0.95rem;">${p.utility}</strong></div><div style="font-size: 0.75rem; color: var(--text-muted); margin-left: 18px; margin-top: 4px;">${p.customers} Pop &bull; ${p.line_km} km</div></td><td style="text-align: right; padding: 12px 16px;"><strong style="color: var(--text-main); font-size: 0.95rem;">${p.saidi}</strong><span style="font-size:0.75rem; color: var(--text-muted);"> hr</span></td><td style="text-align: right; padding: 12px 16px;"><strong style="color: var(--text-main); font-size: 0.95rem;">${p.saifi}</strong></td>`;
                 row.addEventListener('click', () => selectUtility(p.id));
-                row.addEventListener('mouseenter', () => layerMap[p.id]?.fire('mouseover'));
-                row.addEventListener('mouseleave', () => layerMap[p.id]?.fire('mouseout'));
+                
+                row.addEventListener('mouseenter', () => {
+                    const layers = Object.values(layerMap).filter(l => l.feature.properties.id === p.id);
+                    layers.forEach(l => l.fire('mouseover'));
+                });
+                row.addEventListener('mouseleave', () => {
+                    const layers = Object.values(layerMap).filter(l => l.feature.properties.id === p.id);
+                    layers.forEach(l => l.fire('mouseout'));
+                });
                 tableBody.appendChild(row);
             });
         }
@@ -595,8 +707,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function selectUtility(id) {
-            const layer = layerMap[id]; if (!layer) return;
-            map.fitBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 10 }); layer.openPopup();
+            const layers = Object.values(layerMap).filter(l => l.feature.properties.id === id);
+            if (layers.length === 0) return;
+            
+            const group = L.featureGroup(layers);
+            map.fitBounds(group.getBounds(), { padding: [30, 30], maxZoom: 10 });
+            layers[0].openPopup();
+            
             document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
             document.getElementById(`row-${id}`)?.classList.add('active');
             document.getElementById(`row-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
