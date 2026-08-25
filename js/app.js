@@ -53,22 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "northland", "type_org": "provincial", "utility": "Northland Utilities", "region": "NWT", "customers": "11K", "line_km": "350", "density": "31", "mix": "Hydro/Diesel", "saidi": 2.10, "saifi": 2.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.40, 62.42], [-114.45, 62.45], [-114.40, 62.48], [-114.35, 62.50], [-114.30, 62.48], [-114.25, 62.45], [-114.30, 62.42], [-114.35, 62.40], [-114.40, 62.42]]] } },
                 { "type": "Feature", "properties": { "id": "atco-yukon", "type_org": "provincial", "utility": "ATCO Electric Yukon", "region": "Yukon", "customers": "19K", "line_km": "450", "density": "42", "mix": "Hydro/Diesel", "saidi": 1.95, "saifi": 2.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-135.10, 60.70], [-135.15, 60.72], [-135.10, 60.75], [-135.05, 60.77], [-135.00, 60.75], [-134.95, 60.72], [-135.00, 60.70], [-135.05, 60.68], [-135.10, 60.70]]] } },
 
-                /* --- 3. ONTARIO LDCs (HIGH-PRECISION BOUNDARIES WITH MULTI-MUNI SUPPORT) --- */
-                { "type": "Feature", "properties": { "id": "alectra", "type_org": "municipal", "utility": "Alectra Utilities", "region": "GTA/Hamilton/Guelph", "customers": "1.1M", "line_km": "18,500", "density": "60", "mix": "Grid", "saidi": 0.85, "saifi": 1.05 }, "geometry": { "type": "MultiPolygon", "coordinates": [[[[ -79.90, 43.20 ], [ -80.00, 43.30 ], [ -79.80, 43.40 ], [ -79.70, 43.30 ], [ -79.90, 43.20 ]]], [[[ -79.60, 43.50 ], [ -79.70, 43.70 ], [ -79.40, 43.90 ], [ -79.20, 43.90 ], [ -79.30, 43.70 ], [ -79.60, 43.50 ]]]] } },
+                /* --- 3. ONTARIO LDCs (STRICT UNIQUE ENTITIES) --- */
+                { "type": "Feature", "properties": { "id": "alectra", "type_org": "municipal", "utility": "Alectra Utilities", "region": "GTA / Hamilton / Guelph", "customers": "1.1M", "line_km": "18,500", "density": "60", "mix": "Grid", "saidi": 0.85, "saifi": 1.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.90, 43.20], [-80.00, 43.30], [-79.80, 43.40], [-79.70, 43.30], [-79.90, 43.20]]] } },
                 { "type": "Feature", "properties": { "id": "toronto-hydro", "type_org": "municipal", "utility": "Toronto Hydro", "region": "Toronto", "customers": "786K", "line_km": "16,000", "density": "49", "mix": "Grid", "saidi": 0.75, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.56, 43.62], [-79.60, 43.70], [-79.58, 43.75], [-79.40, 43.80], [-79.16, 43.82], [-79.12, 43.78], [-79.20, 43.70], [-79.30, 43.66], [-79.38, 43.62], [-79.54, 43.58]]] } },
                 { "type": "Feature", "properties": { "id": "hydro-ottawa", "type_org": "municipal", "utility": "Hydro Ottawa", "region": "Ottawa", "customers": "350K", "line_km": "5,800", "density": "60", "mix": "Grid", "saidi": 1.10, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.05, 45.30], [-76.00, 45.40], [-75.80, 45.50], [-75.60, 45.52], [-75.40, 45.55], [-75.25, 45.40], [-75.40, 45.10], [-75.70, 45.10], [-75.90, 45.20], [-76.05, 45.30]]] } },
                 { "type": "Feature", "properties": { "id": "elexicon", "type_org": "municipal", "utility": "Elexicon Energy", "region": "Durham Region", "customers": "175K", "line_km": "4,500", "density": "38", "mix": "Grid", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.10, 43.84], [-79.14, 43.90], [-79.14, 44.02], [-79.00, 44.00], [-78.85, 43.98], [-78.80, 43.90], [-78.75, 43.85], [-78.90, 43.82], [-79.00, 43.83], [-79.10, 43.84]]] } },
                 { "type": "Feature", "properties": { "id": "london-hydro", "type_org": "municipal", "utility": "London Hydro", "region": "London", "customers": "165K", "line_km": "3,100", "density": "53", "mix": "Grid", "saidi": 0.85, "saifi": 1.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.38, 42.92], [-81.36, 42.96], [-81.33, 43.05], [-81.25, 43.06], [-81.18, 43.05], [-81.12, 42.98], [-81.12, 42.92], [-81.20, 42.88], [-81.30, 42.89], [-81.38, 42.92]]] } },
-                { "type": "Feature", "properties": { "id": "enova", "type_org": "municipal", "utility": "Enova Power", "region": "Kitchener/Waterloo", "customers": "160K", "line_km": "3,800", "density": "42", "mix": "Grid", "saidi": 0.90, "saifi": 1.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.60, 43.35], [-80.65, 43.40], [-80.65, 43.45], [-80.60, 43.50], [-80.55, 43.55], [-80.50, 43.53], [-80.45, 43.52], [-80.40, 43.42], [-80.50, 43.38], [-80.60, 43.35]]] } },
-                { "type": "Feature", "properties": { "id": "grandbridge", "type_org": "municipal", "utility": "GrandBridge Energy", "region": "Brantford/Cambridge", "customers": "110K", "line_km": "3,200", "density": "34", "mix": "Grid", "saidi": 1.05, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.40, 43.15], [-80.42, 43.20], [-80.40, 43.25], [-80.35, 43.35], [-80.30, 43.42], [-80.25, 43.41], [-80.20, 43.40], [-80.15, 43.20], [-80.25, 43.18], [-80.40, 43.15]]] } },
+                { "type": "Feature", "properties": { "id": "enova", "type_org": "municipal", "utility": "Enova Power", "region": "Kitchener / Waterloo", "customers": "160K", "line_km": "3,800", "density": "42", "mix": "Grid", "saidi": 0.90, "saifi": 1.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.60, 43.35], [-80.65, 43.40], [-80.65, 43.45], [-80.60, 43.50], [-80.55, 43.55], [-80.50, 43.53], [-80.45, 43.52], [-80.40, 43.42], [-80.50, 43.38], [-80.60, 43.35]]] } },
+                { "type": "Feature", "properties": { "id": "grandbridge", "type_org": "municipal", "utility": "GrandBridge Energy", "region": "Brantford / Cambridge", "customers": "110K", "line_km": "3,200", "density": "34", "mix": "Grid", "saidi": 1.05, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.40, 43.15], [-80.42, 43.20], [-80.40, 43.25], [-80.35, 43.35], [-80.30, 43.42], [-80.25, 43.41], [-80.20, 43.40], [-80.15, 43.20], [-80.25, 43.18], [-80.40, 43.15]]] } },
                 { "type": "Feature", "properties": { "id": "enwin", "type_org": "municipal", "utility": "ENWIN Utilities", "region": "Windsor", "customers": "91K", "line_km": "1,100", "density": "82", "mix": "Grid", "saidi": 0.88, "saifi": 0.98 }, "geometry": { "type": "Polygon", "coordinates": [[[-83.10, 42.25], [-83.11, 42.28], [-83.08, 42.32], [-83.04, 42.34], [-82.95, 42.35], [-82.90, 42.32], [-82.88, 42.28], [-82.92, 42.25], [-83.10, 42.25]]] } },
                 { "type": "Feature", "properties": { "id": "niagara-pen", "type_org": "municipal", "utility": "Niagara Peninsula Energy", "region": "Niagara Region", "customers": "85K", "line_km": "2,200", "density": "38", "mix": "Grid", "saidi": 1.20, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.35, 42.90], [-79.38, 43.00], [-79.40, 43.10], [-79.32, 43.15], [-79.25, 43.20], [-79.18, 43.18], [-79.10, 43.15], [-79.05, 42.95], [-79.20, 42.92], [-79.35, 42.90]]] } },
                 { "type": "Feature", "properties": { "id": "oakville", "type_org": "municipal", "utility": "Oakville Hydro", "region": "Oakville", "customers": "74K", "line_km": "1,800", "density": "41.1", "mix": "Grid", "saidi": 0.85, "saifi": 0.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.38], [-79.78, 43.42], [-79.75, 43.48], [-79.68, 43.52], [-79.62, 43.50], [-79.60, 43.45], [-79.65, 43.40], [-79.72, 43.38], [-79.80, 43.38]]] } },
                 { "type": "Feature", "properties": { "id": "burlington", "type_org": "municipal", "utility": "Burlington Hydro", "region": "Burlington", "customers": "69K", "line_km": "1,500", "density": "46", "mix": "Grid", "saidi": 0.90, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.85, 43.30], [-79.88, 43.35], [-79.90, 43.43], [-79.85, 43.48], [-79.78, 43.45], [-79.76, 43.38], [-79.80, 43.33], [-79.85, 43.30]]] } },
-                { "type": "Feature", "properties": { "id": "entegrus", "type_org": "municipal", "utility": "Entegrus Powerlines", "region": "Chatham-Kent", "customers": "60K", "line_km": "2,100", "density": "28", "mix": "Grid", "saidi": 1.05, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-82.25, 42.20], [-82.32, 42.30], [-82.40, 42.45], [-82.20, 42.52], [-82.00, 42.60], [-81.85, 42.60], [-81.70, 42.60], [-81.80, 42.30], [-82.00, 42.25], [-82.25, 42.20]]] } },
+                { "type": "Feature", "properties": { "id": "entegrus", "type_org": "municipal", "utility": "Entegrus Powerlines", "region": "Chatham-Kent / St. Thomas", "customers": "60K", "line_km": "2,100", "density": "28", "mix": "Grid", "saidi": 1.05, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-82.25, 42.20], [-82.32, 42.30], [-82.40, 42.45], [-82.20, 42.52], [-82.00, 42.60], [-81.85, 42.60], [-81.70, 42.60], [-81.80, 42.30], [-82.00, 42.25], [-82.25, 42.20]]] } },
                 { "type": "Feature", "properties": { "id": "oshawa", "type_org": "municipal", "utility": "Oshawa PUC Networks", "region": "Oshawa", "customers": "60K", "line_km": "1,500", "density": "40", "mix": "Grid", "saidi": 0.95, "saifi": 1.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-78.90, 43.85], [-78.92, 43.90], [-78.95, 43.95], [-78.90, 44.00], [-78.85, 44.05], [-78.80, 43.98], [-78.75, 43.90], [-78.82, 43.88], [-78.90, 43.85]]] } },
-                { "type": "Feature", "properties": { "id": "synergy", "type_org": "municipal", "utility": "Synergy North", "region": "Thunder Bay/Kenora", "customers": "56K", "line_km": "2,200", "density": "25", "mix": "Grid", "saidi": 1.25, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-89.35, 48.38], [-89.32, 48.42], [-89.30, 48.48], [-89.22, 48.46], [-89.15, 48.45], [-89.12, 48.40], [-89.10, 48.35], [-89.20, 48.30], [-89.35, 48.38]]] } },
-                { "type": "Feature", "properties": { "id": "newmarket-tay", "type_org": "municipal", "utility": "Newmarket-Tay Power", "region": "Newmarket/Midland", "customers": "48K", "line_km": "1,600", "density": "30", "mix": "Grid", "saidi": 1.15, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 44.02], [-79.51, 44.06], [-79.52, 44.10], [-79.46, 44.12], [-79.40, 44.15], [-79.38, 44.10], [-79.35, 44.05], [-79.42, 44.03], [-79.50, 44.02]]] } },
+                { "type": "Feature", "properties": { "id": "synergy", "type_org": "municipal", "utility": "Synergy North", "region": "Thunder Bay / Kenora", "customers": "56K", "line_km": "2,200", "density": "25", "mix": "Grid", "saidi": 1.25, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-89.35, 48.38], [-89.32, 48.42], [-89.30, 48.48], [-89.22, 48.46], [-89.15, 48.45], [-89.12, 48.40], [-89.10, 48.35], [-89.20, 48.30], [-89.35, 48.38]]] } },
+                { "type": "Feature", "properties": { "id": "newmarket-tay", "type_org": "municipal", "utility": "Newmarket-Tay Power", "region": "Newmarket / Midland", "customers": "48K", "line_km": "1,600", "density": "30", "mix": "Grid", "saidi": 1.15, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 44.02], [-79.51, 44.06], [-79.52, 44.10], [-79.46, 44.12], [-79.40, 44.15], [-79.38, 44.10], [-79.35, 44.05], [-79.42, 44.03], [-79.50, 44.02]]] } },
                 { "type": "Feature", "properties": { "id": "greater-sudbury", "type_org": "municipal", "utility": "Greater Sudbury Hydro", "region": "Sudbury", "customers": "47K", "line_km": "1,100", "density": "42", "mix": "Grid", "saidi": 1.10, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.05, 46.45], [-81.08, 46.50], [-81.10, 46.55], [-81.02, 46.60], [-80.95, 46.65], [-80.90, 46.58], [-80.85, 46.50], [-80.95, 46.48], [-81.05, 46.45]]] } },
                 { "type": "Feature", "properties": { "id": "milton", "type_org": "municipal", "utility": "Milton Hydro", "region": "Milton", "customers": "40K", "line_km": "1,400", "density": "28", "mix": "Grid", "saidi": 0.85, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.95, 43.48], [-79.98, 43.52], [-80.00, 43.58], [-79.92, 43.59], [-79.85, 43.60], [-79.82, 43.55], [-79.80, 43.50], [-79.88, 43.49], [-79.95, 43.48]]] } },
                 { "type": "Feature", "properties": { "id": "elexicon-belleville", "type_org": "municipal", "utility": "Elexicon Energy", "region": "Belleville", "customers": "40K", "line_km": "1,000", "density": "40.0", "mix": "Grid", "saidi": 0.95, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-77.40, 44.10], [-77.42, 44.15], [-77.40, 44.20], [-77.32, 44.22], [-77.25, 44.20], [-77.22, 44.15], [-77.25, 44.10], [-77.32, 44.08], [-77.40, 44.10]]] } },
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "cn-power", "type_org": "municipal", "utility": "Canadian Niagara Power", "region": "Fort Erie", "customers": "28K", "line_km": "800", "density": "35", "mix": "Grid", "saidi": 1.10, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.05, 42.88], [-79.06, 42.92], [-79.08, 42.95], [-79.02, 42.96], [-78.95, 42.98], [-78.92, 42.94], [-78.90, 42.90], [-78.98, 42.89], [-79.05, 42.88]]] } },
                 { "type": "Feature", "properties": { "id": "cornwall", "type_org": "municipal", "utility": "Cornwall Electric", "region": "Cornwall", "customers": "25K", "line_km": "600", "density": "41", "mix": "Grid", "saidi": 0.85, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-74.78, 44.98], [-74.80, 45.02], [-74.82, 45.05], [-74.75, 45.06], [-74.68, 45.08], [-74.66, 45.04], [-74.65, 45.00], [-74.72, 44.99], [-74.78, 44.98]]] } },
                 { "type": "Feature", "properties": { "id": "welland", "type_org": "municipal", "utility": "Welland Hydro", "region": "Welland", "customers": "24K", "line_km": "800", "density": "30", "mix": "Grid", "saidi": 1.00, "saifi": 1.10 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.30, 42.95], [-79.32, 42.98], [-79.35, 43.02], [-79.28, 43.04], [-79.20, 43.05], [-79.18, 43.00], [-79.15, 42.95], [-79.22, 42.94], [-79.30, 42.95]]] } },
-                { "type": "Feature", "properties": { "id": "erth", "type_org": "municipal", "utility": "ERTH Power", "region": "Oxford/Elgin", "customers": "24K", "line_km": "900", "density": "26", "mix": "Grid", "saidi": 1.15, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.05, 42.75], [-81.10, 42.82], [-81.15, 42.90], [-81.00, 42.95], [-80.85, 43.00], [-80.80, 42.92], [-80.75, 42.85], [-80.90, 42.80], [-81.05, 42.75]]] } },
+                { "type": "Feature", "properties": { "id": "erth", "type_org": "municipal", "utility": "ERTH Power", "region": "Oxford / Elgin", "customers": "24K", "line_km": "900", "density": "26", "mix": "Grid", "saidi": 1.15, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-81.05, 42.75], [-81.10, 42.82], [-81.15, 42.90], [-81.00, 42.95], [-80.85, 43.00], [-80.80, 42.92], [-80.75, 42.85], [-80.90, 42.80], [-81.05, 42.75]]] } },
                 { "type": "Feature", "properties": { "id": "north-bay", "type_org": "municipal", "utility": "North Bay Hydro", "region": "North Bay", "customers": "24K", "line_km": "850", "density": "28", "mix": "Grid", "saidi": 1.20, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 46.28], [-79.52, 46.33], [-79.55, 46.38], [-79.48, 46.40], [-79.40, 46.42], [-79.38, 46.37], [-79.35, 46.32], [-79.42, 46.30], [-79.50, 46.28]]] } },
                 { "type": "Feature", "properties": { "id": "halton-hills", "type_org": "municipal", "utility": "Halton Hills Hydro", "region": "Halton Hills", "customers": "23K", "line_km": "950", "density": "24", "mix": "Grid", "saidi": 1.05, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.95, 43.62], [-79.98, 43.67], [-80.00, 43.72], [-79.92, 43.74], [-79.85, 43.75], [-79.82, 43.70], [-79.80, 43.65], [-79.88, 43.64], [-79.95, 43.62]]] } },
                 { "type": "Feature", "properties": { "id": "epcor-on", "type_org": "municipal", "utility": "EPCOR Electricity ON", "region": "Collingwood", "customers": "21K", "line_km": "750", "density": "28", "mix": "Grid", "saidi": 1.10, "saifi": 1.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-80.25, 44.45], [-80.28, 44.50], [-80.30, 44.55], [-80.22, 44.58], [-80.15, 44.60], [-80.12, 44.55], [-80.10, 44.50], [-80.18, 44.48], [-80.25, 44.45]]] } },
@@ -492,21 +492,26 @@ document.addEventListener('DOMContentLoaded', () => {
         function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
         // ==========================================
-        // STYLING TWEAK: Make Hydro One seamless
+        // OPTIMIZED "GHOST LAYER" STYLING
         // ==========================================
         let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
             smoothFactor: 1.5, 
             style: function(f) { 
                 const isHydroOne = f.properties.id === 'ho';
                 const isProv = f.properties.type_org === 'provincial';
+                
+                let polyFillOpacity = isHydroOne ? 0.08 : (isProv ? 0.15 : 0.40);
+                let borderOpacity = isHydroOne ? 0.0 : (isProv ? 0.4 : 0.85);
+                let borderWeight = isHydroOne ? 0 : (isProv ? 1 : 1.5);
+
                 return { 
                     fillColor: getColor(f.properties.saidi), 
-                    weight: isHydroOne ? 0.2 : (isProv ? 1.5 : 2), 
-                    opacity: isHydroOne ? 0.2 : (isProv ? 0.4 : 1), 
+                    weight: borderWeight, 
+                    opacity: borderOpacity, 
                     color: getColor(f.properties.saidi), 
-                    fillOpacity: isHydroOne ? 0.25 : (isProv ? 0.05 : 0.45), 
+                    fillOpacity: polyFillOpacity, 
                     lineJoin: 'round', 
-                    lineCap: 'round' 
+                    lineCap: 'round'
                 }; 
             }, 
             onEachFeature: function(f, layer) {
@@ -517,189 +522,204 @@ document.addEventListener('DOMContentLoaded', () => {
                 layer.bindPopup(`<div style="min-width: 260px; padding: 4px;"><div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 800; margin-bottom: 4px;">${f.properties.region}</div><strong style="font-size: 1.15rem; color: var(--text-main); display: block; margin-bottom: 10px; border-bottom: 1px solid var(--border-main); padding-bottom: 6px;">${f.properties.utility}</strong><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;"><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Customer Pop.</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.customers}</strong></div><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Route Length</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.line_km} km</strong></div></div><div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.8rem;"><span style="color: var(--text-muted);">Grid Density:</span><strong style="color: #10b981;">${f.properties.density} /km</strong></div><div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.8rem; border-bottom: 1px solid var(--border-main); padding-bottom: 8px;"><span style="color: var(--text-muted);">Generation Mix:</span><strong style="text-align: right; color: var(--text-main);">${f.properties.mix}</strong></div><div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIDI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saidi} hrs</strong></div><div style="text-align: right;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIFI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saifi}</strong></div></div></div>`);
                 
                 layer.on({ 
-                    mouseover: (e) => { e.target.setStyle({ weight: 3, fillOpacity: 0.60 }); document.getElementById(`row-${f.properties.id}`)?.classList.add('active'); }, 
-                    mouseout: (e) => { geojsonLayer.resetStyle(e.target); document.getElementById(`row-${f.properties.id}`)?.classList.remove('active'); }, 
+                    mouseover: (e) => { 
+                        e.target.setStyle({ weight: 2.5, opacity: 1, fillOpacity: 0.65 }); 
+                        document.getElementById(`row-${f.properties.id}`)?.classList.add('active'); 
+                    }, 
+                    mouseout: (e) => { 
+                        geojsonLayer.resetStyle(e.target); 
+                        document.getElementById(`row-${f.properties.id}`)?.classList.remove('active'); 
+                    }, 
                     click: () => selectUtility(f.properties.id) 
                 });
             }
         }).addTo(map);
 
         // ==========================================
-        // ENTERPRISE UPGRADE: HIGH-PRECISION POLYGON FETCH
-        // Overwrites the generic bounding boxes with precise survey geometries
-        // Aggregates multiple municipalities into a single LDC operator where applicable
+        // NORMALIZATION & MULTIPOLYGON AGGREGATION ENGINE
+        // Merges municipal geometries into unique LDCs without adding extra duplicate features
         // ==========================================
+        function normalizeName(str) {
+            if (!str) return '';
+            return str.toString().toUpperCase()
+                .replace(/^(CITY|TOWN|TOWNSHIP|MUNICIPALITY|VILLAGE|COUNTY)\s+OF\s+/i, '')
+                .replace(/^(VILLAGE|TOWN|CITY|TOWNSHIP|MUNICIPALITY)\s+/i, '')
+                .replace(/[^A-Z0-9]/g, '');
+        }
+
+        function extractPolygonRings(geom) {
+            if (!geom) return [];
+            if (geom.type === 'Polygon') return [geom.coordinates];
+            if (geom.type === 'MultiPolygon') return geom.coordinates;
+            return [];
+        }
+
         const boundaryLookup = {
-            "CITY OF OTTAWA": "hydro-ottawa",
-            "VILLAGE OF CASSELMAN": "hydro-ottawa",
-            "CITY OF LONDON": "london-hydro",
-            "CITY OF TORONTO": "toronto-hydro",
-            "CITY OF MISSISSAUGA": "alectra",
-            "CITY OF BRAMPTON": "alectra",
-            "CITY OF HAMILTON": "alectra",
-            "CITY OF GUELPH": "alectra",
-            "CITY OF MARKHAM": "alectra",
-            "CITY OF VAUGHAN": "alectra",
-            "CITY OF BARRIE": "alectra",
-            "CITY OF ST. CATHARINES": "alectra",
-            "TOWN OF AURORA": "alectra",
-            "TOWN OF BRADFORD WEST GWILLIMBURY": "alectra",
-            "TOWN OF NEW TECUMSETH": "alectra",
-            "TOWN OF PENETANGUISHENE": "alectra",
-            "CITY OF KITCHENER": "enova",
-            "CITY OF WATERLOO": "enova",
-            "TOWNSHIP OF WELLESLEY": "enova",
-            "TOWNSHIP OF WOOLWICH": "enova",
-            "TOWNSHIP OF WILMOT": "enova",
-            "CITY OF BRANTFORD": "grandbridge",
-            "CITY OF CAMBRIDGE": "grandbridge",
-            "COUNTY OF BRANT": "grandbridge",
-            "TOWNSHIP OF NORTH DUMFRIES": "grandbridge",
-            "CITY OF WINDSOR": "enwin",
-            "CITY OF NIAGARA FALLS": "niagara-pen",
-            "TOWN OF PELHAM": "niagara-pen",
-            "TOWN OF LINCOLN": "niagara-pen",
-            "TOWN OF GRIMSBY": "niagara-pen",
-            "TOWNSHIP OF WEST LINCOLN": "niagara-pen",
-            "TOWN OF OAKVILLE": "oakville",
-            "CITY OF BURLINGTON": "burlington",
-            "MUNICIPALITY OF CHATHAM-KENT": "entegrus",
-            "MUNICIPALITY OF STRATHROY-CARADOC": "entegrus",
-            "MUNICIPALITY OF DUTTON/DUNWICH": "entegrus",
-            "CITY OF ST. THOMAS": "entegrus",
-            "CITY OF OSHAWA": "oshawa",
-            "CITY OF THUNDER BAY": "synergy",
-            "CITY OF KENORA": "synergy",
-            "TOWN OF NEWMARKET": "newmarket-tay",
-            "TOWNSHIP OF TAY": "newmarket-tay",
-            "TOWN OF MIDLAND": "newmarket-tay",
-            "CITY OF GREATER SUDBURY": "greater-sudbury",
-            "MUNICIPALITY OF WEST NIPISSING": "greater-sudbury",
-            "TOWN OF MILTON": "milton",
-            "CITY OF BELLEVILLE": "elexicon-belleville",
-            "TOWN OF WHITBY": "elexicon",
-            "TOWN OF AJAX": "elexicon",
-            "CITY OF PICKERING": "elexicon",
-            "MUNICIPALITY OF CLARINGTON": "elexicon",
-            "MUNICIPALITY OF PORT HOPE": "elexicon",
-            "CITY OF SARNIA": "bluewater",
-            "TOWN OF PETROLIA": "bluewater",
-            "TOWNSHIP OF ST. CLAIR": "bluewater",
-            "VILLAGE OF POINT EDWARD": "bluewater",
-            "TOWNSHIP OF WARWICK": "bluewater",
-            "MUNICIPALITY OF BROOKE-ALVINSTON": "bluewater",
-            "CITY OF SAULT STE. MARIE": "puc-ssm",
-            "TOWN OF ESSEX": "essex",
-            "TOWN OF AMHERSTBURG": "essex",
-            "TOWN OF LASALLE": "essex",
-            "TOWN OF TECUMSEH": "essex",
-            "CITY OF KINGSTON": "kingston",
-            "TOWN OF FORT ERIE": "cn-power",
-            "CITY OF PORT COLBORNE": "cn-power",
-            "CITY OF CORNWALL": "cornwall",
-            "TOWNSHIP OF SOUTH GLENGARRY": "cornwall",
-            "CITY OF WELLAND": "welland",
-            "TOWN OF INGERSOLL": "erth",
-            "TOWN OF AYLMER": "erth",
-            "MUNICIPALITY OF THAMES CENTRE": "erth",
-            "MUNICIPALITY OF CENTRAL ELGIN": "erth",
-            "MUNICIPALITY OF BAYHAM": "erth",
-            "MUNICIPALITY OF WEST PERTH": "erth",
-            "CITY OF NORTH BAY": "north-bay",
-            "TOWN OF HALTON HILLS": "halton-hills",
-            "TOWN OF COLLINGWOOD": "epcor-on",
-            "TOWN OF THE BLUE MOUNTAINS": "epcor-on",
-            "CITY OF STRATFORD": "festival",
-            "TOWN OF ST. MARYS": "festival",
-            "MUNICIPALITY OF SOUTH HURON": "festival",
-            "TOWN OF INNISFIL": "innpower",
-            "TOWNSHIP OF ESSA": "innpower",
-            "TOWN OF HUNTSVILLE": "lakeland",
-            "TOWN OF BRACEBRIDGE": "lakeland",
-            "TOWN OF PARRY SOUND": "lakeland",
-            "MUNICIPALITY OF MAGNETAWAN": "lakeland",
-            "TOWNSHIP OF PERRY": "lakeland",
-            "VILLAGE OF BURK'S FALLS": "lakeland",
-            "TOWN OF WASAGA BEACH": "wasaga",
-            "TOWN OF ORANGEVILLE": "orangeville",
-            "TOWN OF GRAND VALLEY": "orangeville",
-            "MUNICIPALITY OF HURON SHORES": "algoma",
-            "TOWN OF BLIND RIVER": "algoma",
-            "TOWNSHIP OF THE NORTH SHORE": "algoma",
-            "TOWN OF THESSALON": "algoma",
-            "TOWN OF BRUCE MINES": "algoma",
-            "TOWNSHIP OF PLUMMER ADDITIONAL": "algoma",
-            "VILLAGE OF HILTON BEACH": "algoma",
-            "TOWN OF KINGSVILLE": "elk",
-            "MUNICIPALITY OF LAKESHORE": "elk",
-            "CITY OF PEMBROKE": "ottawa-river",
-            "TOWN OF DEEP RIVER": "ottawa-river",
-            "TOWN OF LAURENTIAN HILLS": "ottawa-river",
-            "TOWNSHIP OF KILLALOE, HAGARTY AND RICHARDS": "ottawa-river",
-            "TOWN OF COBOURG": "lakefront",
-            "TOWNSHIP OF ALNWICK/HALDIMAND": "lakefront",
-            "TOWN OF NIAGARA-ON-THE-LAKE": "notl",
-            "TOWNSHIP OF CENTRE WELLINGTON": "cw",
-            "TOWN OF TILLSONBURG": "tillsonburg",
-            "TOWN OF PRESCOTT": "rideau",
-            "VILLAGE OF CARDINAL": "rideau",
-            "TOWNSHIP OF SOUTH DUNDAS": "rideau",
-            "TOWNSHIP OF EDWARDSBURGH/CARDINAL": "rideau",
-            "TOWN OF COCHRANE": "northern-wires",
-            "TOWN OF IROQUOIS FALLS": "northern-wires",
-            "TOWN OF KAPUSKASING": "northern-wires",
-            "TOWN OF HAWKESBURY": "hydro-hawk",
-            "TOWN OF RENFREW": "renfrew",
-            "TOWN OF FORT FRANCES": "fort-frances",
-            "MUNICIPALITY OF SIOUX LOOKOUT": "sioux",
-            "TOWN OF HEARST": "hearst",
-            "TOWNSHIP OF RUSSELL": "coop-embrun",
-            "TOWNSHIP OF ATIKOKAN": "atikokan",
-            "TOWNSHIP OF ALFRED AND PLANTAGENET": "hydro-2000"
+            "OTTAWA": "hydro-ottawa",
+            "CASSELMAN": "hydro-ottawa",
+            "LONDON": "london-hydro",
+            "TORONTO": "toronto-hydro",
+            "MISSISSAUGA": "alectra",
+            "BRAMPTON": "alectra",
+            "HAMILTON": "alectra",
+            "GUELPH": "alectra",
+            "MARKHAM": "alectra",
+            "VAUGHAN": "alectra",
+            "BARRIE": "alectra",
+            "STCATHARINES": "alectra",
+            "SAINTCATHARINES": "alectra",
+            "AURORA": "alectra",
+            "BRADFORDWESTGWILLIMBURY": "alectra",
+            "NEWTECUMSETH": "alectra",
+            "PENETANGUISHENE": "alectra",
+            "KITCHENER": "enova",
+            "WATERLOO": "enova",
+            "WELLESLEY": "enova",
+            "WOOLWICH": "enova",
+            "WILMOT": "enova",
+            "BRANTFORD": "grandbridge",
+            "CAMBRIDGE": "grandbridge",
+            "BRANT": "grandbridge",
+            "COUNTYOFBRANT": "grandbridge",
+            "NORTHDUMFRIES": "grandbridge",
+            "WINDSOR": "enwin",
+            "NIAGARAFALLS": "niagara-pen",
+            "PELHAM": "niagara-pen",
+            "LINCOLN": "niagara-pen",
+            "WESTLINCOLN": "niagara-pen",
+            "GRIMSBY": "niagara-pen",
+            "OAKVILLE": "oakville",
+            "BURLINGTON": "burlington",
+            "CHATHAMKENT": "entegrus",
+            "STRATHROYCARADOC": "entegrus",
+            "DUTTONDUNWICH": "entegrus",
+            "DUTTON": "entegrus",
+            "DUNWICH": "entegrus",
+            "STTHOMAS": "entegrus",
+            "SAINTTHOMAS": "entegrus",
+            "OSHAWA": "oshawa",
+            "THUNDERBAY": "synergy",
+            "KENORA": "synergy",
+            "NEWMARKET": "newmarket-tay",
+            "TAY": "newmarket-tay",
+            "MIDLAND": "newmarket-tay",
+            "GREATERSUDBURY": "greater-sudbury",
+            "SUDBURY": "greater-sudbury",
+            "WESTNIPISSING": "greater-sudbury",
+            "MILTON": "milton",
+            "BELLEVILLE": "elexicon-belleville",
+            "WHITBY": "elexicon",
+            "AJAX": "elexicon",
+            "PICKERING": "elexicon",
+            "CLARINGTON": "elexicon",
+            "PORTHOPE": "elexicon",
+            "SARNIA": "bluewater",
+            "PETROLIA": "bluewater",
+            "STCLAIR": "bluewater",
+            "SAINTCLAIR": "bluewater",
+            "POINTEDWARD": "bluewater",
+            "WARWICK": "bluewater",
+            "BROOKEALVINSTON": "bluewater",
+            "SAULTSTEMARIE": "puc-ssm",
+            "SAULTSTE": "puc-ssm",
+            "ESSEX": "essex",
+            "AMHERSTBURG": "essex",
+            "LASALLE": "essex",
+            "TECUMSEH": "essex",
+            "KINGSTON": "kingston",
+            "FORTERIE": "cn-power",
+            "PORTCOLBORNE": "cn-power",
+            "CORNWALL": "cornwall",
+            "SOUTHGLENGARRY": "cornwall",
+            "WELLAND": "welland",
+            "INGERSOLL": "erth",
+            "AYLMER": "erth",
+            "CENTRALELGIN": "erth",
+            "BAYHAM": "erth",
+            "WESTPERTH": "erth",
+            "NORTHBAY": "north-bay",
+            "HALTONHILLS": "halton-hills",
+            "COLLINGWOOD": "epcor-on",
+            "THEBLUEMOUNTAINS": "epcor-on",
+            "BLUEMOUNTAINS": "epcor-on",
+            "STRATFORD": "festival",
+            "STMARYS": "festival",
+            "SAINTMARYS": "festival",
+            "SOUTHHURON": "festival",
+            "INNISFIL": "innpower",
+            "HUNTSVILLE": "lakeland",
+            "BRACEBRIDGE": "lakeland",
+            "PARRYSOUND": "lakeland",
+            "MAGNETAWAN": "lakeland",
+            "PERRY": "lakeland",
+            "BURKSFALLS": "lakeland",
+            "WASAGABEACH": "wasaga",
+            "WASAGA": "wasaga",
+            "ORANGEVILLE": "orangeville",
+            "GRANDVALLEY": "orangeville",
+            "HURONSHORES": "algoma",
+            "BLINDRIVER": "algoma",
+            "THENORTHSHORE": "algoma",
+            "NORTHSHORE": "algoma",
+            "THESSALON": "algoma",
+            "BRUCEMINES": "algoma",
+            "PLUMMERADDITIONAL": "algoma",
+            "HILTONBEACH": "algoma",
+            "KINGSVILLE": "elk",
+            "LAKESHORE": "elk",
+            "PEMBROKE": "ottawa-river",
+            "DEEPRIVER": "ottawa-river",
+            "LAURENTIANHILLS": "ottawa-river",
+            "KILLALOEHAGARTYANDRICHARDS": "ottawa-river",
+            "COBOURG": "lakefront",
+            "ALNWICKHALDIMAND": "lakefront",
+            "NIAGARAONTHELAKE": "notl",
+            "CENTREWELLINGTON": "cw",
+            "TILLSONBURG": "tillsonburg",
+            "PRESCOTT": "rideau",
+            "CARDINAL": "rideau",
+            "SOUTHDUNDAS": "rideau",
+            "EDWARDSBURGHCARDINAL": "rideau",
+            "COCHRANE": "northern-wires",
+            "IROQUOISFALLS": "northern-wires",
+            "KAPUSKASING": "northern-wires",
+            "HAWKESBURY": "hydro-hawk",
+            "RENFREW": "renfrew",
+            "FORTFRANCES": "fort-frances",
+            "SIOUXLOOKOUT": "sioux",
+            "HEARST": "hearst",
+            "RUSSELL": "coop-embrun",
+            "EMBRUN": "coop-embrun",
+            "ATIKOKAN": "atikokan",
+            "ALFREDANDPLANTAGENET": "hydro-2000"
         };
 
         fetch('data/ontario_cities.geojson')
             .then(res => res.json())
             .then(highResData => {
-                const newFeatures = [];
+                const ldcGeomMap = {};
 
                 highResData.features.forEach(hiResFeature => {
-                    const muniName = hiResFeature.properties.MUNICIPAL_NAME || hiResFeature.properties.LDC_NAME || hiResFeature.properties.NAME;
-                    if (!muniName) return;
-                    
-                    const mappedLdcId = boundaryLookup[muniName];
-                    
-                    if (mappedLdcId) {
-                        let ldcTemplate = utilitiesGeoJSON.features.find(f => f.properties.id === mappedLdcId);
-                        if (ldcTemplate) {
-                            if (!ldcTemplate.properties.upgraded) {
-                                ldcTemplate.geometry = hiResFeature.geometry;
-                                ldcTemplate.properties.upgraded = true;
-                                ldcTemplate.properties.region = muniName.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
-                            } else {
-                                // Clone feature if an LDC covers multiple cities (e.g. Enova -> Kitchener + Waterloo)
-                                newFeatures.push({
-                                    type: "Feature",
-                                    properties: { ...ldcTemplate.properties, region: muniName.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) },
-                                    geometry: hiResFeature.geometry
-                                });
-                            }
-                        }
-                    } else {
-                        // Default any unmapped rural municipality to Hydro One Survey Polygon
-                        let hydroOneBase = utilitiesGeoJSON.features.find(f => f.properties.id === 'ho');
-                        if (hydroOneBase) {
-                            let formattedName = muniName.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
-                            newFeatures.push({
-                                type: "Feature",
-                                properties: { ...hydroOneBase.properties, region: formattedName },
-                                geometry: hiResFeature.geometry
-                            });
-                        }
-                    }
+                    const rawName = hiResFeature.properties.MUNICIPAL_NAME || hiResFeature.properties.MUNICIPAL_NAME_SHORTFORM || hiResFeature.properties.LDC_NAME || hiResFeature.properties.NAME || '';
+                    const norm = normalizeName(rawName);
+                    const ldcId = boundaryLookup[norm] || 'ho';
+
+                    const rings = extractPolygonRings(hiResFeature.geometry);
+                    if (!ldcGeomMap[ldcId]) ldcGeomMap[ldcId] = [];
+                    ldcGeomMap[ldcId].push(...rings);
                 });
 
-                utilitiesGeoJSON.features.push(...newFeatures);
+                // Update geometry in-place on unique 93 LDCs
+                for (const [ldcId, rings] of Object.entries(ldcGeomMap)) {
+                    const ldcFeature = utilitiesGeoJSON.features.find(f => f.properties.id === ldcId);
+                    if (ldcFeature && rings.length > 0) {
+                        ldcFeature.geometry = {
+                            type: "MultiPolygon",
+                            coordinates: rings
+                        };
+                    }
+                }
+
                 geojsonLayer.clearLayers();
                 geojsonLayer.addData(utilitiesGeoJSON);
                 buildTable(utilitiesGeoJSON.features);
@@ -711,19 +731,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function buildTable(features) {
             if (!tableBody) return;
-            
-            // Filter to ensure only 1 row per unique LDC ID
-            const uniqueLDCs = [];
-            const seen = new Set();
-            for (const f of features) {
-                if (!seen.has(f.properties.id)) {
-                    seen.add(f.properties.id);
-                    uniqueLDCs.push(f);
-                }
-            }
 
             tableBody.innerHTML = '';
-            [...uniqueLDCs].sort((a, b) => {
+            [...features].sort((a, b) => {
                 let vA = a.properties[activeSortKey]; let vB = b.properties[activeSortKey];
                 if (activeSortKey === 'customers') { vA = parseCustomers(vA); vB = parseCustomers(vB); }
                 if (typeof vA === 'number' && typeof vB === 'number') return isAscending ? vA - vB : vB - vA;
@@ -733,15 +743,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const row = document.createElement('tr'); row.className = 'utility-row'; row.id = `row-${p.id}`;
                 row.innerHTML = `<td style="padding: 12px 16px;"><div style="display:flex; align-items:center; gap: 10px;"><span class="status-badge" style="background: ${getColor(p.saidi)}; width: 8px; height: 8px; border-radius: 50%;"></span><strong style="color: var(--text-main); font-size: 0.95rem;">${p.utility}</strong></div><div style="font-size: 0.75rem; color: var(--text-muted); margin-left: 18px; margin-top: 4px;">${p.customers} Pop &bull; ${p.line_km} km</div></td><td style="text-align: right; padding: 12px 16px;"><strong style="color: var(--text-main); font-size: 0.95rem;">${p.saidi}</strong><span style="font-size:0.75rem; color: var(--text-muted);"> hr</span></td><td style="text-align: right; padding: 12px 16px;"><strong style="color: var(--text-main); font-size: 0.95rem;">${p.saifi}</strong></td>`;
                 row.addEventListener('click', () => selectUtility(p.id));
-                
-                row.addEventListener('mouseenter', () => {
-                    const layers = Object.values(layerMap).filter(l => l.feature.properties.id === p.id);
-                    layers.forEach(l => l.fire('mouseover'));
-                });
-                row.addEventListener('mouseleave', () => {
-                    const layers = Object.values(layerMap).filter(l => l.feature.properties.id === p.id);
-                    layers.forEach(l => l.fire('mouseout'));
-                });
+                row.addEventListener('mouseenter', () => layerMap[p.id]?.fire('mouseover'));
+                row.addEventListener('mouseleave', () => layerMap[p.id]?.fire('mouseout'));
                 tableBody.appendChild(row);
             });
         }
@@ -756,12 +759,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function selectUtility(id) {
-            const layers = Object.values(layerMap).filter(l => l.feature.properties.id === id);
-            if (layers.length === 0) return;
+            const layer = layerMap[id];
+            if (!layer) return;
             
-            const group = L.featureGroup(layers);
-            map.fitBounds(group.getBounds(), { padding: [30, 30], maxZoom: 10 });
-            layers[0].openPopup();
+            map.fitBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 10 });
+            layer.openPopup();
             
             document.querySelectorAll('.utility-row').forEach(r => r.classList.remove('active'));
             document.getElementById(`row-${id}`)?.classList.add('active');
@@ -774,7 +776,9 @@ document.addEventListener('DOMContentLoaded', () => {
             searchTimeout = setTimeout(() => {
                 const query = e.target.value.toLowerCase();
                 const filtered = utilitiesGeoJSON.features.filter(f => f.properties.utility.toLowerCase().includes(query) || f.properties.region.toLowerCase().includes(query));
-                buildTable(filtered); geojsonLayer.clearLayers(); geojsonLayer.addData({ type: "FeatureCollection", features: filtered });
+                buildTable(filtered); 
+                geojsonLayer.clearLayers(); 
+                geojsonLayer.addData({ type: "FeatureCollection", features: filtered });
             }, 250);
         });
         window.addEventListener('resize', () => map.invalidateSize());
