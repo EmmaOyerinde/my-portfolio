@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // ==========================================
     // COMPLETE & UNABRIDGED NATIONAL UTILITY DATABASE (93 ENTITIES)
-    // Upgraded with organically delineated municipal boundaries
     // ==========================================
     const db = {
         utilitiesGeoJSON: {
@@ -54,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "northland", "type_org": "provincial", "utility": "Northland Utilities", "region": "NWT", "customers": "11K", "line_km": "350", "density": "31", "mix": "Hydro/Diesel", "saidi": 2.10, "saifi": 2.20 }, "geometry": { "type": "Polygon", "coordinates": [[[-114.40, 62.42], [-114.45, 62.45], [-114.40, 62.48], [-114.35, 62.50], [-114.30, 62.48], [-114.25, 62.45], [-114.30, 62.42], [-114.35, 62.40], [-114.40, 62.42]]] } },
                 { "type": "Feature", "properties": { "id": "atco-yukon", "type_org": "provincial", "utility": "ATCO Electric Yukon", "region": "Yukon", "customers": "19K", "line_km": "450", "density": "42", "mix": "Hydro/Diesel", "saidi": 1.95, "saifi": 2.05 }, "geometry": { "type": "Polygon", "coordinates": [[[-135.10, 60.70], [-135.15, 60.72], [-135.10, 60.75], [-135.05, 60.77], [-135.00, 60.75], [-134.95, 60.72], [-135.00, 60.70], [-135.05, 60.68], [-135.10, 60.70]]] } },
 
-                /* --- 3. ONTARIO LDCs (ORGANIC BOUNDARIES) --- */
+                /* --- 3. ONTARIO LDCs (HIGH-PRECISION SURVEY BOUNDARIES FALLBACKS) --- */
                 { "type": "Feature", "properties": { "id": "alectra", "type_org": "municipal", "utility": "Alectra Utilities", "region": "GTA/Hamilton/Guelph", "customers": "1.1M", "line_km": "18,500", "density": "60", "mix": "Grid", "saidi": 0.85, "saifi": 1.05 }, "geometry": { "type": "MultiPolygon", "coordinates": [[[[ -79.90, 43.20 ], [ -80.00, 43.30 ], [ -79.80, 43.40 ], [ -79.70, 43.30 ], [ -79.90, 43.20 ]]], [[[ -79.60, 43.50 ], [ -79.70, 43.70 ], [ -79.40, 43.90 ], [ -79.20, 43.90 ], [ -79.30, 43.70 ], [ -79.60, 43.50 ]]]] } },
                 { "type": "Feature", "properties": { "id": "toronto-hydro", "type_org": "municipal", "utility": "Toronto Hydro", "region": "Toronto", "customers": "786K", "line_km": "16,000", "density": "49", "mix": "Grid", "saidi": 0.75, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.54, 43.58], [-79.56, 43.62], [-79.60, 43.70], [-79.58, 43.75], [-79.40, 43.80], [-79.16, 43.82], [-79.12, 43.78], [-79.20, 43.70], [-79.30, 43.66], [-79.38, 43.62], [-79.54, 43.58]]] } },
                 { "type": "Feature", "properties": { "id": "hydro-ottawa", "type_org": "municipal", "utility": "Hydro Ottawa", "region": "Ottawa", "customers": "350K", "line_km": "5,800", "density": "60", "mix": "Grid", "saidi": 1.10, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-76.05, 45.30], [-76.00, 45.40], [-75.80, 45.50], [-75.60, 45.52], [-75.40, 45.55], [-75.25, 45.40], [-75.40, 45.10], [-75.70, 45.10], [-75.90, 45.20], [-76.05, 45.30]]] } },
@@ -218,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         defaultBasemap.addTo(mapInstance);
         attachLocateControl(mapInstance);
-        attachResetControl(mapInstance); // UX Elevation: Reset Map to Canada view
+        attachResetControl(mapInstance); 
         L.control.layers(baseMaps, null, { position: 'bottomright', collapsed: true }).addTo(mapInstance);
         attachCustomGeocoder(mapInstance);
     }
@@ -249,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // UX Elevation: Reset to Canada control button
     function attachResetControl(mapInstance) {
         const ResetControl = L.Control.extend({
             options: { position: 'bottomright' },
@@ -459,7 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let checkLeaflet = setInterval(() => {
         if (window.L) {
             clearInterval(checkLeaflet);
-            // Strict Bounding Box: Locks the map completely within Canada
             const canadaBounds = L.latLngBounds(L.latLng(41.0, -142.0), L.latLng(84.0, -52.0));
             
             initReliabilityMap(db.utilitiesGeoJSON, canadaBounds); 
@@ -478,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!mapEl) return;
 
         const map = L.map('leaflet-map', { 
-            preferCanvas: true, // Forces HTML5 Canvas rendering for massive performance boost
+            preferCanvas: true, 
             zoomControl: false, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false,
             maxBounds: canadaBounds, maxBoundsViscosity: 1.0, minZoom: 3 
         }).setView([58.0, -98.0], 3); 
@@ -514,6 +511,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }).addTo(map);
+
+        // ==========================================
+        // ENTERPRISE UPGRADE: HIGH-PRECISION POLYGON FETCH
+        // Overwrites the generic bounding boxes with precise survey geometries
+        // ==========================================
+        const boundaryLookup = {
+            "CITY OF OTTAWA": "hydro-ottawa",
+            "TOWN OF OAKVILLE": "oakville",
+            "TOWN OF HUNTSVILLE": "lakeland",
+            "TOWN OF THE BLUE MOUNTAINS": "epcor-on",
+            "TOWNSHIP OF ST. CLAIR": "bluewater",
+            "TOWN OF GRIMSBY": "niagara-pen",
+            "MUNICIPALITY OF THAMES CENTRE": "london-hydro",
+            "TOWN OF DEEP RIVER": "ottawa-river",
+            "TOWN OF BLIND RIVER": "algoma",
+            "TOWNSHIP OF ARMOUR": "ho"
+        };
+
+        fetch('data/ontario_cities.geojson')
+            .then(res => res.json())
+            .then(highResData => {
+                highResData.features.forEach(hiResFeature => {
+                    const muniName = hiResFeature.properties.MUNICIPAL_NAME || hiResFeature.properties.LDC_NAME || hiResFeature.properties.NAME;
+                    if (!muniName) return;
+                    
+                    const mappedLdcId = boundaryLookup[muniName];
+                    
+                    if (mappedLdcId) {
+                        let ldc = utilitiesGeoJSON.features.find(f => f.properties.id === mappedLdcId);
+                        if (ldc) {
+                            ldc.geometry = hiResFeature.geometry;
+                        }
+                    } else {
+                        let hydroOneBase = utilitiesGeoJSON.features.find(f => f.properties.id === 'ho');
+                        if (hydroOneBase) {
+                            let formattedName = muniName.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+                            let newHydroOneSector = {
+                                type: "Feature",
+                                properties: { ...hydroOneBase.properties, region: formattedName },
+                                geometry: hiResFeature.geometry
+                            };
+                            utilitiesGeoJSON.features.push(newHydroOneSector);
+                        }
+                    }
+                });
+
+                geojsonLayer.clearLayers();
+                geojsonLayer.addData(utilitiesGeoJSON);
+                buildTable(utilitiesGeoJSON.features);
+            })
+            .catch(err => console.log("High-res boundary file not found. Falling back to default DB coordinates.", err));
 
         const tableBody = document.getElementById('utility-table-body');
         let activeSortKey = 'customers'; let isAscending = false; 
@@ -681,14 +729,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('news-feed-container'); 
         if (!container) return;
         
-        // 1. Dynamic query with a cache-buster so we always get fresh news
         const targetUrl = `https://news.google.com/rss/search?q=Canada+electric+utility+OR+grid+OR+hydro+when:7d&hl=en-CA&gl=CA&ceid=CA:en&cb=${Date.now()}`;
         
-        // 2. Define two separate proxies. If one gets rate-limited, the other saves the feed.
         const primaryProxy = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
         const secondaryProxy = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&disableCache=true`;
 
-        // Attempt 1: Fetch raw XML via Primary Proxy
         fetch(primaryProxy)
             .then(res => {
                 if (!res.ok) throw new Error('Primary Proxy Failed');
@@ -697,7 +742,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(str => new DOMParser().parseFromString(str, "text/xml"))
             .then(data => processFeed(data, container))
             .catch(() => {
-                // Attempt 2: Fallback to Secondary JSON-wrapped proxy
                 fetch(secondaryProxy)
                     .then(res => {
                         if (!res.ok) throw new Error('Secondary Proxy Failed');
@@ -705,7 +749,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     .then(data => new DOMParser().parseFromString(data.contents, "text/xml"))
                     .then(data => processFeed(data, container))
-                    .catch(() => renderFallbackNews(container)); // Ultimate Fail-safe
+                    .catch(() => renderFallbackNews(container)); 
             });
     }
 
@@ -721,14 +765,12 @@ document.addEventListener('DOMContentLoaded', () => {
             let title = item.querySelector("title")?.textContent || ''; 
             let src = 'Utility Intelligence';
             
-            // Clean up Google News title formatting (Source is usually after the last '-')
             const lastHyphenIndex = title.lastIndexOf(' - ');
             if (lastHyphenIndex !== -1) {
                 src = title.substring(lastHyphenIndex + 3).trim();
                 title = title.substring(0, lastHyphenIndex).trim();
             }
             
-            // Safe Date Parsing for all browsers (including iOS Safari)
             let pubDate = item.querySelector("pubDate")?.textContent;
             let formattedDate = 'Today';
             if (pubDate) {
