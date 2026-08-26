@@ -3,7 +3,7 @@
    ========================================== */
 :root {
     /* Brand & Accents */
-    --accent: #2563eb;       
+    --accent: #2563eb;        
     --accent-hover: #1d4ed8;
     --brand-cyan: #06b6d4;
     --status-good: #10b981;
@@ -170,7 +170,7 @@ input, textarea, select { font-size: 16px !important; }
 .project-link:hover { color: var(--accent); gap: 0.75rem; }
 
 /* ==========================================
-   7. SHARED MAP LAYOUT STYLES
+   7. SHARED MAP LAYOUT STYLES & TOUCH OPTIMIZATIONS
    ========================================== */
 .map-section { padding: 120px 5%; background: var(--bg-base); position: relative; overflow: hidden; border-top: 1px solid var(--border-main); transition: background-color var(--transition), border-color var(--transition); }
 .map-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 80vw; background: radial-gradient(circle, var(--glow-primary) 0%, transparent 60%); border-radius: 50%; z-index: 0; pointer-events: none; filter: blur(80px); transition: background var(--transition); }
@@ -186,10 +186,25 @@ input, textarea, select { font-size: 16px !important; }
 .search-container { padding: 16px 24px; border-bottom: 1px solid var(--border-main); transition: border-color var(--transition); }
 .search-input { width: 100%; padding: 12px 16px; border: 1px solid var(--border-main); border-radius: var(--radius-sm); outline: none; transition: var(--transition); background: var(--input-bg); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif;}
 .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
-.table-container { flex-grow: 1; overflow-y: auto; }
+.table-container { flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .table-container::-webkit-scrollbar { width: 6px; }
 .table-container::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 3px; transition: background-color var(--transition); }
-.leaflet-map-container { flex-grow: 1; height: 100%; min-height: 400px; z-index: 1; background: var(--map-bg); transition: background var(--transition); }
+
+/* Mobile Touch Action Optimization: Prevents scroll trapping across all Leaflet containers */
+.leaflet-map-container,
+#leaflet-map, 
+#forecast-map-premium, 
+#deficit-leaflet-map, 
+#offgrid-leaflet-map { 
+    flex-grow: 1; 
+    height: 100%; 
+    min-height: 400px; 
+    z-index: 1; 
+    background: var(--map-bg); 
+    transition: background var(--transition); 
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+}
 
 /* ==========================================
    8. RELIABILITY TABLE
@@ -216,18 +231,18 @@ input, textarea, select { font-size: 16px !important; }
 .slider-header label { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); transition: color var(--transition); }
 .year-highlight { font-size: 2.5rem; font-weight: 800; color: var(--brand-cyan); line-height: 1; }
 input[type=range].premium-slider { -webkit-appearance: none; width: 100%; background: transparent; }
-input[type=range].premium-slider::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: var(--text-main); cursor: pointer; margin-top: -8px; box-shadow: var(--shadow-sm); border: 2px solid var(--brand-cyan); transition: background-color var(--transition); }
+input[type=range].premium-slider::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: var(--text-main); cursor: pointer; margin-top: -10px; box-shadow: var(--shadow-sm); border: 2px solid var(--brand-cyan); transition: background-color var(--transition); }
 input[type=range].premium-slider::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: var(--border-main); border-radius: 2px; transition: background-color var(--transition); }
 .scenario-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid var(--border-light); transition: border-color var(--transition); }
-.toggle-row { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.toggle-row { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 4px 0; }
 .toggle-label { font-size: 0.9rem; color: var(--text-main); font-weight: 600; transition: color var(--transition); }
 .toggle-label span { display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; font-weight: 400; transition: color var(--transition); }
-.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch { position: relative; display: inline-block; width: 48px; height: 26px; }
 .switch input { opacity: 0; width: 0; height: 0; }
-.slider-toggle { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-main); transition: .4s; border-radius: 24px; border: 1px solid var(--border-light); }
-.slider-toggle:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+.slider-toggle { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-main); transition: .4s; border-radius: 26px; border: 1px solid var(--border-light); }
+.slider-toggle:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 input:checked + .slider-toggle { background-color: var(--brand-cyan); border-color: var(--brand-cyan); }
-input:checked + .slider-toggle:before { transform: translateX(20px); }
+input:checked + .slider-toggle:before { transform: translateX(22px); }
 .metric-readout { text-align: center; }
 .metric-readout .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; transition: color var(--transition); }
 .metric-readout .value { font-size: 3.5rem; font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 10px; transition: color var(--transition); }
@@ -280,8 +295,10 @@ input:checked + .slider-toggle:before { transform: translateX(20px); }
 .leaflet-control-layers-expanded { padding: 10px 14px !important; }
 .leaflet-control-layers-base label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; cursor: pointer; }
 .leaflet-control-layers-base label:hover { color: var(--accent); }
-.leaflet-control-locate-btn { display: flex !important; align-items: center; justify-content: center; background-color: var(--bg-surface) !important; color: var(--text-main) !important; border-bottom: none !important; font-size: 1.1rem !important; transition: var(--transition); }
-.leaflet-control-locate-btn:hover { background-color: var(--border-main) !important; color: var(--accent) !important; }
+.leaflet-control-locate-btn,
+.leaflet-control-reset-btn { display: flex !important; align-items: center; justify-content: center; background-color: var(--bg-surface) !important; color: var(--text-main) !important; border-bottom: none !important; font-size: 1.1rem !important; transition: var(--transition); }
+.leaflet-control-locate-btn:hover,
+.leaflet-control-reset-btn:hover { background-color: var(--border-main) !important; color: var(--accent) !important; }
 
 /* ==========================================
    13. CUSTOM ENTERPRISE GEOCODER UI
@@ -320,7 +337,7 @@ input[type="text"]:focus, input[type="email"]:focus, textarea:focus { outline: n
 footer { background: var(--bg-base); color: var(--text-muted); text-align: center; padding: 3rem 5%; font-size: 0.95rem; border-top: 1px solid var(--border-main); transition: var(--transition); }
 
 /* ==========================================
-   15. MOBILE RESPONSIVE
+   15. MOBILE RESPONSIVE & ENHANCED TOUCH TARGETS
    ========================================== */
 @media (max-width: 1024px) {
     .hero { padding: 120px 5% 80px; }
@@ -328,18 +345,43 @@ footer { background: var(--bg-base); color: var(--text-muted); text-align: cente
     .skills-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: 1fr; }
     .map-app-wrapper { flex-direction: column; height: auto; }
-    .map-sidebar { width: 100%; height: auto; max-height: 450px; border-right: none; border-bottom: 1px solid var(--border-main); }
-    .leaflet-map-container { height: 500px; }
-    .glass-dashboard { position: relative; top: 0; left: 0; width: 100%; border-radius: 0; border: none; border-bottom: 1px solid var(--border-main); box-shadow: none; }
+    .map-sidebar { width: 100%; height: auto; max-height: 400px; border-right: none; border-bottom: 1px solid var(--border-main); }
+    .leaflet-map-container { height: 480px; }
+    .glass-dashboard { position: relative; top: 0; left: 0; width: 100%; border-radius: 0; border: none; border-bottom: 1px solid var(--border-main); box-shadow: none; padding: 24px; }
     .forecast-hero-wrapper { height: auto; display: flex; flex-direction: column; border: 1px solid var(--border-main); }
-    #forecast-map-premium, #deficit-leaflet-map { height: 500px; position: relative !important; }
+    #forecast-map-premium, #deficit-leaflet-map, #offgrid-leaflet-map { height: 480px; position: relative !important; }
     .mobile-menu-btn { display: block; }
     .nav-links { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-panel); backdrop-filter: blur(20px); flex-direction: column; gap: 0; text-align: center; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--border-main); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
     .nav-links.active { opacity: 1; visibility: visible; transform: translateY(0); }
     .nav-links a { display: block; padding: 1.5rem; border-bottom: 1px solid var(--border-main); font-size: 1.1rem; }
     .contact-form { padding: 2rem; }
 }
+
 @media (max-width: 768px) {
     .hero h1 { font-size: clamp(2.2rem, 8vw, 3rem) !important; }
-    .enterprise-search-container { width: calc(100vw - 30px); margin: 15px auto !important; }
+    .enterprise-search-container { width: calc(100vw - 30px) !important; margin: 10px 15px !important; }
+    
+    /* Enlarged Touch Targets for Mobile Maps (Thumb-Friendly Ergonomics) */
+    .leaflet-control-zoom a,
+    .leaflet-control-locate-btn,
+    .leaflet-control-reset-btn {
+        width: 42px !important;
+        height: 42px !important;
+        line-height: 42px !important;
+        font-size: 20px !important;
+        border-radius: 8px !important;
+    }
+
+    .leaflet-control-layers-toggle {
+        width: 42px !important;
+        height: 42px !important;
+    }
+
+    .back-to-top {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+        bottom: max(20px, env(safe-area-inset-bottom));
+        right: 20px;
+    }
 }
