@@ -27,21 +27,24 @@
     <link rel="icon" type="image/svg+xml" href="logo-icon.svg">
     <link rel="apple-touch-icon" href="logo-icon.svg">
 
-    <!-- Premium Typography -->
+    <!-- Performance: Preconnect to external CDN sources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com">
+
+    <!-- Premium Typography -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Leaflet Geospatial CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     
     <!-- Enterprise Stylesheet -->
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
     <!-- EXECUTIVE NAVIGATION -->
-    <nav class="enterprise-nav">
+    <nav class="enterprise-nav" aria-label="Main Navigation">
         <div class="scroll-progress" id="scroll-progress"></div>
         <div class="logo" style="display: flex; align-items: center; gap: 10px;">
             <img src="logo-icon.svg" alt="E.O. Logo" style="width: 32px; height: 32px;">
@@ -59,7 +62,7 @@
         </ul>
         <div class="nav-controls">
             <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme" title="Switch to Light Mode">☀️</button>
-            <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle Navigation">☰</button>
+            <button class="mobile-menu-btn" id="menu-btn" aria-expanded="false" aria-label="Toggle Navigation Menu">☰</button>
         </div>
     </nav>
 
@@ -68,9 +71,9 @@
         <section class="hero" id="home">
             <div class="hero-glow"></div>
             <div class="hero-content">
-                <div class="profile-avatar"><img src="headshot.jpg" alt="Emmanuel Oyerinde"></div>
+                <div class="profile-avatar"><img src="headshot.jpg" alt="Emmanuel Oyerinde Headshot"></div>
                 <span class="badge">
-                    <svg style="width:16px; height:16px; margin-right:8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg style="width:16px; height:16px; margin-right:8px;" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
                     </svg>PMP® Certified Project Manager
                 </span>
@@ -128,6 +131,7 @@
                     </div>
                 </div>
                 <div class="project-card">
+                    <!-- Note: Iframes for PDFs can be slow on mobile iOS Safari. Consider an image linking to the PDF if you face issues here -->
                     <div class="project-image-wrapper"><iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy" style="width: 100%; height: 100%; border: none; pointer-events: auto;"></iframe></div>
                     <div class="project-content">
                         <div class="project-category">International Analysis</div>
@@ -250,14 +254,14 @@
             <div style="max-width: 800px; margin: 0 auto;">
                 <details class="source-details">
                     <summary>
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <svg width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         View Data Sources & Methodology
                     </summary>
                     <div class="source-content">
                         <p><strong>Load Forecasts & Capacity:</strong> IESO Planning Outlooks, AESO Long-Term Outlook, BC Hydro IRP.</p>
                         <p><strong>Reliability Benchmarks:</strong> SAIDI/SAIFI from Ontario Energy Board LDC Scorecards & Electricity Canada.</p>
                         <p><strong>Off-Grid Infrastructure:</strong> Microgrid data cross-referenced via Natural Resources Canada (NRCan).</p>
-                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Basemaps by &copy; CARTO.</p>
+                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Basemaps by &copy; Esri.</p>
                     </div>
                 </details>
             </div>
@@ -268,7 +272,8 @@
             <div class="contact-container">
                 <h2>Get In Touch</h2>
                 <p>Interested in collaborating or discussing enterprise project management and business systems solutions?</p>
-                <form id="contact-form" class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
+                <!-- NOTE: Replace "YOUR_FORMSPREE_ENDPOINT" with an actual Formspree URL, e.g., https://formspree.io/f/xyzababc -->
+                <form id="contact-form" class="contact-form" action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST">
                     <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Full Name" required></div>
                     <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="email@example.com" required></div>
                     <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" rows="5" placeholder="How can I help you?" required></textarea></div>
