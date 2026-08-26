@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "niagara-pen", "type_org": "municipal", "utility": "Niagara Peninsula Energy", "region": "Niagara Falls, Pelham, Lincoln, Grimsby, West Lincoln", "customers": "85K", "line_km": "2,200", "density": "38", "mix": "Grid", "saidi": 1.20, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.35, 42.90], [-79.38, 43.00], [-79.40, 43.10], [-79.32, 43.15], [-79.25, 43.20], [-79.18, 43.18], [-79.10, 43.15], [-79.05, 42.95], [-79.20, 42.92], [-79.35, 42.90]]] } },
                 { "type": "Feature", "properties": { "id": "oakville", "type_org": "municipal", "utility": "Oakville Hydro", "region": "Oakville, Halton Region", "customers": "74K", "line_km": "1,800", "density": "41.1", "mix": "Grid", "saidi": 0.85, "saifi": 0.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.38], [-79.78, 43.42], [-79.75, 43.48], [-79.68, 43.52], [-79.62, 43.50], [-79.60, 43.45], [-79.65, 43.40], [-79.72, 43.38], [-79.80, 43.38]]] } },
                 { "type": "Feature", "properties": { "id": "burlington", "type_org": "municipal", "utility": "Burlington Hydro", "region": "Burlington, Halton Region", "customers": "69K", "line_km": "1,500", "density": "46", "mix": "Grid", "saidi": 0.90, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.85, 43.30], [-79.88, 43.35], [-79.90, 43.43], [-79.85, 43.48], [-79.78, 43.45], [-79.76, 43.38], [-79.80, 43.33], [-79.85, 43.30]]] } },
-                { "type": "Feature", "properties": { "id": "entegrus", "type_org": "municipal", "utility": "Entegrus Powerlines", "region": "Chatham-Kent, St. Thomas, Strathroy-Caradoc, Dutton/Dunwich", "customers": "60K", "line_km": "2,100", "density": "28", "mix": "Grid", "saidi": 1.05, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-82.25, 42.20], [-82.32, 42.30], [-82.40, 42.45], [-82.20, 42.52], [-82.00, 42.60], [-81.85, 42.60], [-81.70, 42.60], [-81.80, 42.30], [-82.00, 42.25], [-82.25, 42.20]]] } },
+                { "type": "Feature", "properties": { "id": "entegrus", "type_org": "municipal", "utility": "Entegrus Powerlines", "region": "Chatham-Kent, St. Thomas, Strathroy-Caradoc, Dutton/Dunwich", "customers": "60K", "line_km": "2,100", "density": "28", "mix": "Grid", "saidi": 1.05, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-82.25, 42.20], [-82.32, 42.30], [-82.40, 42.45], [-82.20, 42.52], [-80.00, 42.60], [-81.85, 42.60], [-81.70, 42.60], [-81.80, 42.30], [-82.00, 42.25], [-82.25, 42.20]]] } },
                 { "type": "Feature", "properties": { "id": "oshawa", "type_org": "municipal", "utility": "Oshawa PUC Networks", "region": "Oshawa, Durham Region", "customers": "60K", "line_km": "1,500", "density": "40", "mix": "Grid", "saidi": 0.95, "saifi": 1.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-78.90, 43.85], [-78.92, 43.90], [-78.95, 43.95], [-78.90, 44.00], [-78.85, 44.05], [-78.80, 43.98], [-78.75, 43.90], [-78.82, 43.88], [-78.90, 43.85]]] } },
                 { "type": "Feature", "properties": { "id": "synergy", "type_org": "municipal", "utility": "Synergy North", "region": "Thunder Bay, Kenora", "customers": "56K", "line_km": "2,200", "density": "25", "mix": "Grid", "saidi": 1.25, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-89.35, 48.38], [-89.32, 48.42], [-89.30, 48.48], [-89.22, 48.46], [-89.15, 48.45], [-89.12, 48.40], [-89.10, 48.35], [-89.20, 48.30], [-89.35, 48.38]]] } },
                 { "type": "Feature", "properties": { "id": "newmarket-tay", "type_org": "municipal", "utility": "Newmarket-Tay Power", "region": "Newmarket, Tay, Midland", "customers": "48K", "line_km": "1,600", "density": "30", "mix": "Grid", "saidi": 1.15, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 44.02], [-79.51, 44.06], [-79.52, 44.10], [-79.46, 44.12], [-79.40, 44.15], [-79.38, 44.10], [-79.35, 44.05], [-79.42, 44.03], [-79.50, 44.02]]] } },
@@ -509,8 +509,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         bindMapObserver(map, 'leaflet-map');
 
-        // FIX: Sort features so provincial (large) shapes are drawn first, 
-        // preventing them from creating an invisible canvas layer that covers smaller municipal LDCs.
         utilitiesGeoJSON.features.sort((a, b) => {
             const rankA = a.properties.type_org === 'provincial' ? 0 : 1;
             const rankB = b.properties.type_org === 'provincial' ? 0 : 1;
@@ -522,15 +520,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const layerMap = {};
         function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
+        // ==========================================
+        // OPTIMIZED "GHOST LAYER" & HIGH-CONTRAST LDC STYLING
+        // ==========================================
         let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
             smoothFactor: 1.5, 
             style: function(f) { 
                 const isHydroOne = f.properties.id === 'ho';
                 const isProv = f.properties.type_org === 'provincial';
                 
-                let polyFillOpacity = isHydroOne ? 0.08 : (isProv ? 0.15 : 0.45);
-                let borderOpacity = isHydroOne ? 0.0 : (isProv ? 0.4 : 0.90);
-                let borderWeight = isHydroOne ? 0 : (isProv ? 1 : 2.0);
+                // REDUCED OPACITY for Default Unselected State
+                let polyFillOpacity = isHydroOne ? 0.05 : (isProv ? 0.10 : 0.20);
+                let borderOpacity = isHydroOne ? 0.0 : (isProv ? 0.3 : 0.70);
+                let borderWeight = isHydroOne ? 0 : (isProv ? 1 : 1.5);
 
                 return { 
                     fillColor: getColor(f.properties.saidi), 
@@ -550,7 +552,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 layer.on({ 
                     mouseover: (e) => { 
-                        e.target.setStyle({ weight: 3, opacity: 1, fillOpacity: 0.75 }); 
+                        // REDUCED OPACITY for Selected/Hovered State
+                        e.target.setStyle({ weight: 2.5, opacity: 0.9, fillOpacity: 0.35 }); 
                         document.getElementById(`row-${f.properties.id}`)?.classList.add('active'); 
                     }, 
                     mouseout: (e) => { 
@@ -906,8 +909,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => offgridMap.invalidateSize(), 500);
 
         const zoneLayers = {};
+        // REDUCED OPACITY for Off-Grid Default State
         let geojsonLayer = L.geoJSON(offgridZones, {
-            style: () => ({ fillColor: '#f59e0b', weight: 2, color: '#fcd34d', dashArray: '5, 5', fillOpacity: 0.15 }),
+            style: () => ({ fillColor: '#f59e0b', weight: 2, color: '#fcd34d', dashArray: '5, 5', fillOpacity: 0.08 }),
             onEachFeature: (f, layer) => {
                 zoneLayers[f.properties.id] = layer;
                 layer.bindTooltip(`<b>${f.properties.name}</b><br/>${f.properties.count} Off-Grid Communities`, { className: 'dark-tooltip' });
@@ -931,7 +935,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(`dir-${id}`)?.classList.add('active');
             document.getElementById(`dir-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             geojsonLayer.eachLayer(l => geojsonLayer.resetStyle(l));
-            if(zoneLayers[id]) { zoneLayers[id].setStyle({ fillColor: '#f59e0b', fillOpacity: 0.4, weight: 3 }); offgridMap.fitBounds(zoneLayers[id].getBounds(), { padding: [20, 20] }); }
+            
+            // REDUCED OPACITY for Off-Grid Selected State
+            if(zoneLayers[id]) { zoneLayers[id].setStyle({ fillColor: '#f59e0b', fillOpacity: 0.2, weight: 3 }); offgridMap.fitBounds(zoneLayers[id].getBounds(), { padding: [20, 20] }); }
         }
         document.getElementById('offgrid-search')?.addEventListener('input', (e) => {
             const q = e.target.value.toLowerCase();
