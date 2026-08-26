@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { "type": "Feature", "properties": { "id": "niagara-pen", "type_org": "municipal", "utility": "Niagara Peninsula Energy", "region": "Niagara Falls, Pelham, Lincoln, Grimsby, West Lincoln", "customers": "85K", "line_km": "2,200", "density": "38", "mix": "Grid", "saidi": 1.20, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.35, 42.90], [-79.38, 43.00], [-79.40, 43.10], [-79.32, 43.15], [-79.25, 43.20], [-79.18, 43.18], [-79.10, 43.15], [-79.05, 42.95], [-79.20, 42.92], [-79.35, 42.90]]] } },
                 { "type": "Feature", "properties": { "id": "oakville", "type_org": "municipal", "utility": "Oakville Hydro", "region": "Oakville, Halton Region", "customers": "74K", "line_km": "1,800", "density": "41.1", "mix": "Grid", "saidi": 0.85, "saifi": 0.90 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.80, 43.38], [-79.78, 43.42], [-79.75, 43.48], [-79.68, 43.52], [-79.62, 43.50], [-79.60, 43.45], [-79.65, 43.40], [-79.72, 43.38], [-79.80, 43.38]]] } },
                 { "type": "Feature", "properties": { "id": "burlington", "type_org": "municipal", "utility": "Burlington Hydro", "region": "Burlington, Halton Region", "customers": "69K", "line_km": "1,500", "density": "46", "mix": "Grid", "saidi": 0.90, "saifi": 0.95 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.85, 43.30], [-79.88, 43.35], [-79.90, 43.43], [-79.85, 43.48], [-79.78, 43.45], [-79.76, 43.38], [-79.80, 43.33], [-79.85, 43.30]]] } },
-                { "type": "Feature", "properties": { "id": "entegrus", "type_org": "municipal", "utility": "Entegrus Powerlines", "region": "Chatham-Kent, St. Thomas, Strathroy-Caradoc, Dutton/Dunwich", "customers": "60K", "line_km": "2,100", "density": "28", "mix": "Grid", "saidi": 1.05, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-82.25, 42.20], [-82.32, 42.30], [-82.40, 42.45], [-82.20, 42.52], [-80.00, 42.60], [-81.85, 42.60], [-81.70, 42.60], [-81.80, 42.30], [-82.00, 42.25], [-82.25, 42.20]]] } },
+                { "type": "Feature", "properties": { "id": "entegrus", "type_org": "municipal", "utility": "Entegrus Powerlines", "region": "Chatham-Kent, St. Thomas, Strathroy-Caradoc, Dutton/Dunwich", "customers": "60K", "line_km": "2,100", "density": "28", "mix": "Grid", "saidi": 1.05, "saifi": 1.15 }, "geometry": { "type": "Polygon", "coordinates": [[[-82.25, 42.20], [-82.32, 42.30], [-82.40, 42.45], [-82.20, 42.52], [-82.00, 42.60], [-81.85, 42.60], [-81.70, 42.60], [-81.80, 42.30], [-82.00, 42.25], [-82.25, 42.20]]] } },
                 { "type": "Feature", "properties": { "id": "oshawa", "type_org": "municipal", "utility": "Oshawa PUC Networks", "region": "Oshawa, Durham Region", "customers": "60K", "line_km": "1,500", "density": "40", "mix": "Grid", "saidi": 0.95, "saifi": 1.00 }, "geometry": { "type": "Polygon", "coordinates": [[[-78.90, 43.85], [-78.92, 43.90], [-78.95, 43.95], [-78.90, 44.00], [-78.85, 44.05], [-78.80, 43.98], [-78.75, 43.90], [-78.82, 43.88], [-78.90, 43.85]]] } },
                 { "type": "Feature", "properties": { "id": "synergy", "type_org": "municipal", "utility": "Synergy North", "region": "Thunder Bay, Kenora", "customers": "56K", "line_km": "2,200", "density": "25", "mix": "Grid", "saidi": 1.25, "saifi": 1.30 }, "geometry": { "type": "Polygon", "coordinates": [[[-89.35, 48.38], [-89.32, 48.42], [-89.30, 48.48], [-89.22, 48.46], [-89.15, 48.45], [-89.12, 48.40], [-89.10, 48.35], [-89.20, 48.30], [-89.35, 48.38]]] } },
                 { "type": "Feature", "properties": { "id": "newmarket-tay", "type_org": "municipal", "utility": "Newmarket-Tay Power", "region": "Newmarket, Tay, Midland", "customers": "48K", "line_km": "1,600", "density": "30", "mix": "Grid", "saidi": 1.15, "saifi": 1.25 }, "geometry": { "type": "Polygon", "coordinates": [[[-79.50, 44.02], [-79.51, 44.06], [-79.52, 44.10], [-79.46, 44.12], [-79.40, 44.15], [-79.38, 44.10], [-79.35, 44.05], [-79.42, 44.03], [-79.50, 44.02]]] } },
@@ -233,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ENHANCEMENT 1: Consolidated Intersection Observer helper to prevent memory leaks and keep code DRY.
     function bindMapObserver(mapInstance, elementId) {
         const mapEl = document.getElementById(elementId);
         if (!mapEl) return;
@@ -510,18 +509,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
         bindMapObserver(map, 'leaflet-map');
 
-        map.createPane('provincialPane'); map.getPane('provincialPane').style.zIndex = 400;
-        map.createPane('municipalPane'); map.getPane('municipalPane').style.zIndex = 500;
-        map.createPane('labels'); map.getPane('labels').style.zIndex = 650; map.getPane('labels').style.pointerEvents = 'none';
+        // FIX: Sort features so provincial (large) shapes are drawn first, 
+        // preventing them from creating an invisible canvas layer that covers smaller municipal LDCs.
+        utilitiesGeoJSON.features.sort((a, b) => {
+            const rankA = a.properties.type_org === 'provincial' ? 0 : 1;
+            const rankB = b.properties.type_org === 'provincial' ? 0 : 1;
+            return rankA - rankB;
+        });
 
         setupMapControls(map, true);
 
         const layerMap = {};
         function getColor(saidi) { return saidi < 1.0 ? '#10b981' : saidi <= 1.8 ? '#f59e0b' : '#ef4444'; }
 
-        // ==========================================
-        // OPTIMIZED "GHOST LAYER" & HIGH-CONTRAST LDC STYLING
-        // ==========================================
         let geojsonLayer = L.geoJSON(utilitiesGeoJSON, { 
             smoothFactor: 1.5, 
             style: function(f) { 
@@ -544,7 +544,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 
             onEachFeature: function(f, layer) {
                 layerMap[f.properties.id] = layer;
-                layer.options.pane = f.properties.type_org === 'provincial' ? 'provincialPane' : 'municipalPane';
                 
                 layer.bindTooltip(`<div style="padding: 2px 4px;"><strong style="font-size: 0.85rem; display:block; color: var(--text-main);">${f.properties.utility}</strong><span style="color: var(--text-muted); font-size: 0.75rem;">${f.properties.region} &bull; ${f.properties.customers} Cust.</span></div>`, { className: 'dark-tooltip', sticky: true, direction: 'auto' });
                 layer.bindPopup(`<div style="min-width: 260px; padding: 4px;"><div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 800; margin-bottom: 4px;">${f.properties.region}</div><strong style="font-size: 1.15rem; color: var(--text-main); display: block; margin-bottom: 10px; border-bottom: 1px solid var(--border-main); padding-bottom: 6px;">${f.properties.utility}</strong><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;"><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Customer Pop.</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.customers}</strong></div><div style="background: var(--hover-overlay); padding: 8px; border-radius: 6px;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">Route Length</span><strong style="font-size: 0.9rem; color: var(--text-main);">${f.properties.line_km} km</strong></div></div><div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.8rem;"><span style="color: var(--text-muted);">Grid Density:</span><strong style="color: #10b981;">${f.properties.density} /km</strong></div><div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.8rem; border-bottom: 1px solid var(--border-main); padding-bottom: 8px;"><span style="color: var(--text-muted);">Generation Mix:</span><strong style="text-align: right; color: var(--text-main);">${f.properties.mix}</strong></div><div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIDI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saidi} hrs</strong></div><div style="text-align: right;"><span style="display:block; color: var(--text-muted); font-size: 0.7rem;">OEB SAIFI</span><strong style="color: ${getColor(f.properties.saidi)}; font-size: 1.05rem;">${f.properties.saifi}</strong></div></div></div>`);
@@ -563,9 +562,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }).addTo(map);
 
-        // ==========================================
-        // NORMALIZATION & MULTI-KEY BOUNDARY INGESTION ENGINE
-        // ==========================================
         function normalizeName(str) {
             if (!str) return '';
             return str.toString().toUpperCase()
@@ -737,7 +733,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     ldcGeomMap[ldcId].push(...rings);
                 });
 
-                // ENHANCEMENT 2: Safe geometry assignment to prevent core DB mutation errors
                 for (const [ldcId, rings] of Object.entries(ldcGeomMap)) {
                     const ldcFeature = utilitiesGeoJSON.features.find(f => f.properties.id === ldcId);
                     if (ldcFeature && rings.length > 0) {
@@ -772,7 +767,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.innerHTML = `<td style="padding: 12px 16px;"><div style="display:flex; align-items:center; gap: 10px;"><span class="status-badge" style="background: ${getColor(p.saidi)}; width: 8px; height: 8px; border-radius: 50%;"></span><strong style="color: var(--text-main); font-size: 0.95rem;">${p.utility}</strong></div><div style="font-size: 0.75rem; color: var(--text-muted); margin-left: 18px; margin-top: 4px;">${p.customers} Pop &bull; ${p.line_km} km</div></td><td style="text-align: right; padding: 12px 16px;"><strong style="color: var(--text-main); font-size: 0.95rem;">${p.saidi}</strong><span style="font-size:0.75rem; color: var(--text-muted);"> hr</span></td><td style="text-align: right; padding: 12px 16px;"><strong style="color: var(--text-main); font-size: 0.95rem;">${p.saifi}</strong></td>`;
                 row.addEventListener('click', () => selectUtility(p.id));
                 
-                // ENHANCEMENT 3: Safe event triggers for table rows preventing undefined layer errors
                 row.addEventListener('mouseenter', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseover'); });
                 row.addEventListener('mouseleave', () => { if(layerMap[p.id]) layerMap[p.id].fire('mouseout'); });
                 
