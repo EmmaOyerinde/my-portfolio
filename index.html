@@ -1,295 +1,984 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <meta name="theme-color" content="#09090b" id="meta-theme-color">
-    <meta name="description" content="Emmanuel Oyerinde - Enterprise Project Manager specializing in utility infrastructure, GIS, and digital transformation.">
-    <title>Emmanuel Oyerinde | Enterprise Project Manager</title>
-    
-    <!-- Instant Theme Engine -->
-    <script>
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        if (savedTheme === 'light') document.getElementById('meta-theme-color').setAttribute('content', '#f8fafc');
-    </script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-210WJQ07MT"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-210WJQ07MT');
-    </script>
-
-    <!-- E.O. Brand Favicons -->
-    <link rel="icon" type="image/svg+xml" href="logo-icon.svg">
-    <link rel="apple-touch-icon" href="logo-icon.svg">
-
-    <!-- Performance: Preconnect to external CDN sources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://unpkg.com">
-
-    <!-- Premium Typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Leaflet Geospatial CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    
-    <!-- Enterprise Stylesheet -->
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org https://server.arcgisonline.com; font-src 'self'; connect-src 'self' https://api.io.canada.ca; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#071821" />
+    <meta
+      name="description"
+      content="Emmanuel Oyerinde, B.Eng, MBA, PMP®; enterprise project leadership, geospatial intelligence and infrastructure transformation. Explore the work, four interactive maps, and live energy news."
+    />
+    <meta property="og:title" content="Emmanuel Oyerinde | Infrastructure, made intelligent." />
+    <meta
+      property="og:description"
+      content="Enterprise leadership. Geospatial thinking. Live infrastructure intelligence."
+    />
+    <meta property="og:type" content="website" />
+    <title>Emmanuel Oyerinde | Infrastructure, made intelligent.</title>
+    <link rel="icon" href="logo-icon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="assets/fonts/sourcesans3-variable.woff2"
+      crossorigin
+    />
+    <link rel="preload" as="image" href="assets/earth-night.webp" />
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
     <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-
-    <!-- EXECUTIVE NAVIGATION -->
-    <nav class="enterprise-nav" aria-label="Main Navigation">
-        <div class="scroll-progress" id="scroll-progress"></div>
-        <div class="logo" style="display: flex; align-items: center; gap: 10px;">
-            <img src="logo-icon.svg" alt="E.O. Logo" style="width: 32px; height: 32px;">
-            <span>Emmanuel <span>Oyerinde</span></span>
-        </div>
-        <ul class="nav-links" id="nav-links">
-            <li><a href="#home" class="active">Home</a></li>
-            <li><a href="#about">Profile</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#grid-map">Analytics</a></li>
-            <li><a href="#load-growth">Forecasts</a></li>
-            <li><a href="#supply-deficit">Deficit</a></li>
-            <li><a href="#off-grid">Off-Grid</a></li>
-            <li><a href="#utility-news">News Wire</a></li>
-        </ul>
-        <div class="nav-controls">
-            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme" title="Switch to Light Mode">☀️</button>
-            <button class="mobile-menu-btn" id="menu-btn" aria-expanded="false" aria-label="Toggle Navigation Menu">☰</button>
-        </div>
-    </nav>
-
-    <main>
-        <!-- 1. HERO SECTION -->
-        <section class="hero" id="home">
-            <div class="hero-glow"></div>
-            <div class="hero-content">
-                <div class="profile-avatar"><img src="headshot.jpg" alt="Emmanuel Oyerinde Headshot"></div>
-                <span class="badge">
-                    <svg style="width:16px; height:16px; margin-right:8px;" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                    </svg>PMP® Certified Project Manager
-                </span>
-                <h1>Bridging Strategy, Enterprise Technology & Operational Excellence</h1>
-                <p>10+ years leading cross-functional IT, infrastructure, enterprise system implementation, and digital transformation initiatives across large utility and engineering organizations.</p>
-                <div class="btn-group">
-                    <a href="#grid-map" class="btn btn-primary">Explore Analytics</a>
-                    <a href="#about" class="btn btn-secondary">Executive Profile</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. ABOUT & COMPETENCIES -->
-        <section class="about-section reveal" id="about">
-            <div class="about-container">
-                <div class="about-grid">
-                    <div class="about-text">
-                        <h2>Enterprise Leadership & Delivery</h2>
-                        <p>My work extends far beyond standard project delivery to ensure the critical infrastructure powering our communities operates flawlessly. I bridge the gap between complex technical execution and high-level business strategy, guiding enterprise IT, GIS, and operational teams through high-stakes deployments.</p>
-                        <p>Whether orchestrating large-scale technology rollouts, aligning executive stakeholders, or untangling legacy system migrations, my focus is entirely on delivering secure, scalable outcomes.</p>
-                    </div>
-                    <div class="skills-grid">
-                        <div class="skill-card card-leadership"><h3>Project Leadership</h3><p>Executive governance, scope/budget management, Agile & hybrid delivery frameworks, and strategic vendor leadership.</p></div>
-                        <div class="skill-card card-systems"><h3>Enterprise Systems</h3><p>Full-lifecycle deployment of enterprise applications, GIS platform integrations, and real-time operational workflows.</p></div>
-                        <div class="skill-card card-process"><h3>Process & Transformation</h3><p>Operational optimization, rigorous risk mitigation, digital transformation, and legacy system modernization.</p></div>
-                        <div class="skill-card card-innovation"><h3>AI & Innovation</h3><p>Leveraging advanced AI tools for rapid project planning, documentation, workflow acceleration, and technical analytics.</p></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. PORTFOLIO SECTION -->
-        <section class="portfolio reveal" id="portfolio">
-            <div class="section-header">
-                <h2>Featured Projects & Publications</h2>
-                <p>A selection of my recent enterprise deployments, GIS architecture designs, and global infrastructure initiatives.</p>
-            </div>
-            <div class="portfolio-grid">
-                <div class="project-card">
-                    <div class="project-image-wrapper"><img src="UT (1).PNG" alt="Geographic Network Monitoring System" style="width: 100%; height: 100%; object-fit: cover; border: none; display: block;" loading="lazy"></div>
-                    <div class="project-content">
-                        <div class="project-category">GIS & Enterprise IT</div>
-                        <h3 class="project-title">Geographic Network Monitoring</h3>
-                        <p class="project-description">A comprehensive spatial tracking tool designed for real-time monitoring, asset tracking, and utility infrastructure management.</p>
-                        <a href="https://www.spatialnode.net/projects/geographic-network-monitoring-system-4228ae" class="project-link" target="_blank" rel="noopener noreferrer">View on SpatialNode &rarr;</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image-wrapper"><img src="Magodo Bilateral 2022.PNG" alt="Ikeja Electric Power Availability Case Study" style="width: 100%; height: 100%; object-fit: cover; border: none; display: block;" loading="lazy"></div>
-                    <div class="project-content">
-                        <div class="project-category">Global Publication</div>
-                        <h3 class="project-title">Ikeja Electric Power Availability</h3>
-                        <p class="project-description">Featured Esri case study detailing how advanced GIS and spatial analytics were utilized to improve power availability and optimize operations.</p>
-                        <a href="https://www.esri.com/en-us/lg/industry/electric-and-gas/stories/ikeja-electric-power-availablity-case-study" class="project-link" target="_blank" rel="noopener noreferrer">Read Case Study on Esri &rarr;</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image-wrapper"><iframe src="EFFECTS OF MINING ON FLOODING IN THE DONBAS REGION (Flooding rate 2).pdf" scrolling="auto" title="Effects of Mining on Flooding" loading="lazy" style="width: 100%; height: 100%; border: none; pointer-events: auto;"></iframe></div>
-                    <div class="project-content">
-                        <div class="project-category">International Analysis</div>
-                        <h3 class="project-title">UNDP Ukraine: Coal Cities</h3>
-                        <p class="project-description">Generated GIS-based environmental assessments for UNDP Ukraine's initiative preparing communities for economic diversification by 2035.</p>
-                        <a href="https://spatialnode.net/projects/undp-ukraine-transition-of-coal-cities-c9394a" class="project-link" target="_blank" rel="noopener noreferrer">View Full Assessment &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. LIVE MAP 1: RELIABILITY -->
-        <section class="map-section reveal" id="grid-map">
-            <div class="map-glow"></div> 
-            <div class="section-header" style="position: relative; z-index: 2;">
-                <h2>National Utility Reliability Benchmark</h2>
-                <p>Interactive analytics tracking SAIDI (outage duration) and SAIFI (outage frequency) across major Canadian utility distribution territories.</p>
-            </div>
-            <div class="map-app-wrapper">
-                <div class="map-sidebar">
-                    <div class="map-sidebar-header">
-                        <h3>Service Territory Analytics</h3>
-                        <p>Select a utility to focus on its territory bounds and performance metrics.</p>
-                        <div class="legend-box">
-                            <div class="legend-item"><div class="legend-color" style="background: #10b981;"></div><span>&lt; 1.0 hr</span></div>
-                            <div class="legend-item"><div class="legend-color" style="background: #f59e0b;"></div><span>1.0 - 1.8 hrs</span></div>
-                            <div class="legend-item"><div class="legend-color" style="background: #ef4444;"></div><span>&gt; 1.8 hrs</span></div>
-                        </div>
-                    </div>
-                    <div class="search-container"><input type="text" id="search-input" class="search-input" placeholder="Filter by utility or region..."></div>
-                    <div class="table-container">
-                        <table class="map-table">
-                            <thead class="utility-table-header"><tr><th>Utility</th><th style="text-align:right;">SAIDI</th><th style="text-align:right;">SAIFI</th></tr></thead>
-                            <tbody id="utility-table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="leaflet-map" class="leaflet-map-container"></div>
-            </div>
-        </section>
-
-        <!-- 5. LIVE MAP 2: 50-YEAR FORECAST -->
-        <section class="map-section reveal" id="load-growth">
-            <div class="map-glow-accent"></div> 
-            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem;">
-                <h2>50-Year Enterprise Load Horizon</h2>
-                <p>Advanced strategic modeling projecting regional grid demands up to 2075. Adjust macroeconomic variables to simulate infrastructural choke points.</p>
-            </div>
-            <div class="forecast-hero-wrapper">
-                <div class="glass-dashboard">
-                    <div class="glass-header"><h3>Growth Parameters</h3><p>Simulate localized capacity strain.</p></div>
-                    <div class="premium-slider-container">
-                        <div class="slider-header"><label>Projection Year</label><div class="year-highlight" id="yearLabelPrem">2025</div></div>
-                        <input type="range" id="yearSliderPrem" class="premium-slider" min="2025" max="2075" value="2025" step="1">
-                    </div>
-                    <div class="scenario-group">
-                        <label class="toggle-row"><div class="toggle-label">EV Supply Chain & Industry<span>Heavy localized battery mfg load</span></div><div class="switch"><input type="checkbox" id="t-ev" checked><span class="slider-toggle"></span></div></label>
-                        <label class="toggle-row"><div class="toggle-label">Hyper-Scale Data & AI<span>Urban dense compute centers</span></div><div class="switch"><input type="checkbox" id="t-ai" checked><span class="slider-toggle"></span></div></label>
-                        <label class="toggle-row"><div class="toggle-label">Residential Electrification<span>Aggressive heat-pump adoption</span></div><div class="switch"><input type="checkbox" id="t-heat"><span class="slider-toggle"></span></div></label>
-                        <label class="toggle-row"><div class="toggle-label">Green Hydrogen Economy<span>Massive industrial electrolysis</span></div><div class="switch"><input type="checkbox" id="t-hydro"><span class="slider-toggle"></span></div></label>
-                    </div>
-                    <div class="metric-readout">
-                        <div class="label">Simulated National Load</div>
-                        <div class="value" id="totalLoadPrem">393 <span>TWh</span></div>
-                        <div class="growth-pill" id="growthPercentPrem">Baseline</div>
-                    </div>
-                </div>
-                <div id="forecast-map-premium" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;"></div>
-            </div>
-        </section>
-
-        <!-- 6. LIVE MAP 3: SUPPLY DEFICIT -->
-        <section class="map-section reveal" id="supply-deficit" style="border-top: 1px solid var(--border-light);">
-            <div class="map-glow-danger"></div>
-            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
-                <h2>The Capacity Deficit: Unserved Energy</h2>
-                <p>Explore the projected 2050 capacity shortfalls across Canada's major grid operators as legacy assets retire against surging electrification.</p>
-            </div>
-            <div class="forecast-hero-wrapper" style="height: 650px; position: relative;">
-                <div id="deficit-leaflet-map" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;"></div>
-            </div>
-        </section>
-
-        <!-- 7. LIVE MAP 4: OFF-GRID -->
-        <section class="map-section reveal" id="off-grid">
-            <div class="map-glow-warning"></div> 
-            <div class="section-header" style="position: relative; z-index: 2;">
-                <h2>Remote & Off-Grid Infrastructure</h2>
-                <p>Visualizing the 100+ Canadian communities and coastal settlements that operate completely independently of the North American power grid.</p>
-            </div>
-            <div class="map-app-wrapper">
-                <div class="map-sidebar">
-                    <div class="map-sidebar-header">
-                        <h3>Off-Grid Directory</h3><p>Select a massive off-grid zone to view the isolated settlements within it.</p>
-                    </div>
-                    <div class="search-container"><input type="text" id="offgrid-search" class="search-input" placeholder="Search community or territory..."></div>
-                    <div class="table-container" id="offgrid-list-container" style="padding: 12px;"></div>
-                </div>
-                <div id="offgrid-leaflet-map" class="leaflet-map-container"></div>
-            </div>
-        </section>
-
-        <!-- 8. LIVE UTILITY NEWS FEED SECTION -->
-        <section class="map-section reveal" id="utility-news" style="border-top: 1px solid var(--border-light);">
-            <div class="map-glow-accent"></div>
-            <div class="section-header" style="position: relative; z-index: 2; margin-bottom: 2.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; justify-content: space-between; align-items: flex-end;">
-                <div>
-                    <h2>Canada Utility Intelligence Wire</h2>
-                    <p>Real-time live news feed tracking strategic developments, regulatory shifts, and grid announcements.</p>
-                </div>
-                <div class="live-indicator"><span class="pulse-dot"></span> Live</div>
-            </div>
-            <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;">
-                <div id="news-feed-container" class="news-feed-grid"><div class="news-loading">Fetching live Canadian utility feed...</div></div>
-            </div>
-        </section>
-
-        <!-- 9. DATA GOVERNANCE & SOURCES -->
-        <section class="sources-section" id="sources">
-            <div style="max-width: 800px; margin: 0 auto;">
-                <details class="source-details">
-                    <summary>
-                        <svg width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        View Data Sources & Methodology
-                    </summary>
-                    <div class="source-content">
-                        <p><strong>Load Forecasts & Capacity:</strong> IESO Planning Outlooks, AESO Long-Term Outlook, BC Hydro IRP.</p>
-                        <p><strong>Reliability Benchmarks:</strong> SAIDI/SAIFI from Ontario Energy Board LDC Scorecards & Electricity Canada.</p>
-                        <p><strong>Off-Grid Infrastructure:</strong> Microgrid data cross-referenced via Natural Resources Canada (NRCan).</p>
-                        <p style="margin-bottom: 0;"><strong>Geospatial Engine:</strong> Map rendering powered by Leaflet.js. Basemaps by &copy; Esri.</p>
-                    </div>
-                </details>
-            </div>
-        </section>
-
-        <!-- 10. CONTACT SECTION -->
-        <section class="contact reveal" id="contact">
-            <div class="contact-container">
-                <h2>Get In Touch</h2>
-                <p>Interested in collaborating or discussing enterprise project management and business systems solutions?</p>
-                <form id="contact-form" class="contact-form" action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST">
-                    <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Full Name" required></div>
-                    <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="email@example.com" required></div>
-                    <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" rows="5" placeholder="How can I help you?" required></textarea></div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Send Message</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Emmanuel Oyerinde, MBA, PMP&reg;. All rights reserved.</p>
-    </footer>
-
-    <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-
-    <!-- Map Scripts (Native Vanilla JS Implementation) -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    <script src="js/preferences.js"></script>
+    <script src="js/data.js" defer></script>
+    <script src="js/evidence-core.js" defer></script>
+    <script src="js/reliability-core.js" defer></script>
+    <script src="js/evidence-seed.js" defer></script>
+    <script defer src="js/ui-core.js"></script>
+    <script src="js/data-client.js" defer></script>
+    <script defer src="js/source-status-ui.js"></script>
+    <script src="js/utility-profiles.js" defer></script>
+    <script src="js/reliability-data.js" defer></script>
+    <script src="vendor/leaflet/leaflet.js" defer></script>
+    <script src="js/map-geometry.js" defer></script>
+    <script src="js/maps.js" defer></script>
     <script src="js/app.js" defer></script>
-
-</body>
+    <script src="js/experience.js" defer></script>
+    <script src="js/source-reader.js" defer></script>
+    <script defer src="js/reliability-view.js"></script>
+    <script src="js/reliability-ui.js" defer></script>
+    <script defer src="js/reliability-finder.js"></script>
+    <script src="js/motion.js" defer></script>
+    <script type="module" src="js/news.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Emmanuel Oyerinde home"
+        ><span class="monogram">e<span>o</span><b>®</b></span
+        ><span>Emmanuel Oyerinde<small>ENTERPRISE & INFRASTRUCTURE</small></span></a
+      >
+      <nav aria-label="Main navigation" id="nav">
+        <a href="#work" data-nav-section="work">Work</a
+        ><a href="#lab" data-nav-section="lab">Intelligence</a
+        ><a href="#news" data-nav-section="news">Live wire <span class="tiny-dot"></span></a
+        ><a href="#about" data-nav-section="about">About</a>
+      </nav>
+      <div class="header-actions">
+        <button class="command-trigger" id="command-open" aria-label="Search and navigate site">
+          ⌕ <kbd>⌘ K</kbd></button
+        ><button
+          class="icon-button reading-trigger"
+          id="reading-open"
+          aria-label="Reading preferences"
+        >
+          Aa</button
+        ><button class="icon-button" id="theme" aria-label="Switch to light theme">◐</button
+        ><a class="contact-nav" href="#contact">Let’s talk <span>↗</span></a
+        ><button
+          id="menu"
+          class="icon-button mobile-only"
+          aria-expanded="false"
+          aria-controls="nav"
+          aria-label="Open navigation"
+        >
+          ☰
+        </button>
+      </div>
+    </header>
+    <main id="main">
+      <section class="hero" id="home">
+        <div class="hero-background">
+          <img
+            src="assets/earth-night.webp"
+            width="1600"
+            height="1600"
+            alt="NASA composite of the Americas at night, showing illuminated cities"
+            fetchpriority="high"
+          />
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <span class="orbital-label label-one"><i></i> SYSTEMS CONNECTED</span
+          ><span class="orbital-label label-two"><i></i> POSSIBILITIES UNLOCKED</span>
+        </div>
+        <div class="section-wrap hero-layout">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="tiny-dot"></span> STRATEGY. SYSTEMS. IMPACT.</p>
+            <h1>Infrastructure,<br />made<br /><em>intelligent.</em></h1>
+            <p class="hero-intro">
+              I turn complex systems into<br />clear decisions and meaningful delivery.
+            </p>
+            <p class="hero-detail">
+              Enterprise project leader. Geospatial thinker.<br />Connecting technology, people, and
+              the infrastructure that powers everyday life.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#work">Discover my work <span>↗</span></a
+              ><a class="text-link" href="#lab">Explore the intelligence lab <span>→</span></a>
+            </div>
+          </div>
+          <div class="hero-aside">
+            <div class="globe-panel">
+              <div class="globe-caption">
+                <span class="eyebrow">A CONNECTED WORLD</span
+                ><button class="motion-toggle small-button" aria-pressed="false">
+                  Pause motion Ⅱ
+                </button>
+              </div>
+              <canvas
+                id="connected-globe"
+                width="640"
+                height="640"
+                tabindex="0"
+                role="img"
+                aria-label="Rotating globe. Use left and right arrow keys to turn it."
+                aria-describedby="globe-help"
+              ></canvas>
+              <p id="globe-help">
+                Drag to explore · arrow keys to turn <span id="globe-state">Loading globe</span>
+              </p>
+            </div>
+            <a class="hero-news" href="#news"
+              ><span class="eyebrow"><span class="tiny-dot"></span> FROM THE LIVE WIRE</span
+              ><strong id="hero-headline"
+                >Energy, infrastructure, and the decisions shaping what comes next.</strong
+              ><span id="hero-news-meta">Connecting to official news sources…</span><b>↗</b></a
+            >
+          </div>
+        </div>
+        <div class="section-wrap hero-bottom">
+          <div class="profile-signature">
+            <img src="assets/portrait.webp" width="42" height="42" alt="Emmanuel Oyerinde" /><span
+              >Emmanuel Oyerinde<small>B.Eng · MBA · PMP® · 10+ YEARS OF EXPERIENCE</small></span
+            >
+          </div>
+          <a href="#work" class="scroll-cue">SCROLL TO EXPLORE <span>↓</span></a
+          ><a
+            class="image-credit"
+            href="https://science.nasa.gov/image-detail/amf-gsfc_20171208_archive_e001587/"
+            target="_blank"
+            rel="noopener"
+            >NASA / 2012 background · not a live view</a
+          >
+        </div>
+      </section>
+      <section class="wire-ribbon" aria-label="News highlights">
+        <div class="section-wrap wire-inner">
+          <a class="wire-brand" href="#news"
+            ><span class="wire-light"></span><strong>THE LIVE WIRE</strong
+            ><small id="wire-status">Connecting to official sources</small></a
+          >
+          <div
+            class="wire-viewport"
+            id="wire-viewport"
+            role="region"
+            aria-label="Scrolling news headlines. Pause to read, or use the previous and next controls."
+            tabindex="0"
+          >
+            <div class="wire-track" id="wire-track">
+              <div class="wire-group" id="wire-group">
+                <a class="wire-item wire-placeholder" href="#news"
+                  >Explore the latest energy and infrastructure headlines
+                  <span>Official publishers · original reporting dates</span></a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="wire-controls">
+            <button id="wire-prev" aria-label="Previous headline">←</button
+            ><span id="wire-position">01</span
+            ><button id="wire-next" aria-label="Next headline">→</button
+            ><button class="motion-toggle" aria-pressed="false" aria-label="Pause site motion">
+              Ⅱ
+            </button>
+          </div>
+        </div>
+      </section>
+      <div class="discipline-strip">
+        <div class="section-wrap">
+          <span>ENTERPRISE DELIVERY</span><i>✳</i><span>GEOSPATIAL INTELLIGENCE</span><i>✳</i
+          ><span>UTILITY TRANSFORMATION</span><i>✳</i><span>STRATEGIC LEADERSHIP</span>
+        </div>
+      </div>
+      <section class="section-wrap work-section" id="work">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / SELECTED WORK</p>
+            <h2>Real complexity.<br /><em>Applied intelligence.</em></h2>
+          </div>
+          <p>
+            A portfolio of spatial thinking, enterprise systems, and infrastructure work. Explore
+            the context behind each project.
+          </p>
+        </div>
+        <article class="lead-project">
+          <div class="project-story">
+            <span class="project-number">01 / 03</span>
+            <p class="eyebrow">UTILITY OPERATIONS · FEATURED BY ESRI</p>
+            <h3>See the grid.<br />Change the picture.</h3>
+            <p>
+              Spatial analytics and operational visibility at Ikeja Electric; connecting the network
+              on the map to the decisions on the ground.
+            </p>
+            <div class="tags">
+              <span>GIS</span><span>Power availability</span><span>Operational intelligence</span>
+            </div>
+            <button class="button outline" data-case="ikeja">
+              Inside the project <span>↗</span>
+            </button>
+          </div>
+          <button
+            class="project-art ikeja-preview"
+            data-case="ikeja"
+            aria-label="Explore the Ikeja Electric case study"
+          >
+            <img
+              src="assets/ikeja.webp"
+              alt="Supplied geographic distribution map from the Ikeja Electric project"
+              width="1400"
+              height="683"
+              loading="lazy"
+            />
+            <div class="art-caption">
+              <span><small>PROJECT DASHBOARD</small><strong>Ikeja Electric</strong></span
+              ><span class="art-action">Explore case study <b aria-hidden="true">↗</b></span>
+            </div>
+          </button>
+        </article>
+        <div class="project-pair">
+          <article class="project-card">
+            <button
+              class="project-image"
+              data-case="network"
+              aria-label="Explore geographic network monitoring"
+            >
+              <img
+                src="assets/network.webp"
+                alt="Geographic network monitoring interface"
+                loading="lazy"
+                width="1200"
+                height="750"
+              /><span class="round-arrow">↗</span>
+            </button>
+            <div class="project-card-title">
+              <div>
+                <p class="eyebrow">02 / ENTERPRISE GIS</p>
+                <h3>Networks, in perspective.</h3>
+              </div>
+              <span class="project-type">SYSTEM</span>
+            </div>
+            <p>
+              Geographic Network Monitoring. A spatial approach to asset tracking and infrastructure
+              visibility.
+            </p>
+            <button class="text-button case-link" data-case="network">
+              Explore project <span>↗</span>
+            </button>
+          </article>
+          <article class="project-card">
+            <button
+              class="project-image"
+              data-case="ukraine"
+              aria-label="Explore UNDP Ukraine environmental assessment"
+            >
+              <img
+                src="assets/ukraine.webp"
+                alt="Supplied Donbas mining and flooding assessment map"
+                loading="lazy"
+                width="1200"
+                height="750"
+              /><span class="round-arrow">↗</span>
+            </button>
+            <div class="project-card-title">
+              <div>
+                <p class="eyebrow">03 / ENVIRONMENTAL ASSESSMENT</p>
+                <h3>Mapping a different future.</h3>
+              </div>
+              <span class="project-type">RESEARCH</span>
+            </div>
+            <p>
+              UNDP Ukraine: Coal Cities. GIS-based environmental assessment supporting economic
+              diversification.
+            </p>
+            <button class="text-button case-link" data-case="ukraine">
+              Explore project <span>↗</span>
+            </button>
+          </article>
+        </div>
+      </section>
+      <section class="expertise-section" id="expertise">
+        <div class="section-wrap expertise-layout">
+          <div>
+            <p class="eyebrow">02 / THE WAY I WORK</p>
+            <h2>Good plans need<br /><em>good follow-through.</em></h2>
+            <p class="section-intro">
+              A project needs more than a good plan. It needs people who can make decisions together
+              and follow through.
+            </p>
+          </div>
+          <div class="expertise-list">
+            <details open>
+              <summary><span>01</span>Lead the delivery<b>↗</b></summary>
+              <p>
+                I keep scope, budgets, suppliers, and decisions connected so teams know what needs
+                to happen next.
+              </p>
+            </details>
+            <details>
+              <summary><span>02</span>Connect the systems<b>↗</b></summary>
+              <p>
+                I work across enterprise applications, GIS platforms, and operational processes to
+                help teams see how the pieces fit.
+              </p>
+            </details>
+            <details>
+              <summary><span>03</span>Make change work<b>↗</b></summary>
+              <p>
+                I help teams move from established systems to new ways of working, with clear
+                ownership and attention to risk.
+              </p>
+            </details>
+            <details>
+              <summary><span>04</span>Explore what’s next<b>↗</b></summary>
+              <p>
+                AI-assisted planning, documentation, and analysis, with human judgment and review
+                throughout.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+      <section class="section-wrap lab-section" id="lab">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="tiny-dot"></span> 03 / INTERACTIVE INTELLIGENCE</p>
+            <h2>One country.<br /><em>Four perspectives.</em></h2>
+          </div>
+          <p>
+            Follow a question from the map to the evidence. Explore utility performance, possible
+            demand futures, electricity flows, and the communities behind the system.
+          </p>
+        </div>
+        <div class="lab-guide" aria-label="Suggested explorations">
+          <span>Start with a question</span
+          ><button data-guide="reliability">How reliable is the grid? <span>↗</span></button
+          ><button data-guide="forecast">What changes by 2050? <span>↗</span></button
+          ><button data-guide="offgrid">How is Iqaluit powered? <span>↗</span></button>
+        </div>
+        <div class="lab-shell">
+          <div class="lab-toolbar">
+            <span class="lab-brand">eo / <strong>INTELLIGENCE LAB</strong></span
+            ><span class="dataset-badge">PUBLISHED EVIDENCE</span
+            ><button class="text-button" id="share">Share this view ↗</button>
+          </div>
+          <div class="data-command">
+            <div>
+              <span class="status-light" id="data-light"></span
+              ><strong id="data-status" role="status">Loading published data</strong
+              ><span id="data-period">Reading source metadata…</span>
+            </div>
+            <div>
+              <button id="data-refresh" class="small-button">Check published copy ↻</button
+              ><button id="source-open" class="small-button">Sources & freshness ↗</button>
+            </div>
+          </div>
+          <p id="data-status-note" class="data-status-note" aria-live="polite">
+            Your published datasets are ready to explore.
+          </p>
+          <div role="tablist" aria-label="Intelligence views" class="lab-tabs">
+            <button
+              role="tab"
+              id="tab-reliability"
+              aria-controls="panel-reliability"
+              aria-selected="true"
+              data-tab="reliability"
+            >
+              01 <span>Reliability</span></button
+            ><button
+              role="tab"
+              id="tab-forecast"
+              aria-controls="panel-forecast"
+              aria-selected="false"
+              tabindex="-1"
+              data-tab="forecast"
+            >
+              02 <span>Demand scenarios</span></button
+            ><button
+              role="tab"
+              id="tab-deficit"
+              aria-controls="panel-deficit"
+              aria-selected="false"
+              tabindex="-1"
+              data-tab="deficit"
+            >
+              03 <span>Energy balance</span></button
+            ><button
+              role="tab"
+              id="tab-offgrid"
+              aria-controls="panel-offgrid"
+              aria-selected="false"
+              tabindex="-1"
+              data-tab="offgrid"
+            >
+              04 <span>Remote communities</span>
+            </button>
+          </div>
+          <div id="panel-reliability" role="tabpanel" aria-labelledby="tab-reliability">
+            <section
+              id="national-metric-finder"
+              class="national-metric-finder"
+              aria-labelledby="national-metric-title"
+            ></section>
+            <div class="explorer-layout">
+              <aside class="utility-sidebar">
+                <div class="sidebar-head">
+                  <h3>Find a utility</h3>
+                  <span id="utility-count"></span>
+                </div>
+                <label class="search-label"
+                  ><span class="sr-only">Search utilities or regions</span
+                  ><span aria-hidden="true">⌕</span
+                  ><input
+                    type="search"
+                    id="utility-search"
+                    placeholder="Search utility or region…" /></label
+                ><label class="sort-label"
+                  >Sort by
+                  <select id="utility-sort">
+                    <option value="utility">Name A–Z</option>
+                    <option value="customers">Customers: largest first</option>
+                    <option value="saidi">OEB outage duration</option>
+                    <option value="saifi">OEB outage frequency</option>
+                  </select></label
+                ><label class="field-label" for="utility-province">Province or territory</label
+                ><select id="utility-province">
+                  <option value="all">All of Canada</option>
+                  <option value="AB">Alberta</option>
+                  <option value="BC">British Columbia</option>
+                  <option value="MB">Manitoba</option>
+                  <option value="NB">New Brunswick</option>
+                  <option value="NL">Newfoundland and Labrador</option>
+                  <option value="NS">Nova Scotia</option>
+                  <option value="NT">Northwest Territories</option>
+                  <option value="NU">Nunavut</option>
+                  <option value="ON">Ontario</option>
+                  <option value="PE">Prince Edward Island</option>
+                  <option value="QC">Québec</option>
+                  <option value="SK">Saskatchewan</option>
+                  <option value="YT">Yukon</option></select
+                ><label class="coverage-filter"
+                  ><input id="verified-only" type="checkbox" /> Published outage figures</label
+                >
+                <div class="utility-list" id="utility-list"></div>
+              </aside>
+              <div class="explorer-main">
+                <div class="map-heading">
+                  <div>
+                    <p class="eyebrow">UTILITY INTELLIGENCE / EVIDENCE & CONTEXT</p>
+                    <h3 id="selected-utility">Toronto Hydro</h3>
+                  </div>
+                  <button class="small-button" id="reset-map">National view ↗</button>
+                </div>
+                <div class="map-stage" data-map-stage="reliability">
+                  <div class="map-tools" data-map-tools="reliability"></div>
+                  <div
+                    class="geo-map"
+                    id="map-reliability"
+                    aria-label="Utility reliability map"
+                  ></div>
+                  <div class="map-legend" id="legend-reliability"></div>
+                </div>
+                <p class="context-note" id="utility-provenance"></p>
+                <div id="utility-metrics" class="metric-grid" aria-live="polite"></div>
+                <div id="utility-context" class="utility-context"></div>
+                <section
+                  id="reliability-detail"
+                  class="reliability-detail"
+                  aria-label="Reliability measures"
+                ></section>
+                <div class="comparison-controls">
+                  <label
+                    >Compare with
+                    <select id="compare-utility">
+                      <option value="">Choose a utility</option>
+                    </select></label
+                  ><button class="text-button" id="export-data">Download data ↓</button>
+                </div>
+                <div id="comparison" aria-live="polite"></div>
+              </div>
+            </div>
+          </div>
+          <div id="panel-forecast" role="tabpanel" aria-labelledby="tab-forecast" hidden>
+            <div class="scenario-layout">
+              <aside class="scenario-controls">
+                <p class="eyebrow">CANADA ENERGY REGULATOR</p>
+                <h3>Explore a possible future.</h3>
+                <p class="control-intro">
+                  Choose a published pathway, then explore when and where electricity use changes.
+                </p>
+                <label class="field-label" for="preset">Published scenario</label
+                ><select id="preset">
+                  <option>Current Measures</option>
+                </select>
+                <p id="scenario-explainer" class="control-help"></p>
+                <label class="field-label" for="scenario-region">Focus geography</label
+                ><select id="scenario-region">
+                  <option value="CA">Canada</option>
+                </select>
+                <div class="year-label">
+                  <label for="year">Projection year</label
+                  ><output for="year" id="year-label">2050</output>
+                </div>
+                <div class="year-stepper">
+                  <button id="year-back" aria-label="Previous year">−</button
+                  ><input type="range" id="year" min="2024" max="2050" value="2050" /><button
+                    id="year-next"
+                    aria-label="Next year"
+                  >
+                    +
+                  </button>
+                </div>
+                <div class="range-ends">
+                  <span id="year-min">2024</span><span id="year-max">2050</span>
+                </div>
+                <details class="sensitivity-control">
+                  <summary>Try your own sensitivity <span>+</span></summary>
+                  <p>
+                    A transparent adjustment to the selected CER pathway. This is your assumption,
+                    not an official forecast.
+                  </p>
+                  <label for="sensitivity"
+                    >Additional annual change <output id="sensitivity-value">0.0%</output></label
+                  ><input type="range" id="sensitivity" min="-1" max="1" step="0.1" value="0" />
+                  <div class="range-ends"><span>−1% / year</span><span>+1% / year</span></div>
+                </details>
+                <button id="scenario-reset" class="button outline">Reset scenario ↺</button>
+              </aside>
+              <div class="scenario-output">
+                <div class="map-stage" data-map-stage="forecast">
+                  <div class="map-tools" data-map-tools="forecast"></div>
+                  <div
+                    class="geo-map"
+                    id="map-forecast"
+                    aria-label="Provincial electricity demand projections"
+                  ></div>
+                  <div class="map-legend" id="legend-forecast"></div>
+                </div>
+                <div class="scenario-results">
+                  <p class="eyebrow">
+                    <span id="scenario-kind">PUBLISHED PROJECTION</span> /
+                    <span id="scenario-year">2050</span>
+                  </p>
+                  <div class="scenario-headline">
+                    <strong id="scenario-total">–</strong><span>TWh</span
+                    ><span id="scenario-growth" class="growth-chip"></span>
+                  </div>
+                  <p id="baseline-caption"></p>
+                  <div id="scenario-chart"></div>
+                  <div class="chart-legend">
+                    <span><i></i> Selected pathway</span><span><i></i> Current Measures</span>
+                  </div>
+                  <details class="model-details">
+                    <summary>Regional results & definitions</summary>
+                    <p id="scenario-definition">Loading the report’s definitions…</p>
+                    <div class="table-scroll"><table id="regional-results"></table></div>
+                  </details>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="panel-deficit" role="tabpanel" aria-labelledby="tab-deficit" hidden>
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">STATISTICS CANADA / MONTHLY OBSERVATIONS</p>
+                <h3>Follow the electricity.</h3>
+                <p>
+                  Generation, electricity available for use, and the net flow across each border.
+                </p>
+              </div>
+              <div class="panel-filters">
+                <label class="field-label"
+                  >Reporting month<select id="balance-period"></select></label
+                ><label class="field-label"
+                  >Order<select id="balance-sort">
+                    <option value="gap">Largest net flow</option>
+                    <option value="name">Province A–Z</option>
+                    <option value="generation">Generation</option>
+                  </select></label
+                >
+              </div>
+            </div>
+            <div class="balance-summary" id="balance-summary"></div>
+            <div class="chart-legend">
+              <span><i></i> Generation</span><span><i></i> Available for use</span>
+            </div>
+            <div class="balance-layout">
+              <div id="balance-list"></div>
+              <div class="map-stage" data-map-stage="deficit">
+                <div class="map-tools" data-map-tools="deficit"></div>
+                <div
+                  class="geo-map"
+                  id="map-deficit"
+                  aria-label="Reported provincial electricity flows"
+                ></div>
+                <div class="map-legend" id="legend-deficit"></div>
+              </div>
+            </div>
+            <p class="data-note">
+              Available for use includes electricity lost in transmission and distribution. Net
+              imports are not evidence of a shortage. Monthly TWh measures energy, not peak power or
+              grid adequacy.
+            </p>
+          </div>
+          <div id="panel-offgrid" role="tabpanel" aria-labelledby="tab-offgrid" hidden>
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">NATURAL RESOURCES CANADA / COMMUNITY INVENTORY</p>
+                <h3>Places behind the power.</h3>
+                <p id="community-count">Loading the latest published inventory…</p>
+              </div>
+              <label class="search-label"
+                ><span class="sr-only">Search communities, provinces, or providers</span
+                ><input
+                  type="search"
+                  id="community-search"
+                  placeholder="Find a community or provider…"
+              /></label>
+            </div>
+            <div class="community-filters">
+              <label
+                >Province or territory<select id="community-province">
+                  <option value="all">All regions</option>
+                </select></label
+              ><label
+                >Primary electricity source<select id="community-fuel">
+                  <option value="all">All power sources</option>
+                </select></label
+              ><button id="community-reset" class="small-button">Clear filters ↺</button>
+            </div>
+            <div class="community-layout">
+              <div id="community-list"></div>
+              <div class="map-stage" data-map-stage="offgrid">
+                <div class="map-tools" data-map-tools="offgrid"></div>
+                <div
+                  class="geo-map"
+                  id="map-offgrid"
+                  aria-label="Official remote community locations"
+                ></div>
+                <div class="map-legend" id="legend-offgrid"></div>
+              </div>
+            </div>
+            <p class="data-note">
+              From NRCan’s published inventory, including communities connected to regional grids.
+              Some entries describe a shared power system.
+              <button class="text-button" data-evidence-kind="communities">
+                Understand the inventory ↗
+              </button>
+            </p>
+          </div>
+          <div class="lab-foot">
+            <p>
+              <span class="info-dot">i</span> Published evidence, explained in context. Reporting
+              periods differ by source; checked time is not the observation date.
+            </p>
+            <a href="#methodology">Read methodology ↗</a>
+          </div>
+        </div>
+        <div class="lab-links">
+          <p>
+            Every map supports dark, light, street, and satellite basemaps. Use the list and chart
+            views for keyboard-accessible detail.
+          </p>
+          <a class="text-link" href="#methodology">Understand the data <span>↗</span></a>
+        </div>
+        <noscript
+          ><p>
+            Enable JavaScript to explore the interactive lab. Project descriptions and contact links
+            remain available.
+          </p></noscript
+        >
+      </section>
+      <section class="news-section" id="news">
+        <div class="section-wrap">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow"><span class="tiny-dot"></span> 04 / THE LIVE WIRE</p>
+              <h2>Stay ahead of<br /><em>what’s changing.</em></h2>
+            </div>
+            <p>
+              Energy, nuclear, climate, and infrastructure updates. Direct from official Canadian
+              sources, with original dates and links.
+            </p>
+          </div>
+          <div class="news-console">
+            <div class="news-top">
+              <div class="feed-state">
+                <span class="status-light" id="feed-light"></span
+                ><strong id="feed-status" role="status">Connecting to sources</strong
+                ><span id="feed-checked">Checking live feeds…</span>
+              </div>
+              <button id="news-refresh" class="small-button">Refresh ↻</button>
+            </div>
+            <div class="news-filters">
+              <div class="news-categories" role="group" aria-label="News topic">
+                <button data-news-topic="all" aria-pressed="true">All signals</button
+                ><button data-news-topic="energy" aria-pressed="false">Energy & grids</button
+                ><button data-news-topic="nuclear" aria-pressed="false">Nuclear</button
+                ><button data-news-topic="climate" aria-pressed="false">Climate</button
+                ><button data-news-topic="infrastructure" aria-pressed="false">
+                  Infrastructure
+                </button>
+              </div>
+              <div class="news-query">
+                <label
+                  ><span class="sr-only">Search headlines</span
+                  ><input id="news-search" type="search" placeholder="Search the wire…" /></label
+                ><label
+                  ><span class="sr-only">Filter news source</span
+                  ><select id="news-source">
+                    <option value="all">All sources</option>
+                  </select></label
+                >
+              </div>
+            </div>
+            <div id="news-grid" class="news-grid" aria-live="polite">
+              <p class="empty-state">Loading headlines from official sources…</p>
+            </div>
+            <div class="news-bottom">
+              <span id="news-count"></span
+              ><button id="news-more" class="text-button" hidden>Load more headlines ↓</button>
+              <details>
+                <summary>Sources & feed health <span>+</span></summary>
+                <div id="news-health"></div>
+                <p>
+                  News titles link to the original publishers. This independent portfolio is not
+                  affiliated with these agencies. Feeds refresh every 10 minutes while this page is
+                  visible. Publication dates and feed check times are shown separately.
+                </p>
+                <a
+                  href="https://www.canada.ca/en/news/subscribe-emails.html"
+                  target="_blank"
+                  rel="noopener"
+                  >Official feed directory ↗</a
+                >
+              </details>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section-wrap about-section" id="about">
+        <div class="about-visual">
+          <div class="portrait-frame">
+            <img
+              src="assets/portrait.webp"
+              alt="Emmanuel Oyerinde"
+              width="400"
+              height="500"
+              loading="lazy"
+            />
+          </div>
+          <div class="portrait-label">
+            <span>EMMANUEL OYERINDE</span><small>B.Eng / MBA / PMP®</small><b>↗</b>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">05 / BEHIND THE WORK</p>
+          <h2>Engineering and<br /><em>project leadership.</em></h2>
+          <p class="about-lead">
+            For more than a decade, I’ve led IT, infrastructure, enterprise systems, and digital
+            transformation projects in utility and engineering organizations.
+          </p>
+          <p>
+            My work involves technical teams, business leaders, and suppliers, each with different
+            priorities. I keep the scope clear, raise risks early, and help the team make the
+            decisions needed to move a project forward.
+          </p>
+          <p>
+            My GIS work covers electricity distribution, network monitoring, and environmental
+            assessment. The projects featured here show how I use location data to examine assets,
+            networks, and the places they serve.
+          </p>
+          <p>
+            I hold a B.Eng in Electrical/Electronics Engineering and an MBA, and I’m a certified
+            Project Management Professional (PMP®).
+          </p>
+          <div class="about-facts">
+            <div><strong>B.Eng</strong><span>Electrical/Electronics Engineering</span></div>
+            <div><strong>10+</strong><span>Years of experience</span></div>
+            <div><strong>MBA</strong><span>Business perspective</span></div>
+            <div><strong>PMP®</strong><span>Delivery discipline</span></div>
+          </div>
+          <a href="#contact" class="text-link">Let’s connect <span>↗</span></a>
+        </div>
+      </section>
+      <section class="section-wrap methodology" id="methodology">
+        <details>
+          <summary>
+            <span
+              ><span class="eyebrow">CLARITY BUILDS TRUST</span
+              ><strong>Evidence, methods & protection</strong></span
+            ><span>+</span>
+          </summary>
+          <div class="method-grid">
+            <div>
+              <h3>Trace every number</h3>
+              <p>
+                Open Sources & freshness in the lab for the publisher, reporting period, check time,
+                coverage, and original download. An unavailable or missing value is never converted
+                to zero. Saved data stays labeled as saved.
+              </p>
+            </div>
+            <div>
+              <h3>Reliability has a scope</h3>
+              <p>
+                OEB annual scorecards cover Ontario distributors, excluding loss of supply and major
+                events. Additional utilities use individually sourced annual reports or clearly
+                labelled provincial electricity context. Report methods differ and are not merged
+                into one reliability ranking. Detailed geographic footprints preserve the original
+                local polygons; official Ontario service-area geometry is available as a separate
+                layer. The optional OEB layer retains its own published names and geometry.
+              </p>
+            </div>
+            <div>
+              <h3>Projections are conditional</h3>
+              <p>
+                CER pathways are published scenarios, not promises. The source defines the
+                historical cutoff. Sensitivity adjustments are explicitly your assumptions.
+                Statistics Canada’s monthly energy flows use a different definition from CER end-use
+                demand, so the two are never subtracted to invent a deficit.
+              </p>
+            </div>
+            <div>
+              <h3>Communities, accurately</h3>
+              <p>
+                The NRCan inventory provides settlement coordinates and reported power sources,
+                including regional-grid communities. Publication edition, catalogue coverage, and
+                retrieval time are separate. Inventory edition and source coverage stay attached to
+                every profile.
+              </p>
+            </div>
+            <div>
+              <h3>Privacy by restraint</h3>
+              <p>
+                No analytics or advertising trackers. Fonts and scripts are hosted with the site.
+                Reading preferences stay on your device. News and basemap providers receive the
+                requests needed to display their content. Contact opens your mail application.
+              </p>
+            </div>
+            <div>
+              <h3>Built-in safeguards</h3>
+              <p>
+                Restricted script loading, validated source snapshots, safe rendering, and tightly
+                scoped publishing workflows reduce common web risks. This is a read-only portfolio:
+                it does not accept passwords, payments, or contact-form submissions.
+              </p>
+            </div>
+          </div>
+          <button class="button outline" id="method-sources">Inspect the sources ↗</button>
+        </details>
+      </section>
+      <section id="contact" class="contact-section">
+        <div class="section-wrap">
+          <p class="eyebrow">NEXT / A CONVERSATION WORTH HAVING</p>
+          <div class="contact-heading">
+            <h2>Complex challenge?<br /><em>Let’s connect.</em></h2>
+            <a
+              href="mailto:emmanueloyerinde@yahoo.com"
+              class="contact-orb"
+              aria-label="Email Emmanuel Oyerinde"
+              >↗</a
+            >
+          </div>
+          <div class="contact-bottom">
+            <p>
+              Enterprise delivery. Spatial intelligence.<br />Infrastructure that makes a
+              difference.
+            </p>
+            <div>
+              <a class="email" href="mailto:emmanueloyerinde@yahoo.com"
+                >emmanueloyerinde@yahoo.com</a
+              ><button class="text-button" id="copy-email">Copy email ↗</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="section-wrap">
+      <a class="footer-mark" href="#home">eo.</a
+      ><span>© <span id="copyright-year">2026</span> Emmanuel Oyerinde</span
+      ><a href="#methodology">Sources & methodology</a><a href="#home">Back to top ↑</a>
+    </footer>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <dialog aria-labelledby="share-title" id="share-dialog">
+      <form method="dialog">
+        <button class="icon-button" aria-label="Close share dialog">×</button>
+      </form>
+      <h2 id="share-title">Share this view</h2>
+      <p>This link preserves the map category, selection, basemap, comparison, and scenario.</p>
+      <label>View URL<input id="share-url" readonly /></label>
+    </dialog>
+    <dialog aria-labelledby="case-title" id="case-dialog">
+      <form method="dialog"><button class="icon-button" aria-label="Close project">×</button></form>
+      <div id="case-body"></div>
+    </dialog>
+    <dialog aria-labelledby="command-title" id="command-dialog">
+      <form method="dialog"><button class="icon-button" aria-label="Close search">×</button></form>
+      <label id="command-title" class="command-label" for="command-input"
+        >Go somewhere interesting.</label
+      ><input
+        type="search"
+        id="command-input"
+        placeholder="Search pages, tools, and projects…"
+        autocomplete="off"
+      />
+      <div id="command-results"></div>
+      <p class="command-hint">↑ ↓ to explore · Enter to open · Esc to close</p>
+    </dialog>
+    <dialog aria-labelledby="source-title" id="source-dialog" class="source-dialog">
+      <form method="dialog"><button class="icon-button" aria-label="Close sources">×</button></form>
+      <p class="eyebrow">THE EVIDENCE DESK</p>
+      <h2 id="source-title">Know what you’re looking at.</h2>
+      <p>
+        Latest published data is not the same as real-time telemetry. Check the reporting period,
+        coverage, and measurement definition.
+      </p>
+      <p id="automation-status" class="automation-status"></p>
+      <div id="source-cards"></div>
+      <p class="control-help">
+        Additional utility annual-report figures are reviewed source excerpts, with the original
+        report linked on each profile. They are not automatically extracted or mixed into OEB
+        comparisons.
+      </p>
+    </dialog>
+    <dialog aria-labelledby="reading-title" id="reading-dialog" class="reading-dialog">
+      <form method="dialog">
+        <button class="icon-button" aria-label="Close reading preferences">×</button>
+      </form>
+      <p class="eyebrow">MAKE YOURSELF COMFORTABLE</p>
+      <h2 id="reading-title">Your reading space.</h2>
+      <label for="reading-size">Text size</label>
+      <div class="reading-size-control">
+        <span>A</span><input id="reading-size" type="range" min="18" max="22" value="19" /><span
+          >A</span
+        ><output id="reading-size-value">19 px</output>
+      </div>
+      <label class="reading-toggle"
+        ><input type="checkbox" id="reading-motion" /> Reduce decorative motion</label
+      >
+      <p class="reading-sample">Clear information. Room to breathe. A view that works for you.</p>
+      <button id="reading-reset" class="button outline">Restore defaults ↺</button>
+      <p class="control-help">
+        Saved only in this browser. Your operating system’s reduced-motion preference is always
+        respected.
+      </p>
+    </dialog>
+    <dialog id="evidence-dialog" class="evidence-dialog" aria-labelledby="evidence-title">
+      <form method="dialog">
+        <button class="icon-button" aria-label="Close source explanation">×</button>
+      </form>
+      <div id="evidence-body"></div>
+    </dialog>
+  </body>
 </html>

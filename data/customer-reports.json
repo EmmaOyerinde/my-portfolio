@@ -1,0 +1,137 @@
+{
+  "reviewedAt": "2026-11-10",
+  "reports": {
+    "hq": {
+      "count": 4646532,
+      "period": "2025",
+      "approximate": false,
+      "definition": "Electricity customer accounts in Qu\u00e9bec, including residential, commercial/institutional/small industrial, large industrial and other accounts.",
+      "sourceTitle": "Hydro-Qu\u00e9bec Annual Report 2025",
+      "sourceUrl": "https://www.hydroquebec.com/data/documents-donnees/pdf/hq-rapport-annuel-2025-anglais.pdf",
+      "precision": "exact",
+      "location": "Five-year statistics table, Number of customer accounts, as at December 31, 2025 column.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "bc": {
+      "count": 2301508,
+      "period": "FY2025/26",
+      "approximate": false,
+      "definition": "Total electricity customer accounts, comprising residential, light industrial/commercial, large industrial and other accounts.",
+      "sourceTitle": "2025/2026 BC Hydro Quick Facts",
+      "sourceUrl": "https://www.bchydro.com/content/dam/BCHydro/customer-portal/documents/corporate/accountability-reports/financial-reports/annual-reports/2025-2026-bc-hydro-quick-facts.pdf#page=2",
+      "precision": "exact",
+      "location": "PDF page 2, Operating statistics, March 31 2026 column, web lines 165-172.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "mh": {
+      "count": 640248,
+      "period": "FY2025/26",
+      "approximate": false,
+      "definition": "Electric customers only; excludes natural-gas customer count.",
+      "sourceTitle": "Manitoba Hydro 75th Annual Report corporate highlights",
+      "sourceUrl": "https://www.hydro.mb.ca/corporate/publications/",
+      "precision": "exact",
+      "location": "Annual Report section, FY ended March 31 2026, Corporate highlights, web lines 91-126.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "skp": {
+      "count": 568222,
+      "period": "Q1 FY2026/27",
+      "approximate": false,
+      "definition": "SaskPower customer accounts; annual breakdown includes residential, farm, commercial, oilfield, power and two reseller accounts.",
+      "sourceTitle": "SaskPower 2026-27 First Quarter Financial Report",
+      "sourceUrl": "https://www.saskpower.com/-/media/saskpower/about-us/reports/report-financials-q1-2026-27.pdf#page=3",
+      "precision": "exact",
+      "location": "PDF page 3 (printed page 1), Operating statistics, June 30 2026 column, web lines 48-54.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "nsp": {
+      "count": 565000,
+      "period": "2025",
+      "approximate": true,
+      "definition": "Nova Scotia Power electricity customers; does not include other Emera electric or gas utility customers.",
+      "sourceTitle": "Emera 2025 Annual Report",
+      "sourceUrl": "https://www.emera.com/docs/librariesprovider3/2025-sr-reports/emera-2025-annual-report--english.pdf#page=22",
+      "precision": "approximate",
+      "location": "Printed page 20, PDF page 22, Canadian Electric Utilities / NSPI, web lines 1045-1052; repeated in financial statements note 1.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "nbp": {
+      "count": 399525,
+      "period": "FY2025/26",
+      "approximate": false,
+      "definition": "Direct electricity customers, including residential, industrial, general service and non-metered customers.",
+      "sourceTitle": "NB Power Annual Report 2025/26",
+      "sourceUrl": "https://www.nbpower.ca/media/1494210/2025-26-nb-power-annual-report-en-final.pdf#page=167",
+      "precision": "exact",
+      "location": "Printed page 167, PDF page 167, Five-Year Review / Operating Statistics, FY2025/26 column, web lines 6212-6221.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "nfp": {
+      "count": 281000,
+      "period": "Q3 2026",
+      "approximate": true,
+      "definition": "Electricity customers served by Newfoundland Power on the island portion of Newfoundland and Labrador.",
+      "sourceTitle": "Newfoundland Power Third Quarter 2026 Interim Management Discussion & Analysis",
+      "sourceUrl": "https://newfoundlandpower.com/-/media/PDFs/About-Us/Financial-Reports/Quarterly-Reports/Q3-Management-Discussion--Anaylsis--Financial-Statements.pdf#page=3",
+      "precision": "approximate",
+      "location": "PDF page 3, printed MD&A page 1, Company overview, web lines 40-47. Report covers September 30 2026 and is dated November 2 2026.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "fa": {
+      "count": 615000,
+      "period": "2025",
+      "approximate": true,
+      "definition": "End-use electricity customers served by FortisAlberta's distribution network, not electricity retail customers.",
+      "sourceTitle": "Fortis Inc. 2025 Annual Information Form",
+      "sourceUrl": "https://www.fortisinc.com/docs/default-source/finance-regulatory-reports/2025-aif---final.pdf#page=15",
+      "precision": "publisher-rounded",
+      "location": "Printed page 14, PDF page 15, FortisAlberta section, web lines 691-696. AIF page 1 dates information as at Dec 31 2025.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "enmax": {
+      "count": 603000,
+      "period": "2025",
+      "approximate": true,
+      "definition": "Rate-regulated electricity customer sites in Calgary and area served by ENMAX Power's transmission and distribution system.",
+      "sourceTitle": "ENMAX 2025 Financial Report",
+      "sourceUrl": "https://assets.enmax.com/api/public/content/26fe1328edc64bc0a563b70376f18683?v=ce68ce9e#page=4",
+      "precision": "approximate",
+      "location": "PDF page 4, ENMAX Power overview, web lines 80-81; repeated in segment financial-statement note on PDF page 45.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "epcor": {
+      "count": 442035,
+      "period": "Company profile",
+      "approximate": false,
+      "definition": "Edmonton electricity distribution customers, derived as residential plus non-residential customers on EPCOR's current city profile.",
+      "sourceTitle": "EPCOR Edmonton company profile",
+      "sourceUrl": "https://www.epcor.com/ca/en/about/our-company/where-we-operate/edmonton.html",
+      "precision": "derived-exact-components",
+      "location": "Figures of note / Power Distribution, web lines 399-403.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    },
+    "me": {
+      "count": 92000,
+      "period": "2025",
+      "approximate": true,
+      "definition": "Electricity customers served by Maritime Electric on Prince Edward Island.",
+      "sourceTitle": "Fortis Inc. 2025 Annual Information Form",
+      "sourceUrl": "https://www.fortisinc.com/docs/default-source/finance-regulatory-reports/2025-aif---final.pdf#page=17",
+      "precision": "publisher-rounded",
+      "location": "Printed page 16, PDF page 17, Other Electric customer table, web lines 791-801. AIF page 1 dates information as at Dec 31 2025.",
+      "reviewedAt": "2026-11-10",
+      "reviewDue": "2027-02-10"
+    }
+  }
+}

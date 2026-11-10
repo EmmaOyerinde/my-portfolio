@@ -1,23 +1,27 @@
-# Security Policy
+# Security notes
 
-## Supported Versions
+This is a static GitHub Pages site. There is no server API, database, login, payment flow or form submission. Do not put credentials in the repository, HTML, client scripts, workflow inputs or public data files.
 
-Since this is a personal portfolio and enterprise dashboard showcase, only the latest version on the `main` branch is actively supported with security updates.
+## Enforced application controls
 
-| Version | Supported          |
-| ------- | ------------------ |
-| `main`  | :white_check_mark: |
-| Older   | :x:                |
+- CSP meta is placed before all resource loading in public HTML.
+- Scripts/fonts are self-hosted; no inline JavaScript or eval.
+- Source fetching is restricted to approved HTTPS origins and paths, bounded response sizes, timeouts and same-origin redirects.
+- External source text is escaped or assigned as text; links are constrained and use `noopener noreferrer`.
+- Spreadsheet formula-leading strings are escaped in CSV exports.
+- Bad data cannot replace a verified snapshot. SHA-256 detects mixed publication files; it does not authenticate a compromised repository.
+- Workflow Actions are pinned to full SHAs, package dependencies are locked, and jobs use scoped permissions. Dependabot proposes updates; it does not automatically merge them.
 
-## Reporting a Vulnerability
+## Hosting boundary
 
-We take the security of this project seriously. If you discover a security vulnerability within this project, please **do not** open a public GitHub Issue. 
+Enable Enforce HTTPS in GitHub Pages. GitHub controls response headers and infrastructure protection. CSP `frame-ancestors`, custom HSTS and custom Permissions-Policy cannot be enforced by adding a meta tag or `_headers` file on Pages. This package does not claim those controls are active. No server rate limiter or custom WAF is installed.
 
-Instead, please privately report the vulnerability by emailing **emmanueloyerinde@yahoo.com**.
+Keep your GitHub account protected with 2FA/passkeys. Review changes to `.github/workflows/` and the source adapters. Restrict repository write access and preserve appropriate branch protection. No personal access token is needed for the included workflow.
 
-When reporting a vulnerability, please include:
-* A description of the vulnerability and its potential impact.
-* Detailed steps to reproduce the vulnerability.
-* Any potential mitigation or fixes you suggest.
+## Failure and disclosure
 
-You should receive a response acknowledging receipt of your report within 48 hours. We will then review the issue, determine its severity, and plan a timeline for deploying a fix. We ask that you give us a reasonable amount of time to correct the issue before disclosing it publicly.
+A failed source check retains the previous successful data and date. A failed build/deployment retains the previous published site. Do not conceal failed checks by changing timestamps manually.
+
+Report a security issue privately to the portfolio owner using the site's email link. Do not post credentials or exploit details containing personal data in a public issue.
+
+The dependency audit found no known vulnerabilities at delivery. This is not a penetration test or a guarantee against future vulnerabilities.

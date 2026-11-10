@@ -1,0 +1,11 @@
+# Immutable source snapshots, generated files and third-party assets.
+data/
+assets/
+vendor/
+dist/
+node_modules/
+.openai/
+js/data.js
+js/evidence-seed.js
+package-lock.json
+styles.css

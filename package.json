@@ -1,0 +1,27 @@
+{
+  "name": "emmanuel-portfolio-github-pages",
+  "version": "5.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/prepare-styles.mjs && node scripts/prepare-seed.mjs && node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "refresh:data": "node scripts/refresh-data.mjs",
+    "validate": "node scripts/validate.mjs",
+    "prepare:data": "node scripts/prepare-seed.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run validate && npm test",
+    "prepare:styles": "node scripts/prepare-styles.mjs"
+  },
+  "dependencies": {
+    "fflate": "0.8.3"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "prettier": "3.6.2"
+  }
+}

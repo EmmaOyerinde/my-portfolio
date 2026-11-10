@@ -1,0 +1,446 @@
+/* Source status, evidence cards and resilient static delivery. */
+.data-status-note {
+  margin: 0;
+  padding: 0 25px 18px;
+  background: var(--surface);
+  font-size: 0.84rem;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: none;
+}
+.automation-status {
+  padding: 16px 18px;
+  border-left: 3px solid var(--accent);
+  background: var(--surface2);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem !important;
+}
+.context-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.profile-evidence > div {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.profile-evidence p {
+  font-size: 0.86rem;
+  line-height: 1.65;
+  margin: 12px 0;
+}
+.profile-evidence a,
+.utility-context a,
+.profile-comparison a {
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-underline-offset: 4px;
+  font-size: 0.82rem;
+}
+.utility-context {
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+}
+.regional-context {
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+  font-size: 0.83rem;
+  line-height: 1.65;
+}
+.regional-context strong,
+.regional-context span {
+  display: block;
+}
+.regional-context span {
+  color: var(--muted);
+  margin-top: 5px;
+}
+.ieso-context {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-top: 18px;
+  padding: 18px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+.ieso-context strong {
+  font-family: var(--heading);
+  font-size: 1.5rem;
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+.ieso-context strong small {
+  font: 400 0.78rem var(--font);
+  color: var(--muted);
+}
+.ieso-context p {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+  min-width: 180px;
+}
+.ieso-context p span {
+  display: block;
+  color: var(--muted);
+}
+.geometry-note {
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--muted);
+  margin-top: 15px;
+}
+.geometry-note summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text);
+  gap: 8px;
+}
+.geometry-note summary::before {
+  content: '+';
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+.geometry-note[open] summary::before {
+  content: '−';
+}
+.geometry-note p {
+  margin: 0;
+}
+.profile-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+.profile-comparison article {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  min-width: 0;
+}
+.profile-comparison h4 {
+  font: 600 1rem var(--heading);
+  margin: 0 0 12px;
+}
+.profile-comparison p,
+.comparison-explainer {
+  font-size: 0.83rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.comparison-metrics > div {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.comparison-metrics small,
+.comparison-metrics strong span {
+  display: block;
+  font-size: 0.73rem;
+  color: var(--muted);
+}
+.comparison-metrics strong {
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+.metric-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.metric-grid strong {
+  overflow-wrap: anywhere;
+}
+.metric-grid .metric-definition {
+  font-size: 0.75rem;
+}
+.metric-grid small {
+  font-size: 0.78rem;
+}
+.lab-guide {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 20px;
+}
+.lab-guide > span {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-right: 4px;
+}
+.lab-guide button {
+  min-height: 46px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 100px;
+  color: var(--text);
+  padding: 9px 17px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.lab-guide button:hover {
+  background: var(--surface2);
+  border-color: var(--accent);
+}
+.lab-guide button span {
+  margin-left: 9px;
+  color: var(--accent);
+}
+.lab-tabs button[aria-selected='true'] span {
+  font-weight: 600;
+}
+.utility-item {
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.utility-item small {
+  color: var(--muted);
+}
+.map-error {
+  position: relative !important;
+  inset: auto !important;
+  max-width: none;
+  margin: 0 !important;
+  padding: 13px 16px;
+  border-radius: 0 !important;
+  background: var(--surface2) !important;
+  color: var(--text) !important;
+  border-top: 1px solid var(--border);
+  font-size: 0.83rem !important;
+  line-height: 1.6;
+}
+.source-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.source-card:last-child {
+  grid-column: auto;
+}
+.news-card {
+  transition: background 0.18s;
+}
+.news-card:hover {
+  background: var(--surface2);
+}
+.news-card a {
+  min-height: 44px;
+}
+.case-link {
+  min-height: 44px;
+}
+.about-degree {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--muted);
+  margin-top: 12px;
+}
+.site-header nav a[aria-current='location'] {
+  color: var(--accent);
+}
+.status-light.offline {
+  background: #d5b97a;
+  box-shadow: none;
+}
+.empty-state {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+.hero-news {
+  overflow-wrap: anywhere;
+}
+@media (min-width: 1500px) {
+  .geo-map {
+    height: 560px;
+  }
+  .explorer-layout {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+  .utility-list {
+    height: 700px;
+  }
+}
+@media (max-width: 760px) {
+  .data-status-note {
+    padding: 0 18px 18px;
+    font-size: 0.83rem;
+  }
+  .metric-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 12px 0;
+  }
+  .metric-grid > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(105px, 1fr);
+    gap: 4px 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .metric-grid small {
+    font-size: 0.85rem;
+    margin: 0;
+    align-self: center;
+    min-height: 0;
+  }
+  .metric-grid strong {
+    font-size: 1.7rem;
+    text-align: right;
+    line-height: 1.3;
+    word-break: normal;
+  }
+  .metric-grid strong span {
+    font-size: 0.73rem;
+    margin-top: 5px;
+  }
+  .metric-grid .metric-definition {
+    grid-column: 1/-1;
+    font-size: 0.77rem;
+    margin: 5px 0 0;
+  }
+  .profile-comparison {
+    grid-template-columns: 1fr;
+  }
+  .ieso-context {
+    padding: 17px;
+    gap: 12px;
+  }
+  .ieso-context p {
+    flex-basis: 100%;
+  }
+  .profile-evidence p {
+    font-size: 0.87rem;
+  }
+  .lab-guide {
+    gap: 8px;
+  }
+  .lab-guide > span {
+    flex-basis: 100%;
+  }
+  .lab-guide button {
+    font-size: 0.8rem;
+    flex: 1 1 auto;
+  }
+  .geometry-note {
+    font-size: 0.83rem;
+  }
+  .about-degree {
+    font-size: 0.84rem;
+  }
+  .lab-tabs button {
+    padding-inline: 5px;
+  }
+  .lab-tabs span {
+    font-size: 0.79rem;
+  }
+  .source-state {
+    font-size: 0.76rem;
+  }
+  .profile-signature small {
+    max-width: 245px;
+    line-height: 1.6;
+  }
+  .news-top {
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+@media (max-width: 400px) {
+  .brand > span:last-child {
+    font-size: 12px;
+    max-width: 104px;
+    line-height: 1.35;
+  }
+  .monogram {
+    font-size: 29px;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .site-header {
+    padding-inline: 12px;
+    gap: 5px;
+  }
+  .header-actions .icon-button {
+    width: 40px;
+    min-width: 40px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 10vw, 2.4rem);
+  }
+  .lab-toolbar {
+    flex-wrap: wrap;
+  }
+  .lab-toolbar .dataset-badge {
+    display: none;
+  }
+  .data-command > div:last-child {
+    width: 100%;
+  }
+  .data-command button {
+    font-size: 0.76rem;
+    flex: 1;
+  }
+  .lab-tabs span {
+    font-size: 0.73rem;
+    margin: 0;
+  }
+  .lab-tabs button {
+    font-size: 0.6rem;
+  }
+  .map-tools label {
+    flex: 1;
+  }
+  .map-tools select {
+    width: 100%;
+    max-width: none;
+  }
+  .profile-signature img {
+    width: 36px;
+    height: 36px;
+  }
+  .profile-signature {
+    font-size: 0.8rem;
+  }
+  .profile-signature small {
+    font-size: 0.61rem;
+  }
+}
+
+.about-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.about-facts > div {
+  min-width: 0;
+}
+.about-facts span {
+  line-height: 1.5;
+}
+.about-facts strong {
+  font-size: 1.6rem;
+}
+@media (max-width: 1100px) {
+  .about-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+}

@@ -1,0 +1,64 @@
+/* Shared typography, spacing and colour tokens. Asset paths resolve from the generated root stylesheet. */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('assets/fonts/manrope-variable.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Sans 3';
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url('assets/fonts/sourcesans3-variable.woff2') format('woff2');
+}
+:root {
+  --bg: #071821;
+  --surface: #0e2530;
+  --surface2: #173641;
+  --text: #eff8f8;
+  --muted: #b5ccd1;
+  --border: #31505d;
+  --accent: #7ce0cb;
+  --ink: #062a2c;
+  --warm: #ecf1f8;
+  --font: 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --heading: 'Manrope', system-ui, sans-serif;
+  color-scheme: dark;
+  --blue: #9ac8ff;
+  --cyan: #65d5ef;
+  --radius: 10px;
+  --reading-size: 19px;
+  --teal: #7ce0cb;
+  --violet: #c1b2ff;
+  --amber: #f4ca83;
+  --teal-wash: #103c3d;
+  --violet-wash: #292b49;
+  --blue-wash: #17374d;
+  --amber-wash: #3e3426;
+  --selection: #b4e6ff;
+  --shadow: 0 18px 60px #010c1335;
+}
+html[data-theme='light'] {
+  --bg: #f4f7f6;
+  --surface: #fff;
+  --surface2: #e9f1ef;
+  --text: #172f3b;
+  --muted: #49636e;
+  --border: #b6cdce;
+  --accent: #087565;
+  --ink: #fff;
+  --warm: #ecf1f8;
+  color-scheme: light;
+  --teal: #087565;
+  --violet: #6544a4;
+  --blue: #215eaa;
+  --amber: #85570f;
+  --teal-wash: #def3eb;
+  --violet-wash: #eee7fa;
+  --blue-wash: #e2edf9;
+  --amber-wash: #fcf0d9;
+  --selection: #104fb2;
+  --shadow: 0 18px 55px #16374710;
+}
