@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-// Order is deliberate: preserve the established responsive and component cascade.
+// The composition layer owns page structure and responsive layouts.
 export const styleFiles = [
   'tokens.css',
   'foundation.css',
@@ -8,6 +8,7 @@ export const styleFiles = [
   'components.css',
   'evidence.css',
   'interaction.css',
+  'composition.css',
 ];
 export function compileStyles() {
   return (

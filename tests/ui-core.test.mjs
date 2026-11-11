@@ -14,6 +14,7 @@ test('shared source links reject protocols, credentials and deceptive hosts', ()
     'http://www.oeb.ca/',
     'https://www.oeb.ca.evil.test/',
     'https://user:password@www.oeb.ca/',
+    'https://www.oeb.ca:8443/open-data',
     '/relative',
     'https://',
   ]) {

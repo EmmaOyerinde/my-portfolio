@@ -46,6 +46,7 @@
     <script src="js/maps.js" defer></script>
     <script src="js/app.js" defer></script>
     <script src="js/experience.js" defer></script>
+    <script src="js/responsive.js" defer></script>
     <script src="js/source-reader.js" defer></script>
     <script defer src="js/reliability-view.js"></script>
     <script src="js/reliability-ui.js" defer></script>
@@ -106,17 +107,17 @@
         <div class="section-wrap hero-layout">
           <div class="hero-copy">
             <p class="eyebrow"><span class="tiny-dot"></span> STRATEGY. SYSTEMS. IMPACT.</p>
-            <h1>Infrastructure,<br />made<br /><em>intelligent.</em></h1>
+            <h1>Infrastructure,<br /><em>made intelligent.</em></h1>
             <p class="hero-intro">
-              I turn complex systems into<br />clear decisions and meaningful delivery.
+              I help teams understand complex infrastructure and deliver the projects it needs.
             </p>
             <p class="hero-detail">
-              Enterprise project leader. Geospatial thinker.<br />Connecting technology, people, and
-              the infrastructure that powers everyday life.
+              Electrical engineering, project leadership, and GIS. From the electricity network to
+              the decisions on the ground.
             </p>
             <div class="hero-actions">
-              <a class="button primary" href="#work">Discover my work <span>↗</span></a
-              ><a class="text-link" href="#lab">Explore the intelligence lab <span>→</span></a>
+              <a class="button primary" href="#work">Explore my work <span>↗</span></a
+              ><a class="text-link" href="#lab">Open the intelligence lab <span>→</span></a>
             </div>
           </div>
           <div class="hero-aside">
@@ -140,12 +141,6 @@
                 Drag to explore · arrow keys to turn <span id="globe-state">Loading globe</span>
               </p>
             </div>
-            <a class="hero-news" href="#news"
-              ><span class="eyebrow"><span class="tiny-dot"></span> FROM THE LIVE WIRE</span
-              ><strong id="hero-headline"
-                >Energy, infrastructure, and the decisions shaping what comes next.</strong
-              ><span id="hero-news-meta">Connecting to official news sources…</span><b>↗</b></a
-            >
           </div>
         </div>
         <div class="section-wrap hero-bottom">
@@ -167,7 +162,7 @@
       <section class="wire-ribbon" aria-label="News highlights">
         <div class="section-wrap wire-inner">
           <a class="wire-brand" href="#news"
-            ><span class="wire-light"></span><strong>THE LIVE WIRE</strong
+            ><span class="wire-light" aria-hidden="true"></span><strong>THE LIVE WIRE</strong
             ><small id="wire-status">Connecting to official sources</small></a
           >
           <div
@@ -196,21 +191,15 @@
           </div>
         </div>
       </section>
-      <div class="discipline-strip">
-        <div class="section-wrap">
-          <span>ENTERPRISE DELIVERY</span><i>✳</i><span>GEOSPATIAL INTELLIGENCE</span><i>✳</i
-          ><span>UTILITY TRANSFORMATION</span><i>✳</i><span>STRATEGIC LEADERSHIP</span>
-        </div>
-      </div>
       <section class="section-wrap work-section" id="work">
         <div class="section-heading">
           <div>
             <p class="eyebrow">01 / SELECTED WORK</p>
-            <h2>Real complexity.<br /><em>Applied intelligence.</em></h2>
+            <h2>From the network<br /><em>to the bigger picture.</em></h2>
           </div>
           <p>
-            A portfolio of spatial thinking, enterprise systems, and infrastructure work. Explore
-            the context behind each project.
+            Electricity distribution, network monitoring, and environmental assessment. Three
+            projects that show how I work with spatial information.
           </p>
         </div>
         <article class="lead-project">
@@ -308,85 +297,39 @@
           </article>
         </div>
       </section>
-      <section class="expertise-section" id="expertise">
-        <div class="section-wrap expertise-layout">
-          <div>
-            <p class="eyebrow">02 / THE WAY I WORK</p>
-            <h2>Good plans need<br /><em>good follow-through.</em></h2>
-            <p class="section-intro">
-              A project needs more than a good plan. It needs people who can make decisions together
-              and follow through.
-            </p>
-          </div>
-          <div class="expertise-list">
-            <details open>
-              <summary><span>01</span>Lead the delivery<b>↗</b></summary>
-              <p>
-                I keep scope, budgets, suppliers, and decisions connected so teams know what needs
-                to happen next.
-              </p>
-            </details>
-            <details>
-              <summary><span>02</span>Connect the systems<b>↗</b></summary>
-              <p>
-                I work across enterprise applications, GIS platforms, and operational processes to
-                help teams see how the pieces fit.
-              </p>
-            </details>
-            <details>
-              <summary><span>03</span>Make change work<b>↗</b></summary>
-              <p>
-                I help teams move from established systems to new ways of working, with clear
-                ownership and attention to risk.
-              </p>
-            </details>
-            <details>
-              <summary><span>04</span>Explore what’s next<b>↗</b></summary>
-              <p>
-                AI-assisted planning, documentation, and analysis, with human judgment and review
-                throughout.
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
       <section class="section-wrap lab-section" id="lab">
         <div class="section-heading">
           <div>
-            <p class="eyebrow"><span class="tiny-dot"></span> 03 / INTERACTIVE INTELLIGENCE</p>
-            <h2>One country.<br /><em>Four perspectives.</em></h2>
+            <p class="eyebrow"><span class="tiny-dot"></span> 02 / INTERACTIVE INTELLIGENCE</p>
+            <h2>Explore Canada’s<br /><em>electricity systems.</em></h2>
           </div>
           <p>
-            Follow a question from the map to the evidence. Explore utility performance, possible
-            demand futures, electricity flows, and the communities behind the system.
+            Choose a view, then a utility, province, or community. Start with the map and open the
+            supporting figures when you need them.
           </p>
-        </div>
-        <div class="lab-guide" aria-label="Suggested explorations">
-          <span>Start with a question</span
-          ><button data-guide="reliability">How reliable is the grid? <span>↗</span></button
-          ><button data-guide="forecast">What changes by 2050? <span>↗</span></button
-          ><button data-guide="offgrid">How is Iqaluit powered? <span>↗</span></button>
         </div>
         <div class="lab-shell">
           <div class="lab-toolbar">
             <span class="lab-brand">eo / <strong>INTELLIGENCE LAB</strong></span
-            ><span class="dataset-badge">PUBLISHED EVIDENCE</span
-            ><button class="text-button" id="share">Share this view ↗</button>
+            ><button class="text-button" id="share">Share view ↗</button>
           </div>
-          <div class="data-command">
-            <div>
+          <details class="source-summary">
+            <summary>
               <span class="status-light" id="data-light"></span
               ><strong id="data-status" role="status">Loading published data</strong
-              ><span id="data-period">Reading source metadata…</span>
+              ><span class="source-summary-label">Source details</span>
+            </summary>
+            <div class="data-command">
+              <span id="data-period">Reading source metadata…</span>
+              <div>
+                <button id="data-refresh" class="small-button">Check published copy ↻</button
+                ><button id="source-open" class="small-button">Sources & freshness ↗</button>
+              </div>
             </div>
-            <div>
-              <button id="data-refresh" class="small-button">Check published copy ↻</button
-              ><button id="source-open" class="small-button">Sources & freshness ↗</button>
-            </div>
-          </div>
-          <p id="data-status-note" class="data-status-note" aria-live="polite">
-            Your published datasets are ready to explore.
-          </p>
+            <p id="data-status-note" class="data-status-note" aria-live="polite">
+              Your published datasets are ready to explore.
+            </p>
+          </details>
           <div role="tablist" aria-label="Intelligence views" class="lab-tabs">
             <button
               role="tab"
@@ -395,7 +338,7 @@
               aria-selected="true"
               data-tab="reliability"
             >
-              01 <span>Reliability</span></button
+              <span class="tab-number" aria-hidden="true">01</span> <span>Reliability</span></button
             ><button
               role="tab"
               id="tab-forecast"
@@ -404,7 +347,8 @@
               tabindex="-1"
               data-tab="forecast"
             >
-              02 <span>Demand scenarios</span></button
+              <span class="tab-number" aria-hidden="true">02</span>
+              <span>Demand scenarios</span></button
             ><button
               role="tab"
               id="tab-deficit"
@@ -413,7 +357,8 @@
               tabindex="-1"
               data-tab="deficit"
             >
-              03 <span>Energy balance</span></button
+              <span class="tab-number" aria-hidden="true">03</span>
+              <span>Energy balance</span></button
             ><button
               role="tab"
               id="tab-offgrid"
@@ -422,61 +367,65 @@
               tabindex="-1"
               data-tab="offgrid"
             >
-              04 <span>Remote communities</span>
+              <span class="tab-number" aria-hidden="true">04</span> <span>Remote communities</span>
             </button>
           </div>
           <div id="panel-reliability" role="tabpanel" aria-labelledby="tab-reliability">
-            <section
-              id="national-metric-finder"
-              class="national-metric-finder"
-              aria-labelledby="national-metric-title"
-            ></section>
             <div class="explorer-layout">
-              <aside class="utility-sidebar">
-                <div class="sidebar-head">
-                  <h3>Find a utility</h3>
-                  <span id="utility-count"></span>
+              <details class="utility-sidebar" id="utility-picker" open>
+                <summary class="utility-picker-summary">
+                  <span
+                    ><small>Selected utility</small
+                    ><strong id="utility-picker-label">Toronto Hydro</strong></span
+                  >
+                  <span class="picker-action">Change utility <b aria-hidden="true">⌄</b></span>
+                </summary>
+                <div class="utility-picker-content">
+                  <div class="sidebar-head">
+                    <h3>Find a utility</h3>
+                    <span id="utility-count"></span>
+                  </div>
+                  <label class="search-label"
+                    ><span class="sr-only">Search utilities or regions</span
+                    ><span aria-hidden="true">⌕</span
+                    ><input
+                      type="search"
+                      id="utility-search"
+                      placeholder="Search utility or region…" /></label
+                  ><label class="sort-label"
+                    >Sort by
+                    <select id="utility-sort">
+                      <option value="utility">Name A–Z</option>
+                      <option value="customers">Customers: largest first</option>
+                      <option value="saidi">OEB outage duration</option>
+                      <option value="saifi">OEB outage frequency</option>
+                    </select></label
+                  ><label class="field-label" for="utility-province">Province or territory</label
+                  ><select id="utility-province">
+                    <option value="all">All of Canada</option>
+                    <option value="AB">Alberta</option>
+                    <option value="BC">British Columbia</option>
+                    <option value="MB">Manitoba</option>
+                    <option value="NB">New Brunswick</option>
+                    <option value="NL">Newfoundland and Labrador</option>
+                    <option value="NS">Nova Scotia</option>
+                    <option value="NT">Northwest Territories</option>
+                    <option value="NU">Nunavut</option>
+                    <option value="ON">Ontario</option>
+                    <option value="PE">Prince Edward Island</option>
+                    <option value="QC">Québec</option>
+                    <option value="SK">Saskatchewan</option>
+                    <option value="YT">Yukon</option></select
+                  ><label class="coverage-filter"
+                    ><input id="verified-only" type="checkbox" /> Published outage figures</label
+                  >
+                  <div class="utility-list" id="utility-list"></div>
                 </div>
-                <label class="search-label"
-                  ><span class="sr-only">Search utilities or regions</span
-                  ><span aria-hidden="true">⌕</span
-                  ><input
-                    type="search"
-                    id="utility-search"
-                    placeholder="Search utility or region…" /></label
-                ><label class="sort-label"
-                  >Sort by
-                  <select id="utility-sort">
-                    <option value="utility">Name A–Z</option>
-                    <option value="customers">Customers: largest first</option>
-                    <option value="saidi">OEB outage duration</option>
-                    <option value="saifi">OEB outage frequency</option>
-                  </select></label
-                ><label class="field-label" for="utility-province">Province or territory</label
-                ><select id="utility-province">
-                  <option value="all">All of Canada</option>
-                  <option value="AB">Alberta</option>
-                  <option value="BC">British Columbia</option>
-                  <option value="MB">Manitoba</option>
-                  <option value="NB">New Brunswick</option>
-                  <option value="NL">Newfoundland and Labrador</option>
-                  <option value="NS">Nova Scotia</option>
-                  <option value="NT">Northwest Territories</option>
-                  <option value="NU">Nunavut</option>
-                  <option value="ON">Ontario</option>
-                  <option value="PE">Prince Edward Island</option>
-                  <option value="QC">Québec</option>
-                  <option value="SK">Saskatchewan</option>
-                  <option value="YT">Yukon</option></select
-                ><label class="coverage-filter"
-                  ><input id="verified-only" type="checkbox" /> Published outage figures</label
-                >
-                <div class="utility-list" id="utility-list"></div>
-              </aside>
+              </details>
               <div class="explorer-main">
                 <div class="map-heading">
                   <div>
-                    <p class="eyebrow">UTILITY INTELLIGENCE / EVIDENCE & CONTEXT</p>
+                    <p class="eyebrow">SELECTED UTILITY</p>
                     <h3 id="selected-utility">Toronto Hydro</h3>
                   </div>
                   <button class="small-button" id="reset-map">National view ↗</button>
@@ -492,23 +441,62 @@
                 </div>
                 <p class="context-note" id="utility-provenance"></p>
                 <div id="utility-metrics" class="metric-grid" aria-live="polite"></div>
-                <div id="utility-context" class="utility-context"></div>
-                <section
-                  id="reliability-detail"
-                  class="reliability-detail"
-                  aria-label="Reliability measures"
-                ></section>
-                <div class="comparison-controls">
-                  <label
-                    >Compare with
-                    <select id="compare-utility">
-                      <option value="">Choose a utility</option>
-                    </select></label
-                  ><button class="text-button" id="export-data">Download data ↓</button>
-                </div>
-                <div id="comparison" aria-live="polite"></div>
+                <details class="lab-disclosure" id="utility-context-panel">
+                  <summary>
+                    <span
+                      ><strong>Customer base & regional context</strong
+                      ><small>Sources, geography, and provincial electricity</small></span
+                    ><b aria-hidden="true">+</b>
+                  </summary>
+                  <div id="utility-context" class="utility-context"></div>
+                </details>
+                <details class="lab-disclosure" id="utility-evidence">
+                  <summary>
+                    <span
+                      ><strong>All reliability measures</strong
+                      ><small id="utility-evidence-count"
+                        >Published figures, calculations, and definitions</small
+                      ></span
+                    ><b aria-hidden="true">+</b>
+                  </summary>
+                  <section
+                    id="reliability-detail"
+                    class="reliability-detail"
+                    aria-label="Reliability measures"
+                  ></section>
+                </details>
+                <details class="lab-disclosure" id="utility-comparison">
+                  <summary>
+                    <span
+                      ><strong>Compare utilities</strong
+                      ><small>Read customer counts and outage measures side by side</small></span
+                    ><b aria-hidden="true">+</b>
+                  </summary>
+                  <div class="comparison-controls">
+                    <label
+                      >Compare with
+                      <select id="compare-utility">
+                        <option value="">Choose a utility</option>
+                      </select></label
+                    ><button class="text-button" id="export-data">Download data ↓</button>
+                  </div>
+                  <div id="comparison" aria-live="polite"></div>
+                </details>
               </div>
             </div>
+            <details class="lab-disclosure metric-discovery" id="metric-discovery">
+              <summary>
+                <span
+                  ><strong>Find a reliability measure across Canada</strong
+                  ><small>CAIDI · CAIFI · MAIFI · ASAI · CEMIₙ · CELID · ENS · AENS</small></span
+                ><b aria-hidden="true">+</b>
+              </summary>
+              <section
+                id="national-metric-finder"
+                class="national-metric-finder"
+                aria-labelledby="national-metric-title"
+              ></section>
+            </details>
           </div>
           <div id="panel-forecast" role="tabpanel" aria-labelledby="tab-forecast" hidden>
             <div class="scenario-layout">
@@ -680,18 +668,10 @@
           </div>
           <div class="lab-foot">
             <p>
-              <span class="info-dot">i</span> Published evidence, explained in context. Reporting
-              periods differ by source; checked time is not the observation date.
+              <span class="info-dot">i</span> Each figure keeps its reporting period and source.
             </p>
             <a href="#methodology">Read methodology ↗</a>
           </div>
-        </div>
-        <div class="lab-links">
-          <p>
-            Every map supports dark, light, street, and satellite basemaps. Use the list and chart
-            views for keyboard-accessible detail.
-          </p>
-          <a class="text-link" href="#methodology">Understand the data <span>↗</span></a>
         </div>
         <noscript
           ><p>
@@ -704,7 +684,7 @@
         <div class="section-wrap">
           <div class="section-heading">
             <div>
-              <p class="eyebrow"><span class="tiny-dot"></span> 04 / THE LIVE WIRE</p>
+              <p class="eyebrow"><span class="tiny-dot"></span> 03 / THE LIVE WIRE</p>
               <h2>Stay ahead of<br /><em>what’s changing.</em></h2>
             </div>
             <p>
@@ -743,11 +723,11 @@
                 >
               </div>
             </div>
-            <div id="news-grid" class="news-grid" aria-live="polite">
+            <div id="news-grid" class="news-grid" aria-busy="false">
               <p class="empty-state">Loading headlines from official sources…</p>
             </div>
             <div class="news-bottom">
-              <span id="news-count"></span
+              <span id="news-count" role="status" aria-atomic="true"></span
               ><button id="news-more" class="text-button" hidden>Load more headlines ↓</button>
               <details>
                 <summary>Sources & feed health <span>+</span></summary>
@@ -784,7 +764,7 @@
           </div>
         </div>
         <div>
-          <p class="eyebrow">05 / BEHIND THE WORK</p>
+          <p class="eyebrow">04 / BEHIND THE WORK</p>
           <h2>Engineering and<br /><em>project leadership.</em></h2>
           <p class="about-lead">
             For more than a decade, I’ve led IT, infrastructure, enterprise systems, and digital
@@ -810,6 +790,39 @@
             <div><strong>MBA</strong><span>Business perspective</span></div>
             <div><strong>PMP®</strong><span>Delivery discipline</span></div>
           </div>
+          <details class="approach-details">
+            <summary>How I work <span aria-hidden="true">+</span></summary>
+            <div class="expertise-list">
+              <details>
+                <summary><span>01</span>Lead the delivery<b>↗</b></summary>
+                <p>
+                  I keep scope, budgets, suppliers, and decisions connected so teams know what needs
+                  to happen next.
+                </p>
+              </details>
+              <details>
+                <summary><span>02</span>Connect the systems<b>↗</b></summary>
+                <p>
+                  I work across enterprise applications, GIS platforms, and operational processes to
+                  help teams see how the pieces fit.
+                </p>
+              </details>
+              <details>
+                <summary><span>03</span>Make change work<b>↗</b></summary>
+                <p>
+                  I help teams move from established systems to new ways of working, with clear
+                  ownership and attention to risk.
+                </p>
+              </details>
+              <details>
+                <summary><span>04</span>Explore what’s next<b>↗</b></summary>
+                <p>
+                  AI-assisted planning, documentation, and analysis, with human judgment and review
+                  throughout.
+                </p>
+              </details>
+            </div>
+          </details>
           <a href="#contact" class="text-link">Let’s connect <span>↗</span></a>
         </div>
       </section>

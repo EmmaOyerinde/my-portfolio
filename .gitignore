@@ -2,3 +2,5 @@ node_modules/
 dist/
 .openai/
 *.tmp
+playwright-report/
+test-results/

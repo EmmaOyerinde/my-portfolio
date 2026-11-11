@@ -15,12 +15,14 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "npm run format:check && npm run validate && npm test",
-    "prepare:styles": "node scripts/prepare-styles.mjs"
+    "prepare:styles": "node scripts/prepare-styles.mjs",
+    "test:browser": "playwright test"
   },
   "dependencies": {
     "fflate": "0.8.3"
   },
   "devDependencies": {
+    "@playwright/test": "1.65.0",
     "jsdom": "26.1.0",
     "prettier": "3.6.2"
   }

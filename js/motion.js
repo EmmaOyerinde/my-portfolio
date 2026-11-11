@@ -15,7 +15,8 @@
     health = {},
     pendingNews = null,
     offset = 0,
-    loopWidth = 0;
+    loopWidth = 0,
+    positions = [];
   const ribbon = $('.wire-ribbon'),
     viewport = $('#wire-viewport'),
     group = $('#wire-group'),
@@ -62,6 +63,7 @@
   function measure() {
     viewport.style.setProperty('--wire-view-width', viewport.clientWidth + 'px');
     loopWidth = group.getBoundingClientRect().width;
+    positions = [...group.children].map((child) => child.offsetLeft);
     if (loopWidth > 0) {
       offset = viewport.scrollLeft % loopWidth;
       viewport.scrollLeft = offset;
@@ -70,10 +72,9 @@
   }
   function updatePosition() {
     if (!articles.length) return;
-    const children = [...group.children];
     let next = 0;
-    for (let i = 0; i < children.length; i++) {
-      if (children[i].offsetLeft <= offset + 3) next = i;
+    for (let i = 0; i < positions.length; i++) {
+      if (positions[i] <= offset + 3) next = i;
       else break;
     }
     index = next;
@@ -104,14 +105,15 @@
   }
   function renderNews(incoming) {
     const current = articles[index]?.url,
-      within = offset - (group.children[index]?.offsetLeft || 0);
+      within = offset - (positions[index] || 0);
     health = incoming.health || {};
     articles = incoming.articles.slice(0, 12).filter((a) => {
       try {
         const u = new URL(a.url);
         return (
           u.protocol === 'https:' &&
-          u.hostname === 'www.canada.ca' &&
+          ['www.canada.ca', 'canada.ca'].includes(u.hostname) &&
+          !u.port &&
           !u.username &&
           !u.password &&
           typeof a.title === 'string' &&
@@ -121,7 +123,22 @@
         return false;
       }
     });
-    if (!articles.length) return;
+    if (!articles.length) {
+      const link = document.createElement('a');
+      link.className = 'wire-item';
+      link.href = '#news';
+      link.textContent = incoming.loading
+        ? 'Checking official news sources…'
+        : 'Headlines are temporarily unavailable. Open the news desk to retry.';
+      group.replaceChildren(link);
+      track.querySelector('.wire-copy')?.remove();
+      positions = [];
+      loopWidth = 0;
+      offset = 0;
+      viewport.scrollLeft = 0;
+      $('#wire-position').textContent = '00 / 00';
+      return;
+    }
     index = Math.max(
       0,
       articles.findIndex((a) => a.url === current),
@@ -134,15 +151,14 @@
     copy.append(...articles.map((a, i) => headlineItem(a, i, true)));
     track.append(copy);
     loopWidth = group.getBoundingClientRect().width;
-    offset =
-      (group.children[index]?.offsetLeft || 0) +
-      (current === articles[index]?.url ? Math.max(0, within) : 0);
+    positions = [...group.children].map((child) => child.offsetLeft);
+    offset = (positions[index] || 0) + (current === articles[index]?.url ? Math.max(0, within) : 0);
     viewport.scrollLeft = offset;
     updatePosition();
     start();
   }
   function flushNews() {
-    if (pendingNews && !stopped() && !readingWire()) {
+    if (pendingNews && !readingWire()) {
       const data = pendingNews;
       pendingNews = null;
       renderNews(data);
@@ -151,7 +167,7 @@
   function stepHeadline(step) {
     if (!articles.length) return;
     index = (index + step + articles.length) % articles.length;
-    offset = group.children[index].offsetLeft;
+    offset = positions[index] || 0;
     viewport.scrollLeft = offset;
     const label =
       String(index + 1).padStart(2, '0') + ' / ' + String(articles.length).padStart(2, '0');
@@ -176,7 +192,7 @@
     const item = e.target.closest('.wire-item');
     if (item) {
       index = Number(item.dataset.headlineIndex) || 0;
-      offset = group.children[index]?.offsetLeft || 0;
+      offset = positions[index] || 0;
       viewport.scrollLeft = offset;
       updatePosition();
     }
@@ -207,10 +223,12 @@
       ? `${incoming.live} official ${incoming.live === 1 ? 'feed' : 'feeds'} connected`
       : incoming.loading
         ? 'Checking official feeds'
-        : 'Saved headlines · not live';
+        : incoming.articles?.length
+          ? 'Saved headlines · not live'
+          : 'Feeds unavailable';
     ribbon.dataset.live = String(incoming.live > 0);
-    if (!incoming.articles?.length) return;
-    if (articles.length && (stopped() || readingWire())) pendingNews = incoming;
+    if (!Array.isArray(incoming.articles)) return;
+    if (readingWire()) pendingNews = incoming;
     else renderNews(incoming);
   });
   const canvas = $('#connected-globe');

@@ -12,6 +12,7 @@
       ? 'Not reported'
       : Number(n).toLocaleString('en-CA', { maximumFractionDigits: 2 });
   const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+  const touchInput = matchMedia('(pointer: coarse)');
   let reduced =
     motionPreference.matches || document.documentElement.dataset.reduceMotion === 'true';
   const maps = {},
@@ -89,38 +90,67 @@
       map.removeLayer(states[name].reference);
       states[name].reference = null;
     }
-    let errorShown = false;
+    const stage = $(`[data-map-stage="${name}"]`);
+    stage.querySelector('.basemap-error')?.remove();
     const layer = createBase(key);
+    const failedTiles = new Set();
     bases[name] = layer;
     states[name].base = key;
-    layer.on('tileerror', () => {
-      if (errorShown) return;
-      errorShown = true;
-      const stage = $(`[data-map-stage="${name}"]`);
-      let note = stage.querySelector('.map-error');
-      if (!note) {
-        note = document.createElement('div');
-        note.className = 'map-error';
-        stage.append(note);
+    function renderTileStatus() {
+      if (bases[name] !== layer) return;
+      const existing = stage.querySelector('.basemap-error');
+      if (!failedTiles.size) {
+        existing?.remove();
+        return;
       }
-      note.textContent =
-        'Some background tiles are unavailable. Try another basemap; the data layers and lists remain available.';
-    });
-    layer.on('tileload', () => {
-      const note = $(`[data-map-stage="${name}"] .map-error`);
-      if (note) note.remove();
-    });
-    layer.addTo(map);
+      if (existing) return;
+      const note = document.createElement('div');
+      note.className = 'map-error basemap-error';
+      const message = document.createElement('span');
+      message.setAttribute('role', 'status');
+      message.textContent =
+        'Some background tiles could not load. Your data layers are still available.';
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.textContent = 'Retry basemap';
+      retry.onclick = () => {
+        holderFocus();
+        setBase(name, states[name].base);
+      };
+      note.append(message, retry);
+      stage.append(note);
+    }
+    function holderFocus() {
+      stage.querySelector('[data-basemap]')?.focus({ preventScroll: true });
+    }
+    function watchTiles(tiles, kind) {
+      const tileKey = (event) =>
+        event.tile || `${kind}:${event.coords?.z}/${event.coords?.x}/${event.coords?.y}`;
+      tiles.on('tileerror', (event) => {
+        if (bases[name] !== layer) return;
+        failedTiles.add(tileKey(event));
+        renderTileStatus();
+      });
+      tiles.on('tileload tileunload', (event) => {
+        failedTiles.delete(tileKey(event));
+        renderTileStatus();
+      });
+      return tiles;
+    }
+    watchTiles(layer, 'base').addTo(map);
     if (key === 'dark' || key === 'light')
-      states[name].reference = L.tileLayer(
-        `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_${key === 'light' ? 'Light' : 'Dark'}_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
-        { pane: 'reference-labels', maxZoom: 18, interactive: false },
+      states[name].reference = watchTiles(
+        L.tileLayer(
+          `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_${key === 'light' ? 'Light' : 'Dark'}_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
+          { pane: 'reference-labels', maxZoom: 18, interactive: false },
+        ),
+        'labels',
       ).addTo(map);
     document.dispatchEvent(new CustomEvent('eo:mapstate'));
   }
   function tools(name) {
     const holder = $(`[data-map-tools="${name}"]`);
-    holder.innerHTML = `<button class="map-focus" data-national="${name}" aria-label="Reset ${name} map to Canada">Reset view</button><label>Basemap<select data-basemap="${name}" aria-label="${name} basemap"><option value="dark">Dark map</option><option value="light">Light map</option><option value="street">Street map</option><option value="satellite">Satellite</option></select></label>${name === 'reliability' ? '<label>Region<select id="map-region" aria-label="Focus map region"><option value="canada">Canada</option><option value="ontario">Ontario utilities</option><option value="gta">Greater Toronto</option><option value="west">Western Canada</option><option value="atlantic">Atlantic Canada</option></select></label><label>Metric<select id="map-metric" aria-label="Map reliability metric"><option value="customers">Customer base · Canada</option><option value="saidi">SAIDI · OEB method</option><option value="saifi">SAIFI · OEB method</option></select></label>' : ''}${name === 'reliability' ? '<label class="official-layer-control"><input type="checkbox" id="official-boundaries"> OEB boundary layer</label>' : ''}<button data-expand="${name}" aria-label="Expand ${name} map" title="Expand map">Expand</button>`;
+    holder.innerHTML = `<label class="basemap-picker"><span>Basemap</span><select data-basemap="${name}" aria-label="${name} basemap"><option value="dark">Dark map</option><option value="light">Light map</option><option value="street">Street map</option><option value="satellite">Satellite</option></select></label>${name === 'reliability' ? '<details class="map-settings"><summary>Map layers <span aria-hidden="true">⌄</span></summary><div><label>Focus region<select id="map-region" aria-label="Focus map region"><option value="canada">Canada</option><option value="ontario">Ontario utilities</option><option value="gta">Greater Toronto</option><option value="west">Western Canada</option><option value="atlantic">Atlantic Canada</option></select></label><label>Colour polygons by<select id="map-metric" aria-label="Map reliability metric"><option value="customers">Customer base · Canada</option><option value="saidi">SAIDI · OEB method</option><option value="saifi">SAIFI · OEB method</option></select></label><label class="official-layer-control"><input type="checkbox" id="official-boundaries"> Official OEB boundaries</label></div></details>' : ''}<button class="map-focus" data-national="${name}" aria-label="Reset ${name} map to Canada">Reset</button><button data-expand="${name}" aria-label="Expand ${name} map" title="Expand map">Expand ↗</button>`;
     const select = holder.querySelector('[data-basemap]');
     select.value = states[name].base;
     select.onchange = () => {
@@ -152,7 +182,9 @@
   function expand(name) {
     const stage = $(`[data-map-stage="${name}"]`);
     const expanded = stage.classList.toggle('is-expanded');
-    document.body.style.overflow = expanded ? 'hidden' : '';
+    if (expanded) stage._previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = expanded ? 'hidden' : stage._previousOverflow || '';
+    syncTouch(name);
     if (expanded) {
       stage.setAttribute('role', 'dialog');
       stage.setAttribute('aria-modal', 'true');
@@ -170,6 +202,7 @@
     } else {
       stage.removeAttribute('role');
       stage.removeAttribute('aria-modal');
+      stage.removeAttribute('aria-label');
       for (const sibling of stage._inert || []) sibling.inert = false;
       stage._inert = [];
     }
@@ -179,23 +212,44 @@
     b.focus();
     setTimeout(() => maps[name]?.invalidateSize(), 50);
   }
+  document.addEventListener('click', (event) => {
+    $$('.map-settings[open]').forEach((settings) => {
+      if (!settings.contains(event.target)) settings.open = false;
+    });
+  });
   document.addEventListener('keydown', (e) => {
     const stage = $('.map-stage.is-expanded');
+    if (e.key === 'Escape') {
+      const settings = $('.map-settings[open]');
+      if (settings) {
+        settings.open = false;
+        settings.querySelector('summary').focus();
+        e.preventDefault();
+        return;
+      }
+      if (stage) expand(stage.dataset.mapStage);
+    }
     if (e.key === 'Tab' && stage) {
-      const f = [...stage.querySelectorAll('button,select,input,a[href],[tabindex="0"]')].filter(
-        (n) => !n.disabled,
-      );
+      const focusable = window.EOUI.focusableWithin(stage);
+      if (!focusable.length) return;
       if (
-        f.length &&
-        ((e.shiftKey && document.activeElement === f[0]) ||
-          (!e.shiftKey && document.activeElement === f.at(-1)))
+        !stage.contains(document.activeElement) ||
+        (e.shiftKey && document.activeElement === focusable[0]) ||
+        (!e.shiftKey && document.activeElement === focusable.at(-1))
       ) {
         e.preventDefault();
-        (e.shiftKey ? f.at(-1) : f[0]).focus();
+        (e.shiftKey ? focusable.at(-1) : focusable[0]).focus();
       }
     }
-    if (e.key === 'Escape') $$('.map-stage.is-expanded').forEach((s) => expand(s.dataset.mapStage));
   });
+  function syncTouch(name) {
+    const stage = $(`[data-map-stage="${name}"]`);
+    const inlineTouch = touchInput.matches && !stage.classList.contains('is-expanded');
+    maps[name]?.dragging[inlineTouch ? 'disable' : 'enable']();
+    const hint = stage.querySelector('.map-touch-hint');
+    if (hint) hint.hidden = !inlineTouch;
+  }
+  touchInput.addEventListener('change', () => Object.keys(maps).forEach(syncTouch));
   function init(name) {
     if (maps[name]) {
       maps[name].invalidateSize();
@@ -212,6 +266,8 @@
       preferCanvas: true,
       zoomControl: false,
       scrollWheelZoom: false,
+      dragging: !touchInput.matches,
+      tapHold: false,
       minZoom: 2,
       maxZoom: 18,
       worldCopyJump: true,
@@ -229,6 +285,13 @@
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
     tools(name);
+    const hint = document.createElement('p');
+    hint.className = 'map-touch-hint';
+    hint.id = `map-${name}-touch-hint`;
+    hint.textContent = 'Use two fingers to move the map, or expand for a closer look.';
+    node.after(hint);
+    node.setAttribute('aria-describedby', hint.id);
+    syncTouch(name);
     setBase(name, initialBase);
     new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(node);
     if (name === 'reliability') {
@@ -269,7 +332,7 @@
     dock.id = 'map-inspector';
     dock.className = 'map-inspector';
     dock.innerHTML =
-      '<div class="inspector-heading"><div><span class="eyebrow">YOUR SELECTION</span><strong id="map-selection-name"></strong><span id="map-selection-fact"></span></div><span class="selection-mark" aria-hidden="true">↗</span></div><p id="map-interaction-hint">Select a footprint to inspect it, or choose a utility from the list to zoom.</p><div id="map-overlaps" class="map-overlaps" hidden></div><div class="inspector-actions"><button id="map-focus-selection">Zoom to area ↗</button><button id="map-profile-selection">Full profile ↓</button><button id="map-compare-selection" aria-pressed="false">Compare an area ＋</button><button id="map-source-selection">Explore source ↗</button></div><span id="map-selection-announcement" class="sr-only" role="status"></span>';
+      '<div class="inspector-heading"><div><span class="eyebrow">YOUR SELECTION</span><strong id="map-selection-name"></strong><span id="map-selection-fact"></span></div><span class="selection-mark" aria-hidden="true">↗</span></div><p id="map-interaction-hint">Select a footprint to inspect it, or choose a utility from the list to zoom.</p><div id="map-overlaps" class="map-overlaps" hidden></div><div class="inspector-actions"><button id="map-focus-selection">Zoom to area ↗</button><button id="map-profile-selection">View figures ↓</button><button id="map-compare-selection" aria-pressed="false">Compare ＋</button><button id="map-source-selection">Source ↗</button></div><span id="map-selection-announcement" class="sr-only" role="status"></span>';
     stage.append(dock);
     $('#map-focus-selection').onclick = () => focusUtility(selected, true);
     $('#map-profile-selection').onclick = () => {
@@ -302,12 +365,10 @@
         ? `${p.balance?.regionName || p.region} · ${p.period} regional electricity context`
         : `${fmt(p.saidi)} hours per customer · ${p.period} · ${p.type === 'oeb' ? 'OEB adjusted annual measure' : 'utility report'}`);
     $('#map-compare-selection').setAttribute('aria-pressed', String(compareMode));
-    $('#map-compare-selection').textContent = compareMode
-      ? 'Cancel comparison ×'
-      : 'Compare an area ＋';
+    $('#map-compare-selection').textContent = compareMode ? 'Cancel comparison ×' : 'Compare ＋';
     $('#map-interaction-hint').textContent = compareMode
       ? 'Choose a second area on the map. The comparison appears below.'
-      : 'Select a footprint to inspect it, or choose a utility from the list to zoom.';
+      : 'Tap an area to select it. Choose a utility to zoom to its boundary.';
   }
   function chooseUtility(id) {
     if (compareMode) {

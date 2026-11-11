@@ -4,7 +4,7 @@ A complete static portfolio and infrastructure intelligence lab. Everything the 
 
 ## Publish from GitHub
 
-1. Extract `my-portfolio-main.zip`. Upload **the contents** of its `my-portfolio-main` folder to the root of your `emmaoyerinde/my-portfolio` repository. `index.html` and `package.json` belong at repository root, not inside another nested folder. Include `.github/workflows/pages.yml`, `.github/dependabot.yml`, and `.nojekyll` (your computer may hide dot-prefixed names). Keep an earlier ZIP or Git commit for rollback.
+1. Extract `my-portfolio-main.zip`. Copy **the contents** of its `my-portfolio-main` folder into your local `emmaoyerinde/my-portfolio` checkout, then commit and push with GitHub Desktop. Keep the checkout's `.git` folder. `index.html` and `package.json` belong at repository root, not inside another nested folder. Include the entire `.github` folder and `.nojekyll` (your computer may hide dot-prefixed names). Keep an earlier ZIP or Git commit for rollback.
 2. In the repository, select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Use the default `main` or `master` branch. For a differently named default branch, change the `push.branches` list in `.github/workflows/pages.yml`.
 3. Open **Actions → Publish portfolio and refresh evidence → Run workflow**, on the default branch. Enable workflows if GitHub asks. No secret values need to be entered.
 4. Wait for `refresh`, `build`, and `deploy` to finish. The deployment links to the Pages URL. The normal project URL is `https://emmaoyerinde.github.io/my-portfolio/`.
@@ -28,12 +28,20 @@ The source is organized by responsibility. Browser code has no framework or runt
 | Utility and reliability data      | `js/utility-profiles.js`, `js/reliability-core.js`, `js/reliability-data.js`; profile lookup and metric indexes are reused until the underlying publication changes    |
 | Reliability interface             | `js/reliability-view.js` shares metric cards; `js/reliability-finder.js` owns national discovery; `js/reliability-ui.js` owns the selected utility and comparison      |
 | Source explanations and shared UI | `js/source-reader.js` presents readable source and customer explanations; `js/ui-core.js` owns escaping, approved links, timezone-safe dates and protected CSV exports |
-| Maps, page and motion             | `js/maps.js`, `js/map-geometry.js`, `js/app.js`, `js/experience.js`, `js/motion.js`                                                                                    |
+| Maps, page and motion             | `js/maps.js`, `js/map-geometry.js`, `js/app.js`, `js/experience.js`, `js/responsive.js`, `js/motion.js`                                                                |
 | News                              | `js/news-core.mjs` validates live and saved headlines; `js/news.js` handles filtering, refreshes and per-publisher fallback                                            |
 | Unattended publication            | `.github/workflows/pages.yml`, `scripts/adapters/`, `scripts/lib/`; no server, Worker or runtime secrets                                                               |
 | Regression checks                 | `tests/` includes data, geometry, security, failure recovery and DOM integration tests                                                                                 |
 
-All 93 original map features and all 5,221 original Ontario polygon parts are retained. Customer counts, all basemaps, dark launch defaults, reading controls and the national reporting directory are preserved. Shared typography and colour values have one source of truth; the component cascade remains unchanged.
+All 93 original map features and all 5,221 original Ontario polygon parts are retained. Customer counts, all basemaps, dark launch defaults, reading controls and the national reporting directory are preserved. Shared typography and colour values have one source of truth; page structure and breakpoints are owned by `styles/composition.css`. Superseded layout rules have been removed from the component files.
+
+## Responsive layout update, 11 November 2026
+
+The explorer starts with the utility and map. Customer counts remain visible; extended reliability measures, provincial context, national metric discovery and comparisons open in labelled disclosures. On screens up to 960 px the utility directory becomes a compact chooser. Selection closes it, focuses the selected utility and fits the original full polygon. Phones retain visible section navigation and a two-by-two category selector. The news list opens with three stories on phones and six on larger screens, with pagination. Community results also paginate instead of adding a long nested scrolling panel on mobile.
+
+The desktop directory remains beside the map. Tablets stack controls above it. Maps keep all four basemaps and the OEB boundary option, grouped under Map layers. Text, controls, dialogs and the email link adapt down to 320 px; the reading-size setting is retained. All historical data and refresh safeguards are unchanged.
+
+`tests/responsive-interactions.test.mjs` checks chooser behavior, breakpoint changes, customer counts, revealed metric destinations, comparison panels and direct disclosure links. These DOM checks do not measure rendered pixel layout. The existing public site was inspected in a real browser, but the updated local build could not be visually reviewed because the managed preview relay is unavailable. Final phone, tablet, keyboard and light-theme visual review remains necessary after deployment.
 
 ## Published evidence and unattended updates
 
@@ -113,7 +121,29 @@ npm run build
 
 The data/security tests cover reporting-month consistency, source/hash generation consistency, timezone-safe review dates, formula-safe CSV exports, safe news links, null semantics, CSV parsing, complete original geometry, XML/entity rejection, source allowlists, redirect and size restrictions, preserved snapshots under 401/schema/timeout errors, bounded retries, regressed releases, overdue source states, IESO interval parsing, static CSP, and workflow permissions/pins.
 
-The committed DOM integration suite loads scripts in their actual HTML order and covers all 93 populated utility profiles, metric discovery, named-utility navigation, all numeric profile observations, source dialogs, focus retention during background checks, dark basemaps, theme independence and offline/404/corrupt-file recovery with blocked storage. This is functional verification, not a rendered mobile/desktop visual review. The managed browser-preview environment was unavailable during this iteration.
+The committed DOM integration suite loads scripts in their actual HTML order and covers all 93 populated utility profiles, metric discovery, named-utility navigation, all numeric profile observations, source dialogs, focus retention during background checks, dark basemaps, theme independence and offline/404/corrupt-file recovery with blocked storage. Additional regressions cover news link focus, headline updates with reduced motion, failed map tiles, touch dragging, expanded-map keyboard navigation, and focus across screen-width changes. This is functional verification, not a rendered mobile/desktop visual review.
+
+### Browser review in GitHub
+
+The separate **Review portfolio layouts** workflow runs on pushes to `main` or `master`, pull requests, and manual requests. It checks Chromium at widths of 320, 390, 768, 1024 and 1440 pixels. The 15 checks cover horizontal page overflow, readable map controls, dark/light themes, utility selection, all map categories, expanded-map Escape behaviour, JavaScript errors, and reduced motion. Official news API requests are blocked during these tests to exercise the bundled fallback. Map-provider availability does not determine the test result.
+
+After a run, open **Actions → Review portfolio layouts → the completed run → Artifacts → portfolio-browser-review**. Download and extract the artifact, then open `playwright-report/index.html` to see the results, dark/light screenshots and any failure traces. These are layout and interaction checks; screenshots still need human review. The browser job is separate from publication so it does not silently prevent the existing daily data refresh.
+
+To run the same review on a development machine after installing dependencies:
+
+```sh
+npm run build
+npx playwright install --with-deps chromium
+npm run test:browser
+```
+
+The browser suite's configuration and all 15 test cases were discovered successfully during this iteration. The browser tests themselves have not been executed here because the managed preview service was unavailable. Do not interpret test discovery as a passing visual review. The first GitHub run is still required.
+
+### Live Wire and map refinements
+
+The Live Wire marker uses a red pulse with distinct dark/light colours. Reduced motion, the shared pause control, and a hidden browser tab stop the pulse. The dot is decorative; the accompanying feed-status text describes actual source connectivity. Pausing animation does not stop incoming news updates. Headlines keep their link identity during refresh, defer banner replacement while someone is reading it, and use cached positions during scrolling. Loading more news moves focus to the first new article.
+
+On touch devices, inline maps reserve one-finger movement for page scrolling. Two fingers move/zoom the map; expanding it enables ordinary dragging. A failed background tile remains reported until that tile recovers or leaves the view, and **Retry basemap** reloads the selected background without clearing the data. Boundary-service errors have their own notice. Expanded maps keep keyboard focus inside visible controls, close their layer menu before closing the map, and restore the previous page scroll setting.
 
 ## Source and platform references
 
@@ -166,7 +196,7 @@ The default map shows customer scale across Canada. OEB SAIDI and SAIFI colour v
 
 ### Finding numeric reliability values
 
-A metric-first panel sits above the map. Select CAIDI, CAIFI, MAIFI, ASAI, CEMIₙ, CELID, ENS or AENS to see named utility observations across Canada. It shows published and calculated counts separately, deduplicates a company's result across overlapping footprints, exports the selected metric, and opens the matching utility profile. Utility cards show all numeric observations.
+A metric-first panel sits below the map. Select CAIDI, CAIFI, MAIFI, ASAI, CEMIₙ, CELID, ENS or AENS to see named utility observations across Canada. It shows published and calculated counts separately, deduplicates a company's result across overlapping footprints, exports the selected metric, and opens the matching utility profile. Utility cards show all numeric observations.
 
 The reviewed report dataset includes Hydro One 2024 normalized energy-not-supplied (8.2 system minutes), and two explicitly historical Newfoundland and Labrador Hydro records from 2019 in MW-min. The latter are an under-frequency load-shedding subset and one transmission event, not a complete annual utility total. Newfoundland and Labrador Hydro has its own identity in the numeric index and is never substituted for the mapped Newfoundland Power profile.
 

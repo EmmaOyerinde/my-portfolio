@@ -20,6 +20,7 @@
       return url.protocol === 'https:' &&
         !url.username &&
         !url.password &&
+        !url.port &&
         sourceHosts.has(url.hostname)
         ? url.href
         : '#methodology';
@@ -101,5 +102,32 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  window.EOUI = Object.freeze({ escapeHTML, safeSourceURL, formatDate, csvCell, downloadCSV });
+  function focusableWithin(container) {
+    return [
+      ...container.querySelectorAll('a[href],button,input,select,textarea,summary,[tabindex]'),
+    ].filter((node) => {
+      if (node.disabled || node.tabIndex < 0 || node.closest('[hidden],[inert]')) return false;
+      for (let parent = node.parentElement; parent; parent = parent.parentElement) {
+        if (
+          parent.matches('details:not([open])') &&
+          !parent.querySelector(':scope > summary')?.contains(node)
+        )
+          return false;
+      }
+      const style = node.ownerDocument.defaultView.getComputedStyle(node);
+      return (
+        style.display !== 'none' &&
+        style.visibility !== 'hidden' &&
+        node.getClientRects().length > 0
+      );
+    });
+  }
+  window.EOUI = Object.freeze({
+    escapeHTML,
+    safeSourceURL,
+    formatDate,
+    csvCell,
+    downloadCSV,
+    focusableWithin,
+  });
 })();

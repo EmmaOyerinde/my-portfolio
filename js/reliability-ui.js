@@ -123,6 +123,7 @@
       window.EOApp.selectUtility(utility.dataset.metricUtility, true, true);
       filter = C.definitions[utility.dataset.metricFocus]?.group || 'all';
       render();
+      $('#utility-evidence').open = true;
       $('#reliability-detail').scrollIntoView({
         block: 'start',
         behavior:

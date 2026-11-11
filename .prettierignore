@@ -9,3 +9,5 @@ js/data.js
 js/evidence-seed.js
 package-lock.json
 styles.css
+playwright-report/
+test-results/

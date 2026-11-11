@@ -33,6 +33,7 @@
   --teal: #7ce0cb;
   --violet: #c1b2ff;
   --amber: #f4ca83;
+  --live-red: #ff6174;
   --teal-wash: #103c3d;
   --violet-wash: #292b49;
   --blue-wash: #17374d;
@@ -55,6 +56,7 @@ html[data-theme='light'] {
   --violet: #6544a4;
   --blue: #215eaa;
   --amber: #85570f;
+  --live-red: #c52a42;
   --teal-wash: #def3eb;
   --violet-wash: #eee7fa;
   --blue-wash: #e2edf9;

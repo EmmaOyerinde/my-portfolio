@@ -83,7 +83,7 @@
     query = new URLSearchParams(location.search);
   let activeTab = 'reliability',
     selected = query.get('utility') || 'toronto-hydro',
-    communityLimit = 20;
+    communityLimit = matchMedia('(max-width: 700px)').matches ? 6 : 12;
   if (!utilities.some((f) => f.properties.id === selected)) selected = 'toronto-hydro';
   function openTab(name, update = true) {
     if (!['reliability', 'forecast', 'deficit', 'offgrid'].includes(name)) name = 'reliability';
@@ -187,15 +187,6 @@
         (b.onclick = () => {
           window.EOMaps?.init('reliability');
           selectUtility(b.dataset.select, true, true);
-          if (matchMedia('(max-width: 760px)').matches)
-            $('[data-map-stage="reliability"]').scrollIntoView({
-              block: 'start',
-              behavior:
-                document.documentElement.dataset.reduceMotion === 'true' ||
-                matchMedia('(prefers-reduced-motion: reduce)').matches
-                  ? 'auto'
-                  : 'smooth',
-            });
         }),
     );
   }
@@ -716,21 +707,21 @@
     );
     if ($('#communities-more'))
       $('#communities-more').onclick = () => {
-        communityLimit += 20;
+        communityLimit += matchMedia('(max-width: 700px)').matches ? 6 : 12;
         renderCommunities();
       };
     document.dispatchEvent(new Event('eo:communities-data'));
   }
   for (const id of ['community-search', 'community-province', 'community-fuel'])
     $('#' + id).addEventListener(id === 'community-search' ? 'input' : 'change', () => {
-      communityLimit = 20;
+      communityLimit = matchMedia('(max-width: 700px)').matches ? 6 : 12;
       renderCommunities();
     });
   $('#community-reset').onclick = () => {
     $('#community-search').value = '';
     $('#community-province').value = 'all';
     $('#community-fuel').value = 'all';
-    communityLimit = 20;
+    communityLimit = matchMedia('(max-width: 700px)').matches ? 6 : 12;
     renderCommunities();
   };
   function showCommunity(id) {

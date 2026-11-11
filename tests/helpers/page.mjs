@@ -15,6 +15,8 @@ export async function createPage({
   failure,
   storage = true,
   clientOnly = false,
+  viewport = 1280,
+  touch = false,
   before,
 } = {}) {
   const errors = [],
@@ -36,7 +38,39 @@ export async function createPage({
     addEventListener: (_, listener) => mediaListeners.add(listener),
     removeEventListener: (_, listener) => mediaListeners.delete(listener),
   };
-  w.matchMedia = () => media;
+  const queries = new Map();
+  const evaluateQuery = (query) => {
+    if (query === '(pointer: coarse)') return touch;
+    const max = query.match(/max-width:\s*(\d+)px/);
+    const min = query.match(/min-width:\s*(\d+)px/);
+    return (
+      (!max || viewport <= Number(max[1])) &&
+      (!min || viewport >= Number(min[1])) &&
+      Boolean(max || min)
+    );
+  };
+  w.matchMedia = (query) => {
+    if (query.includes('prefers-reduced-motion')) return media;
+    if (!queries.has(query)) {
+      const listeners = new Set();
+      queries.set(query, {
+        matches: evaluateQuery(query),
+        addEventListener: (_, listener) => listeners.add(listener),
+        removeEventListener: (_, listener) => listeners.delete(listener),
+        listeners,
+      });
+    }
+    return queries.get(query);
+  };
+  media.resize = (width) => {
+    viewport = width;
+    for (const [query, item] of queries) {
+      const matches = evaluateQuery(query);
+      if (item.matches === matches) continue;
+      item.matches = matches;
+      for (const listener of item.listeners) listener({ matches });
+    }
+  };
   media.change = (value) => {
     media.matches = value;
     for (const listener of mediaListeners) listener({ matches: value });
@@ -86,6 +120,9 @@ export async function createPage({
       right: this.clientWidth,
       bottom: this.clientHeight,
     };
+  };
+  w.HTMLElement.prototype.getClientRects = function () {
+    return [this.getBoundingClientRect()];
   };
   w.HTMLDialogElement.prototype.showModal = function () {
     this.open = true;
