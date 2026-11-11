@@ -51,6 +51,7 @@
     <script defer src="js/reliability-view.js"></script>
     <script src="js/reliability-ui.js" defer></script>
     <script defer src="js/reliability-finder.js"></script>
+    <script src="js/globe-renderer.js" defer></script>
     <script src="js/motion.js" defer></script>
     <script type="module" src="js/news.js"></script>
   </head>
@@ -123,10 +124,7 @@
           <div class="hero-aside">
             <div class="globe-panel">
               <div class="globe-caption">
-                <span class="eyebrow">A CONNECTED WORLD</span
-                ><button class="motion-toggle small-button" aria-pressed="false">
-                  Pause motion Ⅱ
-                </button>
+                <span class="eyebrow">A CONNECTED WORLD</span>
               </div>
               <canvas
                 id="connected-globe"
@@ -137,6 +135,15 @@
                 aria-label="Rotating globe. Use left and right arrow keys to turn it."
                 aria-describedby="globe-help"
               ></canvas>
+              <img
+                id="globe-static"
+                class="globe-static"
+                src="assets/earth-night.webp"
+                alt="NASA composite of Earth at night"
+                width="640"
+                height="640"
+                hidden
+              />
               <p id="globe-help">
                 Drag to explore · arrow keys to turn <span id="globe-state">Loading globe</span>
               </p>
@@ -169,7 +176,7 @@
             class="wire-viewport"
             id="wire-viewport"
             role="region"
-            aria-label="Scrolling news headlines. Pause to read, or use the previous and next controls."
+            aria-label="News headlines. Hover or focus to read; swipe or use the previous and next controls."
             tabindex="0"
           >
             <div class="wire-track" id="wire-track">
@@ -184,10 +191,7 @@
           <div class="wire-controls">
             <button id="wire-prev" aria-label="Previous headline">←</button
             ><span id="wire-position">01</span
-            ><button id="wire-next" aria-label="Next headline">→</button
-            ><button class="motion-toggle" aria-pressed="false" aria-label="Pause site motion">
-              Ⅱ
-            </button>
+            ><button id="wire-next" aria-label="Next headline">→</button>
           </div>
         </div>
       </section>
@@ -202,7 +206,7 @@
             projects that show how I work with spatial information.
           </p>
         </div>
-        <article class="lead-project">
+        <article class="lead-project work-card" data-project="ikeja">
           <div class="project-story">
             <span class="project-number">01 / 03</span>
             <p class="eyebrow">UTILITY OPERATIONS · FEATURED BY ESRI</p>
@@ -237,7 +241,7 @@
           </button>
         </article>
         <div class="project-pair">
-          <article class="project-card">
+          <article class="project-card work-card" data-project="network">
             <button
               class="project-image"
               data-case="network"
@@ -266,7 +270,7 @@
               Explore project <span>↗</span>
             </button>
           </article>
-          <article class="project-card">
+          <article class="project-card work-card" data-project="ukraine">
             <button
               class="project-image"
               data-case="ukraine"

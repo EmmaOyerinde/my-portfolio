@@ -52,10 +52,6 @@ body {
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
-.motion-toggle:disabled {
-  opacity: 0.7;
-  cursor: default;
-}
 @keyframes wire-beacon {
   0% {
     transform: scale(1);
@@ -67,7 +63,6 @@ body {
     opacity: 0;
   }
 }
-html[data-motion-paused='true'] .wire-light::after,
 html[data-page-hidden='true'] .wire-light::after,
 html[data-reduce-motion='true'] .wire-light::after {
   animation: none;
@@ -514,7 +509,6 @@ html[data-reduce-motion='true'] .wire-light::after {
 #map-deficit[data-motion-visible='true'] .balance-pulse-ring {
   animation-play-state: running;
 }
-html[data-motion-paused='true'] .balance-pulse-ring,
 html[data-page-hidden='true'] .balance-pulse-ring {
   animation-play-state: paused;
 }

@@ -3,10 +3,12 @@
   const $ = (s) => document.querySelector(s),
     root = document.documentElement,
     media = matchMedia('(prefers-reduced-motion: reduce)');
-  let paused = false,
-    visible = true,
+  let visible = true,
     wireVisible = true,
     hover = false,
+    wireTouching = false,
+    wireTouchHold = false,
+    touchTimer,
     frame = 0,
     last = 0,
     lastGlobe = 0,
@@ -22,44 +24,28 @@
     group = $('#wire-group'),
     track = $('#wire-track');
   const reduced = () => media.matches || root.dataset.reduceMotion === 'true';
-  const stopped = () => paused || reduced();
-  const readingWire = () => hover || ribbon.contains(document.activeElement);
+  const readingWire = () =>
+    hover || wireTouching || wireTouchHold || ribbon.contains(document.activeElement);
   function sync() {
-    root.dataset.motionPaused = String(stopped());
     root.dataset.pageHidden = String(document.hidden);
-    document.querySelectorAll('.motion-toggle').forEach((b) => {
-      b.setAttribute('aria-pressed', String(stopped()));
-      b.disabled = reduced();
-      b.setAttribute(
-        'aria-label',
-        reduced()
-          ? 'Motion reduced by your preferences'
-          : paused
-            ? 'Resume site motion'
-            : 'Pause site motion',
-      );
-      b.textContent = b.closest('.wire-controls')
-        ? stopped()
-          ? '▶'
-          : 'Ⅱ'
-        : reduced()
-          ? 'Motion reduced'
-          : paused
-            ? 'Resume motion ▶'
-            : 'Pause motion Ⅱ';
-    });
     if ($('#globe-state'))
-      $('#globe-state').textContent = stopped() ? 'Still view' : 'Slow rotation';
+      $('#globe-state').textContent = !globe
+        ? 'World view'
+        : reduced()
+          ? 'Still view'
+          : 'Continuous rotation';
+    canvas?.setAttribute(
+      'aria-label',
+      `${reduced() ? 'Globe' : 'Rotating globe'}. Use left and right arrow keys to turn it.`,
+    );
+    if (reduced()) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    }
     flushNews();
     draw();
     start();
   }
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('.motion-toggle')) {
-      paused = !paused;
-      sync();
-    }
-  });
   function measure() {
     viewport.style.setProperty('--wire-view-width', viewport.clientWidth + 'px');
     loopWidth = group.getBoundingClientRect().width;
@@ -175,19 +161,43 @@
   }
   $('#wire-prev').onclick = () => stepHeadline(-1);
   $('#wire-next').onclick = () => stepHeadline(1);
-  ribbon.addEventListener('pointerenter', () => (hover = true));
+  ribbon.addEventListener('pointerenter', (event) => {
+    if (event.pointerType !== 'touch') hover = true;
+  });
   ribbon.addEventListener('pointerleave', () => {
     hover = false;
     offset = loopWidth ? viewport.scrollLeft % loopWidth : viewport.scrollLeft;
     flushNews();
     start();
   });
-  viewport.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'touch') {
-      paused = true;
-      sync();
-    }
-  });
+  function releaseWireAfterTouch() {
+    clearTimeout(touchTimer);
+    wireTouchHold = true;
+    touchTimer = setTimeout(() => {
+      if (wireTouching) return;
+      wireTouchHold = false;
+      offset = loopWidth ? viewport.scrollLeft % loopWidth : viewport.scrollLeft;
+      flushNews();
+      start();
+    }, 1800);
+  }
+  viewport.addEventListener(
+    'pointerdown',
+    (event) => {
+      if (event.pointerType === 'touch') {
+        wireTouching = true;
+        clearTimeout(touchTimer);
+      }
+    },
+    { passive: true },
+  );
+  function finishWireTouch(event) {
+    if (!wireTouching || (event && event.pointerType !== 'touch')) return;
+    wireTouching = false;
+    releaseWireAfterTouch();
+  }
+  document.addEventListener('pointerup', finishWireTouch, { passive: true });
+  document.addEventListener('pointercancel', finishWireTouch, { passive: true });
   viewport.addEventListener('focusin', (e) => {
     const item = e.target.closest('.wire-item');
     if (item) {
@@ -207,9 +217,10 @@
   viewport.addEventListener(
     'scroll',
     () => {
-      if (stopped() || readingWire()) {
+      if (reduced() || readingWire()) {
         offset = loopWidth ? viewport.scrollLeft % loopWidth : viewport.scrollLeft;
         updatePosition();
+        if (wireTouching || wireTouchHold) releaseWireAfterTouch();
       }
     },
     { passive: true },
@@ -232,123 +243,26 @@
     else renderNews(incoming);
   });
   const canvas = $('#connected-globe');
-  let ctx;
-  try {
-    ctx = canvas?.getContext('2d');
-  } catch {}
-  let rings = [],
-    dots = [],
-    angle = (-95 * Math.PI) / 180,
-    size = 400,
-    ready = false,
+  const globe = canvas ? window.EOGlobe.create(canvas) : null;
+  const fullTurn = Math.PI * 2;
+  let angle = (-95 * Math.PI) / 180,
     drag = null;
-  const tilt = (23 * Math.PI) / 180;
-  const vector = ([lng, lat]) => {
-    lng *= Math.PI / 180;
-    lat *= Math.PI / 180;
-    return [Math.cos(lat) * Math.cos(lng), Math.cos(lat) * Math.sin(lng), Math.sin(lat)];
-  };
-  function project(v) {
-    const x = v[1] * Math.cos(angle) - v[0] * Math.sin(angle),
-      z = v[0] * Math.cos(angle) + v[1] * Math.sin(angle);
-    return [
-      x,
-      v[2] * Math.cos(tilt) - z * Math.sin(tilt),
-      v[2] * Math.sin(tilt) + z * Math.cos(tilt),
-    ];
-  }
-  function resize() {
-    if (!ctx) return;
-    size = Math.max(220, Math.min(680, canvas.clientWidth || 400));
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = Math.round(size * dpr);
-    canvas.height = Math.round(size * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw();
-  }
-  const graticule = [];
-  for (let lat = -60; lat <= 60; lat += 30)
-    graticule.push(Array.from({ length: 181 }, (_, i) => vector([-180 + i * 2, lat])));
-  for (let lng = -180; lng < 180; lng += 30)
-    graticule.push(Array.from({ length: 91 }, (_, i) => vector([lng, -90 + i * 2])));
-  function line(points, cx, cy, r) {
-    let pen = false;
-    ctx.beginPath();
-    for (const v of points) {
-      const [x, y, z] = project(v);
-      if (z <= 0.015) {
-        pen = false;
-        continue;
-      }
-      const px = cx + x * r,
-        py = cy - y * r;
-      if (pen) ctx.lineTo(px, py);
-      else {
-        ctx.moveTo(px, py);
-        pen = true;
-      }
-    }
-    ctx.stroke();
-  }
-  function draw() {
-    if (!ctx || !ready) return;
-    const light = root.dataset.theme === 'light',
-      c = size / 2,
-      r = size * 0.435;
-    ctx.clearRect(0, 0, size, size);
-    const glow = ctx.createRadialGradient(c, c, r * 0.7, c, c, r * 1.13);
-    glow.addColorStop(0, '#249cac00');
-    glow.addColorStop(0.75, light ? '#1a869d20' : '#2ec6bd30');
-    glow.addColorStop(1, '#249cac00');
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, size, size);
-    const sea = ctx.createRadialGradient(c - r * 0.4, c - r * 0.4, 0, c, c, r);
-    sea.addColorStop(0, light ? '#e7f5f0' : '#143e4b');
-    sea.addColorStop(0.7, light ? '#c9e3e9' : '#0b2534');
-    sea.addColorStop(1, light ? '#accbdc' : '#071622');
-    ctx.beginPath();
-    ctx.arc(c, c, r, 0, Math.PI * 2);
-    ctx.fillStyle = sea;
-    ctx.fill();
-    ctx.strokeStyle = light ? '#5b8b9e' : '#40839a';
-    ctx.lineWidth = 0.8;
-    ctx.stroke();
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(c, c, r, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.strokeStyle = light ? '#2d718426' : '#80c6d51b';
-    ctx.lineWidth = 0.7;
-    for (const linePoints of graticule) line(linePoints, c, c, r);
-    ctx.strokeStyle = light ? '#0a7283bb' : '#80d3cabb';
-    ctx.lineWidth = 0.85;
-    for (const ring of rings) line(ring, c, c, r);
-    for (const v of dots) {
-      const [x, y, z] = project(v);
-      if (z <= 0) continue;
-      ctx.globalAlpha = 0.35 + z * 0.6;
-      ctx.fillStyle = light ? '#086d79' : '#83dacb';
-      ctx.beginPath();
-      ctx.arc(c + x * r, c - y * r, size * 0.0021, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    ctx.restore();
-  }
+  const normalizeAngle = (value) => ((value % fullTurn) + fullTurn) % fullTurn;
+  const draw = () => globe?.draw(angle);
   function start() {
-    if (frame || stopped() || document.hidden || (!visible && !wireVisible)) return;
+    if (frame || reduced() || document.hidden || (!visible && !wireVisible)) return;
     last = 0;
     frame = requestAnimationFrame(tick);
   }
   function tick(t) {
     frame = 0;
-    if (stopped() || document.hidden || (!visible && !wireVisible)) return;
+    if (reduced() || document.hidden || (!visible && !wireVisible)) return;
     const dt = last ? Math.min(t - last, 64) : 0;
     last = t;
-    const globeRunning = visible && ready && !drag,
+    const globeRunning = visible && globe && !drag,
       wireRunning = wireVisible && !readingWire() && articles.length > 0 && loopWidth > 0;
     if (globeRunning) {
-      angle += dt * 0.000045;
+      angle = normalizeAngle(angle + dt * 0.000045);
       if (t - lastGlobe >= 32) {
         draw();
         lastGlobe = t;
@@ -361,52 +275,56 @@
     }
     if (globeRunning || wireRunning) frame = requestAnimationFrame(tick);
   }
-  if (ctx) {
+  if (globe) {
+    // The outline renders immediately and remains usable if the land asset cannot load.
+    globe.resize();
+    canvas.dataset.ready = 'true';
+    canvas.dataset.detail = 'outline';
     fetch('assets/globe-land.json', { signal: AbortSignal.timeout(12000) })
-      .then((r) => {
-        if (!r.ok) throw Error('Globe unavailable');
-        return r.json();
+      .then((response) => {
+        if (!response.ok) throw Error('Globe unavailable');
+        return response.json();
       })
       .then((data) => {
-        if (!Array.isArray(data.rings) || data.rings.length > 500) throw Error('Invalid globe');
-        rings = data.rings.map((r) => r.map(vector));
-        dots = (data.dots || []).map(vector);
-        ready = true;
-        canvas.dataset.ready = 'true';
-        resize();
-        sync();
+        globe.setGeometry(data);
+        canvas.dataset.detail = 'land';
+        draw();
       })
       .catch(() => {
-        canvas.hidden = true;
-        $('#globe-help').textContent = 'World view · NASA background image';
+        canvas.dataset.detail = 'outline';
+        draw();
       });
-    new ResizeObserver(resize).observe(canvas);
-    canvas.addEventListener('pointerdown', (e) => {
-      drag = { x: e.clientX, start: angle };
-      canvas.setPointerCapture?.(e.pointerId);
+    new ResizeObserver(() => globe.resize()).observe(canvas);
+    canvas.addEventListener('pointerdown', (event) => {
+      if (event.isPrimary === false || event.button > 0) return;
+      drag = { id: event.pointerId, x: event.clientX, start: angle };
+      canvas.setPointerCapture?.(event.pointerId);
     });
-    canvas.addEventListener('pointermove', (e) => {
-      if (!drag) return;
-      angle = drag.start - (e.clientX - drag.x) * 0.008;
+    canvas.addEventListener('pointermove', (event) => {
+      if (!drag || event.pointerId !== drag.id) return;
+      angle = normalizeAngle(drag.start - (event.clientX - drag.x) * 0.008);
       draw();
     });
-    const finish = () => {
-      if (drag) {
-        drag = null;
-        paused = true;
-        sync();
-      }
-    };
-    canvas.addEventListener('pointerup', finish);
-    canvas.addEventListener('pointercancel', finish);
-    canvas.addEventListener('keydown', (e) => {
-      if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
-      e.preventDefault();
-      paused = true;
-      angle += e.key === 'ArrowLeft' ? -0.15 : 0.15;
+    function finishDrag(event) {
+      if (!drag || (event && event.pointerId !== drag.id)) return;
+      drag = null;
+      start();
+    }
+    canvas.addEventListener('pointerup', finishDrag);
+    canvas.addEventListener('pointercancel', finishDrag);
+    canvas.addEventListener('lostpointercapture', finishDrag);
+    window.addEventListener('blur', () => finishDrag());
+    canvas.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      angle = normalizeAngle(angle + (event.key === 'ArrowLeft' ? -0.15 : 0.15));
       draw();
-      sync();
+      start();
     });
+  }
+  if (!globe) {
+    canvas.hidden = true;
+    $('#globe-static').hidden = false;
   }
   new IntersectionObserver((entries) => {
     visible = entries.some((e) => e.isIntersecting);
@@ -422,9 +340,18 @@
   });
   media.addEventListener?.('change', sync);
   document.addEventListener('eo:tab', sync);
+  window.addEventListener('blur', () => {
+    hover = false;
+    finishWireTouch();
+  });
   document.addEventListener('visibilitychange', () => {
     root.dataset.pageHidden = String(document.hidden);
     if (document.hidden) {
+      drag = null;
+      hover = false;
+      wireTouching = false;
+      wireTouchHold = false;
+      clearTimeout(touchTimer);
       cancelAnimationFrame(frame);
       frame = 0;
     } else start();

@@ -178,8 +178,13 @@ export async function createPage({
   const scripts = [...d.querySelectorAll('script[src]:not([type=module])')].map((script) =>
     script.getAttribute('src'),
   );
-  for (const script of clientOnly ? clientFiles : scripts) w.eval(read(script));
-  await w.EOData.ready;
-  if (!clientOnly) await tick();
+  try {
+    for (const script of clientOnly ? clientFiles : scripts) w.eval(read(script));
+    await w.EOData.ready;
+    if (!clientOnly) await tick();
+  } catch (error) {
+    w.close();
+    throw error;
+  }
   return { dom, w, d, errors, requests, downloads, media, close: () => w.close() };
 }

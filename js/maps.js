@@ -7,6 +7,13 @@
   const $ = (s) => document.querySelector(s),
     $$ = (s) => [...document.querySelectorAll(s)];
   const esc = window.EOUI.escapeHTML;
+  const canvasAvailable = (() => {
+    try {
+      return Boolean(document.createElement('canvas').getContext('2d'));
+    } catch {
+      return false;
+    }
+  })();
   const fmt = (n) =>
     n === null || n === undefined
       ? 'Not reported'
@@ -263,7 +270,7 @@
       return;
     }
     const map = L.map(node, {
-      preferCanvas: true,
+      preferCanvas: canvasAvailable,
       zoomControl: false,
       scrollWheelZoom: false,
       dragging: !touchInput.matches,

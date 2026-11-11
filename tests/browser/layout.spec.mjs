@@ -106,3 +106,121 @@ test('the red beacon honours reduced motion', async ({ page }) => {
   await page.locator('#theme').click();
   await expect(dot).toHaveCSS('background-color', 'rgb(197, 42, 66)');
 });
+
+test('globe rotation resumes after direct interaction without pause controls', async ({ page }) => {
+  const canvas = page.locator('#connected-globe');
+  await canvas.scrollIntoViewIfNeeded();
+  await expect(canvas).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('.motion-toggle')).toHaveCount(0);
+  const isRotating = async () => {
+    const initial = await canvas.evaluate((node) => node.toDataURL());
+    await expect.poll(() => canvas.evaluate((node) => node.toDataURL())).not.toBe(initial);
+  };
+  await isRotating();
+  await canvas.press('ArrowRight');
+  await isRotating();
+  const box = await canvas.boundingBox();
+  await page.mouse.move(box.x + box.width * 0.4, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.6, box.y + box.height / 2, { steps: 5 });
+  await page.mouse.up();
+  await isRotating();
+});
+
+test('each project has subtle focus feedback and respects reduced motion', async ({
+  page,
+}, testInfo) => {
+  const cards = page.locator('#work .work-card');
+  await expect(cards).toHaveCount(3);
+  for (const card of await cards.all()) {
+    const image = card.locator('img');
+    await card.locator('button[data-case]').first().focus();
+    await expect
+      .poll(() =>
+        image.evaluate(
+          (node) => new DOMMatrixReadOnly(getComputedStyle(node).transform).isIdentity,
+        ),
+      )
+      .toBe(false);
+    await noPageOverflow(page);
+  }
+  await testInfo.attach('selected-work-feedback', {
+    body: await page.screenshot(),
+    contentType: 'image/png',
+  });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const card of await cards.all()) {
+    await card.locator('button[data-case]').first().focus();
+    await expect
+      .poll(() =>
+        card
+          .locator('img')
+          .evaluate((node) => new DOMMatrixReadOnly(getComputedStyle(node).transform).isIdentity),
+      )
+      .toBe(true);
+  }
+});
+
+test('utility rows contain their full text at default and large reading sizes', async ({
+  page,
+}, testInfo) => {
+  await page.locator('#lab').scrollIntoViewIfNeeded();
+  const picker = page.locator('#utility-picker');
+  if (!(await picker.evaluate((node) => node.open))) await picker.locator('summary').click();
+  const rows = page.locator('#utility-list .utility-item');
+  await expect(rows).toHaveCount(93);
+  await page.evaluate(() => document.fonts.ready);
+
+  for (const size of [19, 22]) {
+    if (size === 22) {
+      await page.locator('#reading-open').click();
+      await page.locator('#reading-size').press('End');
+      await page.keyboard.press('Escape');
+      await expect(page.locator('html')).toHaveCSS('font-size', '22px');
+    }
+    for (const theme of ['dark', 'light']) {
+      if ((await page.locator('html').getAttribute('data-theme')) !== theme)
+        await page.locator('#theme').click();
+      await rows.first().scrollIntoViewIfNeeded();
+      const clipped = await rows.evaluateAll((items) =>
+        items.flatMap((row) => {
+          const bounds = row.getBoundingClientRect();
+          const content = [...row.children].map((child) => child.getBoundingClientRect());
+          const overflows =
+            row.scrollHeight > row.clientHeight + 1 ||
+            row.scrollWidth > row.clientWidth + 1 ||
+            content.some(
+              (box) =>
+                box.bottom > bounds.bottom - 1 ||
+                box.top < bounds.top ||
+                box.left < bounds.left ||
+                box.right > bounds.right,
+            );
+          return overflows
+            ? [
+                {
+                  name: row.firstElementChild.textContent,
+                  height: bounds.height,
+                  contentHeight: row.scrollHeight,
+                },
+              ]
+            : [];
+        }),
+      );
+      expect(clipped, `Utility content must fit each row at ${size}px in ${theme} mode`).toEqual(
+        [],
+      );
+      await noPageOverflow(page);
+      await testInfo.attach(`utility-directory-${theme}-${size}px`, {
+        body: await page.screenshot(),
+        contentType: 'image/png',
+      });
+    }
+  }
+  await page.locator('#utility-search').fill('Niagara-on-the-Lake');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('customers');
+  await page.locator('#utility-search').fill('no-such-utility-123');
+  await expect(page.locator('#utility-list')).toContainText('No utilities match');
+  await noPageOverflow(page);
+});
