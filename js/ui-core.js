@@ -46,15 +46,15 @@
       'www.nspower.ca',
       'www.maritimeelectric.com',
       // These are reviewed, repository-owned report links, never visitor-supplied origins.
-      ...(window.EOEvidenceSeed?.reliabilityReports?.coverage || []).flatMap((row) => [
+      ...(window.EOReferenceData?.reliabilityReports?.coverage || []).flatMap((row) => [
         row.url,
         row.dataUrl,
       ]),
-      ...Object.values(window.EOEvidenceSeed?.reliabilityReports?.gapNotes || {}).flatMap((row) =>
+      ...Object.values(window.EOReferenceData?.reliabilityReports?.gapNotes || {}).flatMap((row) =>
         row.sources.map((source) => source.url),
       ),
-      ...(window.EOEvidenceSeed?.reliabilityReports?.rows || []).map((row) => row.sourceUrl),
-      ...Object.values(window.EOEvidenceSeed?.customerReports || {}).map((row) => row.sourceUrl),
+      ...(window.EOReferenceData?.reliabilityReports?.rows || []).map((row) => row.sourceUrl),
+      ...Object.values(window.EOReferenceData?.customerReports || {}).map((row) => row.sourceUrl),
     ]
       .map((value) => {
         if (!value.includes('://')) return value;

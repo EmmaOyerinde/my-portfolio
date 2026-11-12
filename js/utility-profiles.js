@@ -122,11 +122,11 @@
         scope: r.name + ' · entire company',
         checkedAt: dataset.checkedAt,
       };
-    const report = window.EOEvidenceSeed?.customerReports?.[id];
+    const report = window.EOReferenceData?.customerReports?.[id];
     if (report && Number.isSafeInteger(report.count) && report.count > 0)
       return { ...report, type: 'report', scope: 'Utility customer base' };
     return {
-      count: parseCount(window.EOEvidenceSeed?.customerReferences?.[id] || p.customers),
+      count: parseCount(window.EOReferenceData?.customerReferences?.[id] || p.customers),
       period: 'Portfolio reference',
       type: 'reference',
       approximate: true,
@@ -139,7 +139,9 @@
   };
   D.customerLabel = (id) => {
     const c = D.customer(id);
-    return c ? (c.approximate ? '≈' : '') + c.count.toLocaleString('en-CA') : 'Reference profile';
+    return c && Number.isFinite(c.count)
+      ? (c.approximate ? '≈' : '') + c.count.toLocaleString('en-CA')
+      : 'Check customer source';
   };
   D.profile = (id) => {
     const p = feature(id);

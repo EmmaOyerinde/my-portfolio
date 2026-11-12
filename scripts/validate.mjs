@@ -3,6 +3,8 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import '../js/evidence-core.js';
 import { compileStyles } from './lib/styles.mjs';
+import { checkClientSources } from './lib/source-check.mjs';
+checkClientSources();
 if (fs.readFileSync('styles.css', 'utf8') !== compileStyles())
   throw Error('Stylesheet is out of date. Run npm run prepare:styles.');
 const E = globalThis.EOEvidence,

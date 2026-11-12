@@ -43,6 +43,8 @@
   )
     ? params.get('view')
     : 'reliability';
+  if (['customers', 'saidi', 'saifi'].includes(params.get('mapMetric')))
+    metric = params.get('mapMetric');
   function national(map) {
     map.setView([57, -96], 3, { animate: !reduced });
   }
@@ -50,24 +52,34 @@
     return metric === 'customers' ? D.customer(id)?.count : D.utility(id)?.[metric];
   }
   function color(value) {
-    if (metric === 'customers' && value != null)
-      value = value < 100000 ? 0.5 : value < 500000 ? 1.5 : 2;
     const light = ['light', 'street'].includes(states.reliability?.base);
-    return value == null
+    if (value == null) return light ? '#665695' : '#b5a2d8';
+    if (metric === 'customers') {
+      const palette = light ? ['#567ca9', '#147c91', '#006b56'] : ['#7599d5', '#4cc5d6', '#97edc5'];
+      return palette[value < 100000 ? 0 : value < 500000 ? 1 : 2];
+    }
+    return value < 1
       ? light
-        ? '#665695'
-        : '#b5a2d8'
-      : value < 1
+        ? '#007865'
+        : '#59d3b4'
+      : value <= 1.8
         ? light
-          ? '#007865'
-          : '#59d3b4'
-        : value <= 1.8
-          ? light
-            ? '#986100'
-            : '#edc56a'
-          : light
-            ? '#bb3650'
-            : '#ff889e';
+          ? '#986100'
+          : '#edc56a'
+        : light
+          ? '#bb3650'
+          : '#ff889e';
+  }
+  function utilityTooltip(id) {
+    const profile = D.profile(id);
+    const value = D.utility(id)?.[metric];
+    const reading =
+      metric === 'customers'
+        ? ''
+        : value == null
+          ? 'Open the profile for its reporting coverage'
+          : `${fmt(value)} ${metric === 'saidi' ? 'outage hours' : 'interruptions'} per customer · ${D.utility(id).year} OEB`;
+    return `<strong>${esc(profile?.name || id)}</strong><span>${esc(D.customerLabel(id))} customer accounts</span>${reading ? `<small>${esc(reading)}</small>` : ''}`;
   }
   function createBase(name) {
     const options = {
@@ -157,7 +169,7 @@
   }
   function tools(name) {
     const holder = $(`[data-map-tools="${name}"]`);
-    holder.innerHTML = `<label class="basemap-picker"><span>Basemap</span><select data-basemap="${name}" aria-label="${name} basemap"><option value="dark">Dark map</option><option value="light">Light map</option><option value="street">Street map</option><option value="satellite">Satellite</option></select></label>${name === 'reliability' ? '<details class="map-settings"><summary>Map layers <span aria-hidden="true">⌄</span></summary><div><label>Focus region<select id="map-region" aria-label="Focus map region"><option value="canada">Canada</option><option value="ontario">Ontario utilities</option><option value="gta">Greater Toronto</option><option value="west">Western Canada</option><option value="atlantic">Atlantic Canada</option></select></label><label>Colour polygons by<select id="map-metric" aria-label="Map reliability metric"><option value="customers">Customer base · Canada</option><option value="saidi">SAIDI · OEB method</option><option value="saifi">SAIFI · OEB method</option></select></label><label class="official-layer-control"><input type="checkbox" id="official-boundaries"> Official OEB boundaries</label></div></details>' : ''}<button class="map-focus" data-national="${name}" aria-label="Reset ${name} map to Canada">Reset</button><button data-expand="${name}" aria-label="Expand ${name} map" title="Expand map">Expand ↗</button>`;
+    holder.innerHTML = `<label class="basemap-picker"><span>Basemap</span><select data-basemap="${name}" aria-label="${name} basemap"><option value="dark">Dark map</option><option value="light">Light map</option><option value="street">Street map</option><option value="satellite">Satellite</option></select></label>${name === 'reliability' ? '<label class="metric-picker"><span>Colour by</span><select id="map-metric" aria-label="Map reliability metric"><option value="customers">Customers</option><option value="saidi">Outage hours · OEB</option><option value="saifi">Outage frequency · OEB</option></select></label><details class="map-settings"><summary aria-label="Map layers">Layers <span aria-hidden="true">⌄</span></summary><div><label>Focus region<select id="map-region" aria-label="Focus map region"><option value="canada">Canada</option><option value="ontario">Ontario utilities</option><option value="gta">Greater Toronto</option><option value="west">Western Canada</option><option value="atlantic">Atlantic Canada</option></select></label><label class="official-layer-control"><input type="checkbox" id="official-boundaries"> Official OEB boundaries</label></div></details>' : ''}<button class="map-focus" data-national="${name}" aria-label="Reset ${name} map to Canada">Reset</button><button data-expand="${name}" aria-label="Expand ${name} map" title="Expand map">Expand ↗</button>`;
     const select = holder.querySelector('[data-basemap]');
     select.value = states[name].base;
     select.onchange = () => {
@@ -169,9 +181,11 @@
     holder.querySelector('[data-expand]').onclick = () => expand(name);
     if (name === 'reliability') {
       $('#official-boundaries').onchange = toggleOfficial;
+      $('#map-metric').value = metric;
       $('#map-metric').onchange = (e) => {
         metric = e.target.value;
         drawReliability(false);
+        document.dispatchEvent(new Event('eo:mapstate'));
       };
       $('#map-region').onchange = (e) => {
         const views = {
@@ -421,9 +435,24 @@
     const map = maps.reliability;
     if (!map) return;
     const state = states.reliability;
+    if (state.geometry === boundaries) {
+      state.layer.eachLayer((layer) => {
+        layer.setStyle(reliableStyle(layer.feature));
+        layer.setTooltipContent(utilityTooltip(layer.feature.properties.id));
+      });
+      for (const [id, target] of Object.entries(state.targetById)) {
+        target.setStyle({ color: color(metricValue(id)), fillColor: color(metricValue(id)) });
+        target.setTooltipContent(utilityTooltip(id));
+      }
+      renderReliabilityLegend();
+      focusUtility(selected, false);
+      return;
+    }
+    state.geometry = boundaries;
     if (state.layer) map.removeLayer(state.layer);
     if (state.targets) map.removeLayer(state.targets);
     state.byId = {};
+    state.targetById = {};
     state.targets = L.layerGroup().addTo(map);
     // Provincial shapes are painted first. Exact hit testing still resolves every overlap.
     const ordered = {
@@ -440,7 +469,7 @@
       onEachFeature: (f, layer) => {
         const p = f.properties;
         state.byId[p.id] = layer;
-        layer.bindTooltip(esc(p.utility) + ' · ' + esc(D.customerLabel(p.id)) + ' customers', {
+        layer.bindTooltip(utilityTooltip(p.id), {
           sticky: true,
           className: 'geo-label',
         });
@@ -453,9 +482,7 @@
           if (Date.now() - (state.hoverAt || 0) < 90) return;
           state.hoverAt = Date.now();
           const id = EOGeometry.find(hitIndex, e.latlng.lng, e.latlng.lat)[0] || p.id;
-          layer.setTooltipContent(
-            esc(D.profile(id)?.name || p.utility) + ' · ' + esc(D.customerLabel(id)) + ' customers',
-          );
+          layer.setTooltipContent(utilityTooltip(id));
           if (state.hoverLayer && state.hoverLayer !== state.byId[id])
             state.hoverLayer.setStyle(reliableStyle(state.hoverLayer.feature));
           state.hoverLayer = state.byId[id];
@@ -475,8 +502,9 @@
             fillOpacity: 0.8,
             fillColor: color(metricValue(p.id)),
           })
-            .bindTooltip(esc(p.utility), { className: 'geo-label' })
+            .bindTooltip(utilityTooltip(p.id), { className: 'geo-label' })
             .addTo(state.targets);
+          state.targetById[p.id] = target;
           target.on('click', () => {
             $('#map-overlaps').hidden = true;
             chooseUtility(p.id);
@@ -484,10 +512,7 @@
         }
       },
     }).addTo(map);
-    $('#legend-reliability').innerHTML =
-      metric === 'customers'
-        ? `<span><i style="background:${color(50000)}"></i> Under 100k</span><span><i style="background:${color(250000)}"></i> 100k–500k</span><span><i style="background:${color(1000000)}"></i> 500k+</span><small>Customer accounts · mixed reporting periods · reference estimates labelled in profiles</small><small class="boundary-status">${fullBoundaries ? 'Detailed geographic footprints' : 'Loading detailed geographic footprints…'}</small>`
-        : `<span><i style="background:${color(0.5)}"></i> &lt; 1</span><span><i style="background:${color(1.5)}"></i> 1–1.8</span><span><i style="background:${color(2)}"></i> &gt; 1.8</span><small>${metric === 'saidi' ? 'SAIDI · outage hours' : 'SAIFI · interruptions'} · OEB annual data</small><span><i style="background:${color(null)}"></i> Report / regional context</span><small class="boundary-status">${fullBoundaries ? 'Detailed geographic footprints' : 'Loading detailed geographic footprints…'}</small>`;
+    renderReliabilityLegend();
     const toggleTargets = () => {
       if (map.getZoom() >= 8) {
         if (map.hasLayer(state.targets)) map.removeLayer(state.targets);
@@ -498,6 +523,12 @@
     map.on('zoomend', toggleTargets);
     toggleTargets();
     focusUtility(selected, false);
+  }
+  function renderReliabilityLegend() {
+    $('#legend-reliability').innerHTML =
+      metric === 'customers'
+        ? `<span><i style="background:${color(50000)}"></i> Under 100k</span><span><i style="background:${color(250000)}"></i> 100k–500k</span><span><i style="background:${color(1000000)}"></i> 500k+</span><small>Customer accounts · mixed reporting periods · reference estimates labelled in profiles</small><small class="boundary-status">${fullBoundaries ? 'Detailed geographic footprints' : 'Loading detailed geographic footprints…'}</small>`
+        : `<span><i style="background:${color(0.5)}"></i> &lt; 1</span><span><i style="background:${color(1.5)}"></i> 1–1.8</span><span><i style="background:${color(2)}"></i> &gt; 1.8</span><small>${metric === 'saidi' ? 'SAIDI · outage hours' : 'SAIFI · interruptions'} · OEB annual data</small><span><i style="background:${color(null)}"></i> Report / regional context</span><small class="boundary-status">${fullBoundaries ? 'Detailed geographic footprints' : 'Loading detailed geographic footprints…'}</small>`;
   }
   function focusUtility(id, focus = true) {
     const previous = selected;
@@ -838,6 +869,7 @@
     chooseUtility,
     reset: () => maps[active] && national(maps[active]),
     getState: () => ({
+      metric,
       base:
         states[active]?.base ||
         (active === requestedView && requestedBase ? requestedBase : defaultBase),

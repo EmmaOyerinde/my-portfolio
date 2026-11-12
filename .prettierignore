@@ -7,6 +7,7 @@ node_modules/
 .openai/
 js/data.js
 js/evidence-seed.js
+js/reference-data.js
 package-lock.json
 styles.css
 playwright-report/

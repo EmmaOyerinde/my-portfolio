@@ -1,5 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { checkClientSources } from './lib/source-check.mjs';
+checkClientSources();
 const root = new URL('../', import.meta.url),
   dist = new URL('../dist/', import.meta.url);
 fs.rmSync(dist, { recursive: true, force: true });

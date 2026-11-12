@@ -23,6 +23,33 @@ async function noPageOverflow(page) {
   expect(result.content).toBeLessThanOrEqual(result.viewport + 1);
 }
 
+test('map controls fit at normal and larger reading sizes', async ({ page }) => {
+  for (const size of ['19', '22']) {
+    await page.locator('#reading-open').click();
+    await page.locator('#reading-size').press(size === '22' ? 'End' : 'Home');
+    if (size === '19') await page.locator('#reading-size').press('ArrowRight');
+    await page.getByRole('button', { name: 'Close reading preferences', exact: true }).click();
+    await page.locator('#lab').scrollIntoViewIfNeeded();
+    const toolbar = page.locator('[data-map-tools="reliability"]');
+    await expect(toolbar.locator('#map-metric')).toBeVisible();
+    const bounds = await toolbar.boundingBox();
+    for (const selector of [
+      '[data-basemap]',
+      '#map-metric',
+      '.map-settings > summary',
+      '[data-national]',
+      '[data-expand]',
+    ]) {
+      const control = toolbar.locator(selector);
+      const rect = await control.boundingBox();
+      expect(rect.height).toBeGreaterThanOrEqual(44);
+      expect(rect.x).toBeGreaterThanOrEqual(bounds.x - 1);
+      expect(rect.x + rect.width).toBeLessThanOrEqual(bounds.x + bounds.width + 1);
+    }
+    await noPageOverflow(page);
+  }
+});
+
 test('dark and light layouts fit the viewport with readable controls', async ({
   page,
 }, testInfo) => {

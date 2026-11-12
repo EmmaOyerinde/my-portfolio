@@ -5,7 +5,7 @@
   const cases = {
     ikeja: {
       category: 'UTILITY OPERATIONS / ESRI CASE STUDY',
-      title: 'Seeing the grid. Improving the picture.',
+      title: 'Ikeja Electric: the grid in view.',
       image: 'assets/ikeja.webp',
       alt: 'Ikeja Electric geographic distribution map',
       scope: 'Ikeja Electric',
@@ -20,7 +20,7 @@
     },
     network: {
       category: 'ENTERPRISE GIS / NETWORK MONITORING',
-      title: 'The network, brought into focus.',
+      title: 'Geographic network monitoring.',
       image: 'assets/network.webp',
       alt: 'Geographic Network Monitoring System',
       scope: 'Geographic Network Monitoring',
@@ -34,7 +34,7 @@
     },
     ukraine: {
       category: 'ENVIRONMENTAL ANALYSIS / UNDP UKRAINE',
-      title: 'Mapping the transition ahead.',
+      title: 'Mining and flooding in the Donbas region.',
       image: 'assets/ukraine.webp',
       alt: 'Mining and flooding assessment of the Donbas region',
       scope: 'UNDP Ukraine: Coal Cities',
@@ -98,7 +98,8 @@
       type: 'Utility',
       run: () => {
         window.EOApp?.openTab('reliability');
-        window.EOApp?.selectUtility(f.properties.id);
+        window.EOMaps?.init('reliability');
+        window.EOApp?.selectUtility(f.properties.id, true, true);
         location.hash = 'lab';
       },
     })),

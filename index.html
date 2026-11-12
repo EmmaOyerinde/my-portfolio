@@ -35,6 +35,7 @@
     <script src="js/data.js" defer></script>
     <script src="js/evidence-core.js" defer></script>
     <script src="js/reliability-core.js" defer></script>
+    <script src="js/reference-data.js" defer></script>
     <script src="js/evidence-seed.js" defer></script>
     <script defer src="js/ui-core.js"></script>
     <script src="js/data-client.js" defer></script>
@@ -208,10 +209,10 @@
           <div class="project-story">
             <span class="project-number">01 / 03</span>
             <p class="eyebrow">UTILITY OPERATIONS · FEATURED BY ESRI</p>
-            <h3>See the grid.<br />Change the picture.</h3>
+            <h3>Ikeja Electric.<br />The grid in view.</h3>
             <p>
-              Spatial analytics and operational visibility at Ikeja Electric; connecting the network
-              on the map to the decisions on the ground.
+              A geographic view of electricity distribution at Ikeja Electric, connecting network
+              assets and power availability with operational decisions.
             </p>
             <div class="tags">
               <span>GIS</span><span>Power availability</span><span>Operational intelligence</span>
@@ -256,7 +257,7 @@
             <div class="project-card-title">
               <div>
                 <p class="eyebrow">02 / ENTERPRISE GIS</p>
-                <h3>Networks, in perspective.</h3>
+                <h3>A network you can navigate.</h3>
               </div>
               <span class="project-type">SYSTEM</span>
             </div>
@@ -285,7 +286,7 @@
             <div class="project-card-title">
               <div>
                 <p class="eyebrow">03 / ENVIRONMENTAL ASSESSMENT</p>
-                <h3>Mapping a different future.</h3>
+                <h3>Mining, flooding, and the future.</h3>
               </div>
               <span class="project-type">RESEARCH</span>
             </div>
@@ -385,7 +386,7 @@
                 <div class="utility-picker-content">
                   <div class="sidebar-head">
                     <h3>Find a utility</h3>
-                    <span id="utility-count"></span>
+                    <span id="utility-count" role="status" aria-live="polite"></span>
                   </div>
                   <label class="search-label"
                     ><span class="sr-only">Search utilities or regions</span
@@ -421,7 +422,8 @@
                   ><label class="coverage-filter"
                     ><input id="verified-only" type="checkbox" /> Published outage figures</label
                   >
-                  <div class="utility-list" id="utility-list"></div>
+                  <button id="utility-clear" class="text-button" hidden>Clear filters ×</button>
+                  <div class="utility-list" id="utility-list" aria-label="Matching utilities"></div>
                 </div>
               </details>
               <div class="explorer-main">
@@ -429,6 +431,7 @@
                   <div>
                     <p class="eyebrow">SELECTED UTILITY</p>
                     <h3 id="selected-utility">Toronto Hydro</h3>
+                    <p id="selected-utility-summary" class="selection-summary"></p>
                   </div>
                   <button class="small-button" id="reset-map">National view ↗</button>
                 </div>

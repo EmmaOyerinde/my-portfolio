@@ -242,7 +242,7 @@
     }
   }
   async function start() {
-    Object.assign(mapping, window.EOEvidenceSeed?.mapping || {});
+    Object.assign(mapping, window.EOReferenceData?.mapping || {});
     for (const kind of kinds) {
       const seed = window.EOEvidenceSeed?.datasets?.[kind];
       if (E.valid(kind, seed)) {
@@ -263,13 +263,15 @@
       } catch {}
       notify(kind);
     }
-    if (!Object.keys(mapping).length) {
+    const recoverMapping = async () => {
+      if (Object.keys(mapping).length) return;
       try {
         const { data } = await fetchJSON('data/reliability-mapping.json', 30000);
         for (const [k, v] of Object.entries(data)) if (typeof v === 'string') mapping[k] = v;
+        notify('reliability');
       } catch {}
-    }
-    await Promise.all(kinds.map(refresh));
+    };
+    await Promise.all([recoverMapping(), ...kinds.map(refresh)]);
   }
   window.EOData = {
     get: (kind) => datasets[kind],

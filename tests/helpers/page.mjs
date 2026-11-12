@@ -17,6 +17,7 @@ export async function createPage({
   clientOnly = false,
   viewport = 1280,
   touch = false,
+  withoutSeed = false,
   before,
 } = {}) {
   const errors = [],
@@ -169,6 +170,7 @@ export async function createPage({
     'data',
     'evidence-core',
     'reliability-core',
+    'reference-data',
     'evidence-seed',
     'ui-core',
     'data-client',
@@ -179,7 +181,10 @@ export async function createPage({
     script.getAttribute('src'),
   );
   try {
-    for (const script of clientOnly ? clientFiles : scripts) w.eval(read(script));
+    for (const script of clientOnly ? clientFiles : scripts) {
+      if (withoutSeed && script === 'js/evidence-seed.js') continue;
+      w.eval(read(script));
+    }
     await w.EOData.ready;
     if (!clientOnly) await tick();
   } catch (error) {

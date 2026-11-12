@@ -126,9 +126,11 @@
       adjustment: $('#sensitivity').value,
       month: $('#balance-period').value,
       base: window.EOMaps?.getState().base || 'dark',
+      mapMetric: window.EOMaps?.getState().metric || query.get('mapMetric') || 'customers',
       compare: $('#compare-utility').value,
     }))
       if (v) u.searchParams.set(k, v);
+      else u.searchParams.delete(k);
     u.hash = 'lab';
     return u;
   }
@@ -149,12 +151,14 @@
     }
   };
   function filteredUtilities() {
-    const q = $('#utility-search').value.toLowerCase().trim(),
+    const q = searchKey($('#utility-search').value).trim(),
       sort = $('#utility-sort').value;
     return utilities
       .filter(
         (f) =>
-          `${f.properties.utility} ${f.properties.region}`.toLowerCase().includes(q) &&
+          searchKey(
+            `${f.properties.utility} ${f.properties.region} ${D.profile(f.properties.id)?.region}`,
+          ).includes(q) &&
           ($('#utility-province').value === 'all' ||
             D.profile(f.properties.id).region === $('#utility-province').value) &&
           (!$('#verified-only').checked ||
@@ -170,25 +174,81 @@
               (D.utility(b.properties.id)?.[sort] ?? Infinity),
       );
   }
+  const utilityNodes = new Map();
+  const searchKey = (value) =>
+    String(value)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ');
+  function clearUtilityFilters() {
+    $('#utility-search').value = '';
+    $('#utility-province').value = 'all';
+    $('#verified-only').checked = false;
+    renderList();
+    $('#utility-search').focus({ preventScroll: true });
+  }
   function renderList() {
-    const list = filteredUtilities();
+    const list = filteredUtilities(),
+      holder = $('#utility-list');
+    const focused = document.activeElement;
+    const hadFocus = holder.contains(focused);
+    const scroll = holder.scrollTop;
+    const ids = new Set(list.map((f) => f.properties.id));
     $('#utility-count').textContent = `${list.length} / ${utilities.length}`;
-    $('#utility-list').innerHTML = list.length
-      ? list
-          .map((f) => {
-            const p = f.properties,
-              r = D.utility(p.id);
-            return `<button class="utility-item" data-select="${esc(p.id)}" aria-pressed="${p.id === selected}"><span>${esc(p.utility)}</span><span class="utility-customers">${esc(D.customerLabel(p.id))} customers</span><small>${r ? `${r.year} · SAIDI ${fmt(r.saidi)} h · OEB` : `${D.profile(p.id)?.type === 'report' ? 'Utility annual report' : 'Regional electricity context'} · ${D.profile(p.id)?.period || 'Explore profile'}`}</small></button>`;
-          })
-          .join('')
-      : '<p class="empty-state">No utilities match. Try a wider search or turn off the coverage filter.</p>';
-    $$('[data-select]').forEach(
-      (b) =>
-        (b.onclick = () => {
+    $('#utility-clear').hidden =
+      !$('#utility-search').value &&
+      $('#utility-province').value === 'all' &&
+      !$('#verified-only').checked;
+    for (const node of [...holder.children]) if (!ids.has(node.dataset.select)) node.remove();
+    list.forEach((f, index) => {
+      const p = f.properties,
+        r = D.utility(p.id),
+        profile = D.profile(p.id);
+      let button = utilityNodes.get(p.id);
+      if (!button) {
+        button = document.createElement('button');
+        button.className = 'utility-item';
+        button.dataset.select = p.id;
+        const name = document.createElement('span'),
+          customers = document.createElement('span'),
+          note = document.createElement('small');
+        customers.className = 'utility-customers';
+        button.append(name, customers, note);
+        button.onclick = () => {
           window.EOMaps?.init('reliability');
-          selectUtility(b.dataset.select, true, true);
-        }),
-    );
+          selectUtility(p.id, true, true);
+        };
+        utilityNodes.set(p.id, button);
+      }
+      button.children[0].textContent = p.utility;
+      button.children[1].textContent = D.customerLabel(p.id) + ' customers';
+      button.children[2].textContent = r
+        ? `${r.year} · SAIDI ${fmt(r.saidi)} h · OEB`
+        : `${profile?.type === 'report' ? 'Utility annual report' : 'Regional electricity context'} · ${profile?.period || 'Explore profile'}`;
+      button.setAttribute('aria-pressed', String(p.id === selected));
+      if (holder.children[index] !== button)
+        holder.insertBefore(button, holder.children[index] || null);
+    });
+    if (!list.length) {
+      const message = document.createElement('div');
+      message.className = 'utility-empty';
+      const title = document.createElement('strong'),
+        detail = document.createElement('p'),
+        reset = document.createElement('button');
+      title.textContent = 'No utilities found';
+      detail.textContent = 'Try a name, province, or a broader search.';
+      reset.textContent = 'Show all utilities';
+      reset.className = 'small-button';
+      reset.onclick = clearUtilityFilters;
+      message.append(title, detail, reset);
+      holder.append(message);
+    }
+    holder.scrollTop = scroll;
+    if (hadFocus) {
+      if (focused.isConnected) focused.focus({ preventScroll: true });
+      else $('#utility-search').focus({ preventScroll: true });
+    }
   }
   function metricCard(label, value, unit, note = '') {
     return `<div><small>${esc(label)}</small><strong>${esc(value)} <span>${esc(unit)}</span></strong><span class="metric-definition">${esc(note)}</span></div>`;
@@ -299,6 +359,8 @@
     selected = id;
     const profile = D.profile(id);
     $('#selected-utility').textContent = p.utility;
+    $('#selected-utility-summary').textContent =
+      `${D.customerLabel(id)} customer accounts · ${profile.customer.period}`;
     $$('[data-select]').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.select === id)),
     );
@@ -314,6 +376,7 @@
     document.dispatchEvent(new CustomEvent('eo:utility', { detail: { id, focus } }));
     if (update) saveView();
   }
+  $('#utility-clear').onclick = clearUtilityFilters;
   $('#utility-province').onchange = renderList;
   $('#utility-search').oninput = renderList;
   $('#utility-sort').onchange = renderList;

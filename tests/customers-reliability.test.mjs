@@ -53,14 +53,16 @@ test('customer replacements reject regressed releases and substantial loss of co
 });
 const box = { window: {}, URL, Date, console };
 box.globalThis = box.window;
-for (const name of ['data', 'reliability-core', 'evidence-seed'])
+for (const name of ['data', 'reliability-core', 'reference-data', 'evidence-seed'])
   vm.runInNewContext(fs.readFileSync('js/' + name + '.js', 'utf8'), box);
 const w = box.window;
 w.EOData = {
   get: (k) => w.EOEvidenceSeed.datasets[k],
-  sourceName: (id) => w.EOEvidenceSeed.mapping[id],
+  sourceName: (id) => w.EOReferenceData.mapping[id],
   utility: (id) =>
-    w.EOEvidenceSeed.datasets.reliability.rows.find((r) => r.name === w.EOEvidenceSeed.mapping[id]),
+    w.EOEvidenceSeed.datasets.reliability.rows.find(
+      (r) => r.name === w.EOReferenceData.mapping[id],
+    ),
 };
 for (const name of ['utility-profiles', 'reliability-data'])
   vm.runInNewContext(fs.readFileSync('js/' + name + '.js', 'utf8'), box);
@@ -103,7 +105,7 @@ test('CAIDI never divides by zero and never combines incompatible periods or sco
   assert.equal(w.EOReliability.coverage.length, 13);
 });
 test('advanced observations retain thresholds, reviewed sources and all-event distinctions', () => {
-  const d = w.EOEvidenceSeed.reliabilityReports;
+  const d = w.EOReferenceData.reliabilityReports;
   assert.ok(w.EOReliabilityCore.valid(d));
   const nsp = d.rows.find((r) => r.utilityId === 'nsp' && r.metric === 'CELID-8');
   assert.equal(nsp.value, 23.6);

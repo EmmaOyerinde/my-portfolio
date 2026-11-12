@@ -2,7 +2,7 @@
 (() => {
   const D = window.EOData,
     C = window.EOReliabilityCore,
-    seed = window.EOEvidenceSeed?.reliabilityReports;
+    seed = window.EOReferenceData?.reliabilityReports;
   const reports = C.valid(seed) ? seed : { rows: [], coverage: [], reviewedAt: null };
   let source = null;
   const rowCache = new Map(),
