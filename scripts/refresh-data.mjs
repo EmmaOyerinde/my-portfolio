@@ -7,8 +7,9 @@ import { fetchBalance, fetchScenarios } from './adapters/energy.mjs';
 import { fetchRemoteCommunities } from './adapters/remote.mjs';
 import { fetchBoundaries } from './lib/fetch-boundaries.mjs';
 import { sourceFetch } from './lib/source-fetch.mjs';
-import { refreshDatasets, readJson, atomicJson, retry, classify } from './lib/refresh.mjs';
-import { NEWS_SOURCES, fetchSource } from '../js/news-core.mjs';
+import { refreshDatasets } from './lib/refresh.mjs';
+import { NEWS_SOURCES } from '../js/news-core.mjs';
+import { refreshNews } from './lib/refresh-news.mjs';
 const directory = fileURLToPath(new URL('../data/', import.meta.url));
 const runUrl =
   process.env.GITHUB_ACTIONS === 'true' &&
@@ -29,33 +30,7 @@ const manifest = await refreshDatasets({
     boundaries: () => fetchBoundaries(sourceFetch),
   },
 });
-const newsFile = new URL('../data/news-snapshot.json', import.meta.url),
-  news = (await readJson(newsFile)) || { groups: {}, health: {} };
-news.groups ||= {};
-news.health ||= {};
-await Promise.all(
-  NEWS_SOURCES.map(async (source) => {
-    try {
-      const r = await retry(() => fetchSource(source));
-      news.groups[source.id] = r.articles;
-      news.health[source.id] = {
-        checkedAt: r.checkedAt,
-        state: 'saved',
-        lastAttemptAt: new Date().toISOString(),
-        status: 'ok',
-      };
-    } catch (error) {
-      news.health[source.id] = {
-        ...news.health[source.id],
-        state: 'saved',
-        status: classify(error),
-        lastAttemptAt: new Date().toISOString(),
-      };
-    }
-  }),
-);
-news.savedAt = new Date().toISOString();
-await atomicJson(newsFile, news);
+const news = await refreshNews();
 const rows = Object.entries(manifest.datasets).map(
   ([kind, s]) => `| ${kind} | ${s.status} | ${s.period} | ${s.lastSuccessAt} |`,
 );

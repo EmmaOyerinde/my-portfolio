@@ -4,7 +4,8 @@ on:
     branches: ['main', 'master']
   workflow_dispatch:
   schedule:
-    - cron: '23 7 * * *'
+    - cron: '23 7 * * *' # Full evidence refresh, daily
+    - cron: '37 * * * *' # News backup only, hourly
 permissions:
   contents: read
 concurrency:
@@ -28,8 +29,12 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit
-      - name: Refresh each source, preserving verified files on upstream failure
+      - name: Refresh evidence and news, preserving verified files on upstream failure
+        if: github.event.schedule != '37 * * * *'
         run: npm run refresh:data
+      - name: Refresh news backup
+        if: github.event.schedule == '37 * * * *'
+        run: npm run refresh:news
       - run: npm run prepare:data && npm run validate && npm test
       - name: Save validated snapshots and health metadata
         id: commit

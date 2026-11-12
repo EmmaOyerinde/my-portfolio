@@ -112,7 +112,8 @@ test('reduced motion and hidden tabs stop rendering, then normal viewing resumes
   let before = page.draws;
   page.step();
   assert.equal(page.draws, before);
-  assert.equal(page.d.querySelector('#globe-state').textContent, 'Still view');
+  assert.match(page.d.querySelector('#connected-globe').getAttribute('aria-label'), /^Globe\./);
+  assert.equal(page.d.querySelector('#globe-state'), null);
   page.media.change(false);
   assertRotating(page);
   hidden = true;
@@ -171,7 +172,7 @@ test('a browser without Canvas receives the existing Earth image', async (t) => 
   t.after(page.close);
   assert.equal(page.d.querySelector('#connected-globe').hidden, true);
   assert.equal(page.d.querySelector('#globe-static').hidden, false);
-  assert.equal(page.d.querySelector('#globe-state').textContent, 'World view');
+  assert.equal(page.d.querySelector('#globe-state'), null);
   assert.ok(
     page.d.querySelector('#map-reliability svg'),
     'the map uses SVG when Canvas is unavailable',

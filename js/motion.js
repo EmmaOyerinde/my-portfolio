@@ -28,12 +28,6 @@
     hover || wireTouching || wireTouchHold || ribbon.contains(document.activeElement);
   function sync() {
     root.dataset.pageHidden = String(document.hidden);
-    if ($('#globe-state'))
-      $('#globe-state').textContent = !globe
-        ? 'World view'
-        : reduced()
-          ? 'Still view'
-          : 'Continuous rotation';
     canvas?.setAttribute(
       'aria-label',
       `${reduced() ? 'Globe' : 'Rotating globe'}. Use left and right arrow keys to turn it.`,

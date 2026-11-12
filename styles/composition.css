@@ -427,11 +427,6 @@ button,
   line-height: 1.6;
   color: var(--muted);
 }
-#globe-help span {
-  display: block;
-  color: var(--accent);
-  margin: 3px 0 0;
-}
 .hero-bottom {
   display: flex;
   align-items: center;
@@ -1838,6 +1833,13 @@ html[data-reduce-motion='true'] .work-card {
   color: var(--muted);
   font-size: 0.74rem;
 }
+#feed-latest {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin-left: 16px;
+}
 .news-filters {
   display: grid;
   gap: 18px;
@@ -2656,10 +2658,6 @@ dialog .icon-button {
   #globe-help,
   .globe-panel #globe-help {
     font-size: 0.73rem;
-  }
-  #globe-help span {
-    display: inline;
-    margin-left: 8px;
   }
   .hero-background img {
     width: 100%;

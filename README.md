@@ -10,7 +10,7 @@ A complete static portfolio and infrastructure intelligence lab. Everything the 
 4. Wait for `refresh`, `build`, and `deploy` to finish. The deployment links to the Pages URL. The normal project URL is `https://emmaoyerinde.github.io/my-portfolio/`.
 5. In **Settings → Pages**, enable **Enforce HTTPS** if the setting is available. The default `github.io` domain supports HTTPS.
 
-The workflow is included, **not activated in your GitHub account by this delivery**. The first manual run both refreshes and publishes. A normal push publishes your validated saved data without requesting every upstream source again. The daily schedule runs at 07:23 UTC; GitHub may delay or skip scheduled runs. If a repository is inactive, GitHub may disable its schedule after 60 days. Resume it from Actions. The site labels source checks overdue after 72 hours rather than claiming they still run.
+The workflow is included, **not activated in your GitHub account by this delivery**. The first manual run both refreshes and publishes. A normal push publishes your validated saved data without requesting every upstream source again. The full evidence schedule runs daily at 07:23 UTC. A separate hourly run, at minute 37, refreshes only the news backup and republishes it; GitHub may delay or skip scheduled runs. If a repository is inactive, GitHub may disable its schedule after 60 days. Resume it from Actions. The site labels source checks overdue after 72 hours rather than claiming they still run.
 
 Public repositories on GitHub Free can use Pages and standard GitHub-hosted Actions runners without purchasing another service. Private-repository availability and usage allowances depend on your GitHub plan. This project uses `ubuntu-latest`, not paid larger runners.
 
@@ -29,7 +29,7 @@ The source is organized by responsibility. Browser code has no framework or runt
 | Reliability interface             | `js/reliability-view.js` shares metric cards; `js/reliability-finder.js` owns national discovery; `js/reliability-ui.js` owns the selected utility and comparison      |
 | Source explanations and shared UI | `js/source-reader.js` presents readable source and customer explanations; `js/ui-core.js` owns escaping, approved links, timezone-safe dates and protected CSV exports |
 | Maps, page and motion             | `js/maps.js`, `js/map-geometry.js`, `js/app.js`, `js/experience.js`, `js/responsive.js`, `js/globe-renderer.js`, `js/motion.js`                                        |
-| News                              | `js/news-core.mjs` validates live and saved headlines; `js/news.js` handles filtering, refreshes and per-publisher fallback                                            |
+| News                              | `js/news-core.mjs` validates headlines; `js/news-refresh.mjs` handles refreshes and fallback; `js/news.js` presents the feed                                           |
 | Unattended publication            | `.github/workflows/pages.yml`, `scripts/adapters/`, `scripts/lib/`; no server, Worker or runtime secrets                                                               |
 | Regression checks                 | `tests/` includes data, geometry, security, failure recovery and DOM integration tests                                                                                 |
 
@@ -53,7 +53,7 @@ The desktop directory remains beside the map. Tablets stack controls above it. M
 | Energy balance              | Statistics Canada 25-10-0016-01          | Requests latest 24 months of published observations and metadata                                       |
 | Remote communities          | NRCan remote communities catalogue       | Discovers newest edition and ArcGIS layer; verifies the full ID inventory                              |
 | Ontario demand context      | IESO Realtime Totals                     | Saves the latest available five-minute interval when the daily job runs; never labelled live telemetry |
-| News                        | Four official Government of Canada feeds | Browser checks directly every ten minutes while relevant; daily job also saves backup headlines        |
+| News                        | Four official Government of Canada feeds | Browser checks directly every five minutes while visible; an hourly job saves backup headlines         |
 
 The daily job is publication refresh, not a continuously running streaming service. The IESO sample may be hours or days old between successful jobs; its delivery date, hour ending, and interval stay visible. Open the IESO data directory for the continuously updated public report.
 
@@ -207,3 +207,15 @@ Six requested metric families have numeric evidence. Customer-affected CAIFI and
 `js/globe-renderer.js` owns the Canvas geometry and projection. Rotation trigonometry is calculated once per frame instead of once per point. `js/motion.js` owns the shared animation clock and independent globe/news interaction states. Angles wrap after each turn, frames are throttled to about 30 per second for the globe, and hidden/offscreen animation avoids unnecessary rendering. No animation framework or new runtime dependency is required.
 
 The globe displays a rotating outline while its land asset loads, and keeps that outline if the asset is missing or malformed. Geometry validation bounds coordinate ranges and point counts. If Canvas is unavailable, the existing Earth image remains visible and maps use their SVG renderer. Motion tests exercise completed/cancelled gestures, lost pointer capture, keyboard rotation, news touches, reduced motion, tab visibility, missing geometry and the Canvas fallback.
+
+## News freshness update, 12 November 2026
+
+The feed covers four federal publishers: NRCan, CNSC, ECCC and HICC. It is not an all-media breaking-news service. At the verification on 12 November, their most recent matching publication was still dated 10 November. A successful check does not change an article's publication date. The interface now shows both dates together, and publisher links open readable news pages.
+
+The browser requests fresh responses on load and every five minutes while the tab is visible, including while someone is using the maps. Returning to an overdue tab, restoring the page from history, or reconnecting also triggers a check. Direct requests and the saved snapshot run concurrently, so a slow backup does not postpone live requests. A newer live result wins over an older arriving snapshot. A failed publisher retains its dated headlines while the other feeds continue updating. The saved snapshot is rechecked on each cycle, so it can recover coverage when direct requests are blocked.
+
+Relevance checks use the headline and publisher summary. A minister's energy-related job title alone does not qualify an otherwise unrelated story. HTTPS publisher allowlists, bounded responses, timeouts, future-date rejection and original source attribution remain in place. No full article text is republished.
+
+The hourly GitHub job shares the same validator and fallback handling as the daily evidence job. It does not repeatedly download utility boundaries or other large datasets. Both schedules need GitHub Actions enabled on the default branch and Pages set to GitHub Actions. GitHub can delay scheduled runs; the browser refresh path works independently of that schedule. No paid news service or API key is required.
+
+The redundant globe status caption has been removed. Rotation and its reduced-motion behavior are unchanged.

@@ -5,6 +5,7 @@ export const NEWS_SOURCES = [
     short: 'NRCan',
     department: 'naturalresourcescanada',
     topic: 'energy',
+    page: 'https://www.canada.ca/en/natural-resources-canada/news.html',
   },
   {
     id: 'cnsc',
@@ -12,6 +13,7 @@ export const NEWS_SOURCES = [
     short: 'CNSC',
     department: 'canadiannuclearsafetycommission',
     topic: 'nuclear',
+    page: 'https://www.canada.ca/en/nuclear-safety-commission/news.html',
   },
   {
     id: 'eccc',
@@ -19,6 +21,7 @@ export const NEWS_SOURCES = [
     short: 'ECCC',
     department: 'departmentoftheenvironment',
     topic: 'climate',
+    page: 'https://www.canada.ca/en/environment-climate-change/news.html',
   },
   {
     id: 'hicc',
@@ -26,12 +29,13 @@ export const NEWS_SOURCES = [
     short: 'HICC',
     department: 'officeinfrastructure',
     topic: 'infrastructure',
+    page: 'https://www.canada.ca/en/housing-infrastructure-communities/news.html',
   },
 ].map((s) => ({
   ...s,
   url: `https://api.io.canada.ca/io-server/gc/news/en/v2?dept=${s.department}&sort=publishedDate&orderBy=desc&pick=100&format=json`,
 }));
-export const NEWS_REFRESH_MS = 10 * 60 * 1000;
+export const NEWS_REFRESH_MS = 5 * 60 * 1000;
 export function isNewsURL(value) {
   try {
     const url = new URL(value);
@@ -74,8 +78,11 @@ export function cleanText(value) {
 }
 export function normalizeFeed(payload, source, now = Date.now()) {
   const raw = payload?.feed?.entry;
-  if (raw === undefined) throw new Error('Unexpected feed format');
+  if (!raw || typeof raw !== 'object') throw new Error('Unexpected feed format');
   const entries = Array.isArray(raw) ? raw : [raw];
+  if (!entries.length || entries.length > 500) throw new Error('Unexpected feed coverage');
+  if (!entries.some((item) => item?.title && item?.link && item?.publishedDate))
+    throw new Error('Unexpected feed format');
   return entries.flatMap((item) => {
     if (!item || typeof item !== 'object') return [];
     const title = cleanText(item.title),
@@ -95,7 +102,13 @@ export function normalizeFeed(payload, source, now = Date.now()) {
       !isNewsURL(url.href)
     )
       return [];
-    if (!relevant.test(title)) return [];
+    // Read the publisher's summary too. A generic headline can describe a grid
+    // or infrastructure project. A minister's job title alone is not relevance.
+    const summary = cleanText(item.teaser).replace(
+      /minister of energy and natural resources/gi,
+      '',
+    );
+    if (!relevant.test(title) && !relevant.test(summary)) return [];
     // Older event invitations are not useful as current coverage.
     if (
       /media advisory|to announce|to highlight|will announce|will highlight|to make an announcement/i.test(
@@ -147,6 +160,7 @@ export async function fetchSource(source, fetcher = fetch) {
   try {
     const response = await fetcher(source.url, {
       signal: controller.signal,
+      cache: 'no-store',
       headers: { Accept: 'application/json' },
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);

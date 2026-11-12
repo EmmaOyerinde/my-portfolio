@@ -1,10 +1,5 @@
-import {
-  NEWS_SOURCES,
-  NEWS_REFRESH_MS,
-  fetchSource,
-  mergeArticles,
-  isSavedArticle,
-} from './news-core.mjs';
+import { NEWS_SOURCES, mergeArticles } from './news-core.mjs';
+import { createNewsFeed, startNewsRefresh } from './news-refresh.mjs';
 import { renderNewsCards } from './news-view.mjs';
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
@@ -13,13 +8,14 @@ const pageSize = () => (compactNews.matches ? 3 : 6);
 let previousPageSize = pageSize();
 let previousWire = '';
 let topic = 'all',
-  limit = pageSize(),
-  loading = false,
-  groups = {},
-  health = {},
-  lastAttempt = null,
-  fromSnapshot = false,
-  visible = false;
+  limit = pageSize();
+const feed = createNewsFeed({ onChange: render, onSave: save });
+const refresh = () => feed.refresh();
+const dateFormat = new Intl.DateTimeFormat('en-CA', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
 const timeFormat = new Intl.DateTimeFormat('en-CA', {
   month: 'short',
   day: 'numeric',
@@ -34,15 +30,17 @@ for (const source of NEWS_SOURCES) {
   sourceSelect.append(o);
 }
 function savedTime(id) {
-  const h = health[id];
+  const h = feed.state.health[id];
   return h?.checkedAt && Number.isFinite(Date.parse(h.checkedAt))
     ? timeFormat.format(new Date(h.checkedAt))
     : 'not checked';
 }
 function currentArticles() {
-  return mergeArticles(Object.values(groups));
+  return mergeArticles(Object.values(feed.state.groups));
 }
 function render() {
+  const { groups, health, loading, lastAttempt } = feed.state;
+  $('#news-refresh').disabled = loading;
   const all = currentArticles(),
     q = $('#news-search').value.trim().toLowerCase(),
     source = sourceSelect.value;
@@ -71,17 +69,27 @@ function render() {
   $('#feed-status').textContent = loading
     ? 'Refreshing official feeds'
     : live === NEWS_SOURCES.length
-      ? 'Connected to 4 official sources'
+      ? `Connected to ${NEWS_SOURCES.length} official sources`
       : live > 0
-        ? `${live} of 4 sources connected`
+        ? `${live} of ${NEWS_SOURCES.length} sources connected`
         : 'Saved headlines · not live';
   if (!all.length && !loading && !live) $('#feed-status').textContent = 'Feeds unavailable';
   $('#feed-light').className = `status-light ${live ? 'live' : 'offline'}`;
-  $('#feed-checked').textContent = lastAttempt
-    ? `Last check ${timeFormat.format(new Date(lastAttempt))}`
-    : fromSnapshot
-      ? 'Showing a dated saved feed while connecting'
-      : 'Checking source availability…';
+  const checked = Object.values(health)
+    .map((h) => Date.parse(h.checkedAt))
+    .filter(Number.isFinite);
+  const latestCheck = checked.length ? Math.max(...checked) : null;
+  $('#feed-checked').textContent = loading
+    ? 'Checking now…'
+    : lastAttempt
+      ? `Checked ${timeFormat.format(new Date(lastAttempt))} · auto-refresh every 5 min`
+      : latestCheck
+        ? `Saved check ${timeFormat.format(new Date(latestCheck))}`
+        : 'Connecting…';
+  $('#feed-latest').hidden = !all.length;
+  $('#feed-latest').textContent = all.length
+    ? `Latest published ${dateFormat.format(new Date(all[0].publishedAt))}${!loading && live === NEWS_SOURCES.length ? ' · latest available from these sources' : ''}`
+    : '';
   const panel = $('#news-health');
   NEWS_SOURCES.forEach((source) => {
     let row = panel.querySelector(`[data-source="${source.id}"]`);
@@ -91,7 +99,7 @@ function render() {
       row.dataset.source = source.id;
       const label = document.createElement('div');
       const link = document.createElement('a');
-      link.href = source.url;
+      link.href = source.page;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
       link.textContent = source.name;
@@ -120,47 +128,11 @@ function render() {
 }
 function save() {
   try {
-    localStorage.setItem('eo-news-v2', JSON.stringify({ groups, health }));
+    localStorage.setItem(
+      'eo-news-v2',
+      JSON.stringify({ groups: feed.state.groups, health: feed.state.health }),
+    );
   } catch (e) {}
-}
-function loadSaved(payload) {
-  if (!payload || typeof payload.groups !== 'object') return;
-  for (const source of NEWS_SOURCES) {
-    const items = payload.groups[source.id];
-    if (!Array.isArray(items)) continue;
-    if (
-      Date.parse(health[source.id]?.checkedAt || '') >
-      Date.parse(payload.health?.[source.id]?.checkedAt || '')
-    )
-      continue;
-    groups[source.id] = items.filter((article) => isSavedArticle(article, source));
-    health[source.id] = {
-      checkedAt: Number.isFinite(Date.parse(payload.health?.[source.id]?.checkedAt))
-        ? payload.health[source.id].checkedAt
-        : null,
-      state: 'saved',
-    };
-  }
-}
-async function refresh() {
-  if (loading) return;
-  loading = true;
-  $('#news-refresh').disabled = true;
-  render();
-  const results = await Promise.allSettled(NEWS_SOURCES.map((source) => fetchSource(source)));
-  results.forEach((result, i) => {
-    const id = NEWS_SOURCES[i].id;
-    if (result.status === 'fulfilled') {
-      groups[id] = result.value.articles;
-      health[id] = { checkedAt: result.value.checkedAt, state: 'live' };
-    } else health[id] = { ...health[id], state: 'failed' };
-  });
-  lastAttempt = new Date().toISOString();
-  fromSnapshot = false;
-  loading = false;
-  $('#news-refresh').disabled = false;
-  save();
-  render();
 }
 $$('[data-news-topic]').forEach(
   (b) =>
@@ -194,33 +166,8 @@ compactNews.addEventListener('change', () => {
 });
 $('#news-refresh').onclick = refresh;
 try {
-  loadSaved(JSON.parse(localStorage.getItem('eo-news-v2')));
+  feed.restore(JSON.parse(localStorage.getItem('eo-news-v2')));
 } catch (e) {}
-{
-  try {
-    const response = await fetch('data/news-snapshot.json', { signal: AbortSignal.timeout(12000) });
-    if (response.ok) {
-      loadSaved(await response.json());
-      fromSnapshot = true;
-    }
-  } catch (e) {}
-}
 render();
 refresh();
-window.addEventListener('online', refresh);
-new IntersectionObserver(
-  (entries) => {
-    visible = entries.some((e) => e.isIntersecting);
-  },
-  { rootMargin: '250px' },
-).observe($('#news'));
-setInterval(() => {
-  if (document.visibilityState === 'visible' && (visible || scrollY < innerHeight)) refresh();
-}, NEWS_REFRESH_MS);
-document.addEventListener('visibilitychange', () => {
-  if (
-    document.visibilityState === 'visible' &&
-    (!lastAttempt || Date.now() - Date.parse(lastAttempt) > NEWS_REFRESH_MS)
-  )
-    refresh();
-});
+startNewsRefresh({ refresh, lastAttempt: () => feed.state.lastAttempt });

@@ -144,9 +144,7 @@
                 height="640"
                 hidden
               />
-              <p id="globe-help">
-                Drag to explore · arrow keys to turn <span id="globe-state">Loading globe</span>
-              </p>
+              <p id="globe-help">Drag to explore · arrow keys to turn</p>
             </div>
           </div>
         </div>
@@ -701,7 +699,8 @@
               <div class="feed-state">
                 <span class="status-light" id="feed-light"></span
                 ><strong id="feed-status" role="status">Connecting to sources</strong
-                ><span id="feed-checked">Checking live feeds…</span>
+                ><span id="feed-checked">Checking live feeds…</span
+                ><span id="feed-latest" hidden></span>
               </div>
               <button id="news-refresh" class="small-button">Refresh ↻</button>
             </div>
@@ -738,8 +737,9 @@
                 <div id="news-health"></div>
                 <p>
                   News titles link to the original publishers. This independent portfolio is not
-                  affiliated with these agencies. Feeds refresh every 10 minutes while this page is
-                  visible. Publication dates and feed check times are shown separately.
+                  affiliated with these agencies. Feeds refresh every 5 minutes while this page is
+                  visible and reconnect when you return. New headlines appear when the publishers
+                  release them. Publication dates and feed check times are shown separately.
                 </p>
                 <a
                   href="https://www.canada.ca/en/news/subscribe-emails.html"

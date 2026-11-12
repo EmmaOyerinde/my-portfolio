@@ -62,3 +62,43 @@ test('failed or oversized news responses reject without creating an empty succes
     SyntaxError,
   );
 });
+
+test('summary relevance recovers infrastructure stories without matching only a minister’s job title', () => {
+  const stories = normalizeFeed(
+    feed([
+      {
+        ...item,
+        title: 'New investment in Peterborough',
+        teaser: 'Funding for wastewater infrastructure.',
+      },
+      {
+        ...item,
+        title: 'Library arts funding',
+        teaser: 'The Minister of Energy and Natural Resources visited a library.',
+      },
+    ]),
+    source,
+    now,
+  );
+  assert.equal(stories.length, 1);
+  assert.equal(stories[0].title, 'New investment in Peterborough');
+  assert.throws(() => normalizeFeed(feed([]), source, now), /coverage/);
+  assert.throws(() => normalizeFeed(feed({ error: 'broken' }), source, now), /format/);
+});
+
+test('publisher refresh bypasses the HTTP cache and newest articles sort first', async () => {
+  let options;
+  const result = await fetchSource(source, async (_url, opts) => {
+    options = opts;
+    return new Response(
+      JSON.stringify(feed([{ ...item, publishedDate: new Date().toISOString() }])),
+    );
+  });
+  assert.equal(options.cache, 'no-store');
+  const older = {
+    ...result.articles[0],
+    id: 'old',
+    publishedAt: new Date(Date.now() - 86400000).toISOString(),
+  };
+  assert.equal(mergeArticles([[older], result.articles])[0].id, result.articles[0].id);
+});
